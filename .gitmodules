@@ -7,3 +7,6 @@
 [submodule "toolchain/riscv/MSYS"]
 	path = toolchain/riscv/MSYS
 	url = https://e.coding.net/axk/aithinker_wb2/MSYS.git
+[submodule "tools/flash_tool"]
+	path = tools/flash_tool
+	url = https://e.coding.net/axk/aithinker_wb2/flash_tool.git
