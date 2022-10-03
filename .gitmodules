@@ -1,0 +1,3 @@
+[submodule "toolchain/riscv/Darwin"]
+	path = toolchain/riscv/Darwin
+	url = https://e.coding.net/axk/aithinker_wb2/Darwin.git
