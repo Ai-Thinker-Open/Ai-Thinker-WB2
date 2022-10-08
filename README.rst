@@ -13,3 +13,6 @@ File an issue, if you have any issue or need any support.
 
 
 Many thanks for Mikkel Kroman's collection(https://github.com/mkroman/awesome-bouffalo)
+
+
+https://e.coding.net/axk/aithinker_wb2/Ai-Thinker-WB2.git

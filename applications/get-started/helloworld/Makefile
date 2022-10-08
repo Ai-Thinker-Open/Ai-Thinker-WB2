@@ -14,8 +14,6 @@ export PROJECT_PATH PROJECT_BOARD
 ifeq ($(origin BL60X_SDK_PATH), undefined)
 BL60X_SDK_PATH_GUESS ?= $(shell pwd)
 BL60X_SDK_PATH ?= $(BL60X_SDK_PATH_GUESS)/../../..
-$(info ****** Please SET BL60X_SDK_PATH ******)
-$(info ****** Trying SDK PATH [$(BL60X_SDK_PATH)])
 endif
 
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
