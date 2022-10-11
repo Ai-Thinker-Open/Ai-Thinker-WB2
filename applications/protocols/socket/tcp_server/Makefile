@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := tcp_client
+PROJECT_NAME := tcp_server
 PROJECT_PATH := $(abspath .)
 PROJECT_BOARD := evb
 export PROJECT_PATH PROJECT_BOARD
@@ -13,7 +13,7 @@ export PROJECT_PATH PROJECT_BOARD
 
 ifeq ($(origin BL60X_SDK_PATH), undefined)
 BL60X_SDK_PATH_GUESS ?= $(shell pwd)
-BL60X_SDK_PATH ?= $(BL60X_SDK_PATH_GUESS)/../../..
+BL60X_SDK_PATH ?= $(BL60X_SDK_PATH_GUESS)/../../../..
 endif
 
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset

@@ -1,13 +1,3 @@
-/**
- * @file main.c
- * @author your name (you@domain.com)
- * @brief
- * @version 0.1
- * @date 2022-10-09
- *
- * @copyright Copyright (c) 2022
- *
- */
 #include <FreeRTOS.h>
 #include <task.h>
 #include <stdio.h>
@@ -16,10 +6,15 @@
 #include <aos/kernel.h>
 #include <lwip/tcpip.h>
 #include <wifi_mgmr_ext.h>
+#include <cli.h>
 #include <hal_wifi.h>
+#include <lwip/init.h>
 
-#define ROUTER_SSID "ssid"
-#define ROUTER_PWD "password"
+#define ROUTER_SSID "AIOT@FAE"
+#define ROUTER_PWD "fae12345678"
+
+#define TCP_SERVER_IP ""
+#define TCP_SERVER_PORT 
 
 static wifi_conf_t conf =
 {

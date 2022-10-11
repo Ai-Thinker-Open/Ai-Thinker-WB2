@@ -53,8 +53,8 @@ CONFIG_BT_MESH_PROXY := 1
 CONFIG_BT_MESH_GATT_PROXY := 1
 endif
 
-CONF_ENABLE_COREDUMP:=1
+CONF_ENABLE_COREDUMP:=0
 
 #blog enable components format :=blog_testc cli vfs helper
 # LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop http_client_tcp
-LOG_ENABLED_COMPONENTS:=http_client_tcp
+LOG_ENABLED_COMPONENTS:=station
