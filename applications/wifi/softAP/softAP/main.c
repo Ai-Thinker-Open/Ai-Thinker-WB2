@@ -18,7 +18,9 @@
 #include <wifi_mgmr_ext.h>
 #include <hal_wifi.h>
 #include <lwip/netif.h>
+#include <lwip/inet.h>
 #include <blog.h>
+
 #define AP_SSID "ai-thinker"
 #define AP_PWD "12345678"
 
@@ -28,6 +30,30 @@ static wifi_conf_t ap_conf = {
     .country_code = "CN",
 };
 static wifi_interface_t ap_interface;
+
+static void wifi_ap_ip_set(u8_t a, u8_t b, u8_t c, u8_t d)
+{
+    struct netif* ap_netif = netif_find("ap1");
+    if (ap_netif) {
+        blog_info("find netif %s \r\n", ip);
+        ip_addr_t ap_ip;
+        ip_addr_t ap_mask;
+        ip_addr_t ap_gw;
+        IP4_ADDR(&ap_ip, a, b, c, d);
+        IP4_ADDR(&ap_mask, 255, 255, 255, 0);
+        IP4_ADDR(&ap_gw, 0, 0, 0, 0);
+
+        netif_set_down(ap_netif);
+        netif_set_ipaddr(ap_netif, &ap_ip);
+        netif_set_netmask(ap_netif, &ap_mask);
+        netif_set_gw(ap_netif, &ap_gw);
+        netif_set_up(ap_netif);
+    }
+    else
+        blog_info("no find netif %s \r\n", ip);
+
+}
+
 /**
  * @brief wifi_ap_start
  *
@@ -37,6 +63,7 @@ static void wifi_ap_start()
     ap_interface = wifi_mgmr_ap_enable();
     wifi_mgmr_conf_max_sta(4);
     wifi_mgmr_ap_start(ap_interface, AP_SSID, 0, AP_PWD, 6);
+    wifi_ap_ip_set(192, 168, 4, 1);
 }
 
 static void event_cb_wifi_event(input_event_t* event, void* private_data)
@@ -52,14 +79,17 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
             break;
         case CODE_WIFI_ON_AP_STARTED:
             blog_info("<<<<<<<<< startt soft ap OK<<<<<<<<<<<\r\n");
+
             break;
         case CODE_WIFI_ON_AP_STOPPED:
             break;
         case CODE_WIFI_ON_AP_STA_ADD:
             blog_info("<<<<<<<<< station connent ap <<<<<<<<<<<\r\n");
+
             break;
         case CODE_WIFI_ON_AP_STA_DEL:
             blog_info("<<<<<<<<< station disconnet ap <<<<<<<<<<<\r\n");
+
             break;
         default:
             break;
@@ -84,6 +114,7 @@ static void system_thread_init()
 void main()
 {
     system_thread_init();
+
     puts("[OS] Starting TCP/IP Stack...\r\n");
     tcpip_init(NULL, NULL);
     puts("[OS] proc_main_entry task...\r\n");
