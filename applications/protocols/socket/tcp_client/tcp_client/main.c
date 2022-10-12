@@ -4,6 +4,7 @@
 #include <string.h>
 #include <aos/yloop.h>
 #include <aos/kernel.h>
+#include <lwip/sockets.h>
 #include <lwip/tcpip.h>
 #include <wifi_mgmr_ext.h>
 #include <cli.h>
@@ -21,6 +22,13 @@ static wifi_conf_t conf =
     .country_code = "CN",
 };
 
+static struct sockaddr_in dest;
+/**
+ * @brief wifi_sta_connect
+ *        wifi station mode connect start
+ * @param ssid
+ * @param password
+ */
 static void wifi_sta_connect(char* ssid, char* password)
 {
     wifi_interface_t wifi_interface;
@@ -29,6 +37,12 @@ static void wifi_sta_connect(char* ssid, char* password)
     wifi_mgmr_sta_connect(wifi_interface, ssid, password, NULL, NULL, 0, 0);
 }
 
+/**
+ * @brief event_cb_wifi_event
+ *      wifi connet ap event Callback function
+ * @param event
+ * @param private_data
+ */
 static void event_cb_wifi_event(input_event_t* event, void* private_data)
 {
     static char* ssid;
@@ -152,14 +166,9 @@ static void proc_main_entry(void* pvParameters)
     vTaskDelete(NULL);
 }
 
-static void system_thread_init()
-{
-    /*nothing here*/
-}
 
 void main()
 {
-    system_thread_init();
     puts("[OS] Starting TCP/IP Stack...\r\n");
     tcpip_init(NULL, NULL);
     puts("[OS] proc_main_entry task...\r\n");
