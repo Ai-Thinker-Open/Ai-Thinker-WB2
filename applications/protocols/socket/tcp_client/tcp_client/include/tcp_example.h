@@ -11,7 +11,9 @@
 #ifndef TCP_EXAMPLE_H
 #define TCP_EXAMPLE_H
 
-
-
-
+int tcp_client_init(char* server_ip, int port);
+int tcp_client_connect(int sockect_fd);
+int tcp_client_send(int sockect_fd, const char* data);
+int tcp_client_receive(int sockect_fd, char* data);
+int tcp_client_deinit(int socket_fd);
 #endif

@@ -2,6 +2,7 @@
 #include <task.h>
 #include <stdio.h>
 #include <string.h>
+#include <blog.h>
 #include <aos/yloop.h>
 #include <aos/kernel.h>
 #include <lwip/sockets.h>
@@ -10,19 +11,18 @@
 #include <cli.h>
 #include <hal_wifi.h>
 #include <lwip/init.h>
+#include "tcp_example.h"
 
-#define ROUTER_SSID "AIOT@FAE"
-#define ROUTER_PWD "fae12345678"
+#define ROUTER_SSID "your ssid"
+#define ROUTER_PWD "your password"
+//This is Ai-Thinker Remote TCP Server: http://tt.ai-thinker.com:8000/ttcloud
+#define TCP_SERVER_IP "122.114.122.174"
+#define TCP_SERVER_PORT 7878
 
-#define TCP_SERVER_IP ""
-#define TCP_SERVER_PORT 
-
-static wifi_conf_t conf =
-{
+static wifi_conf_t conf = {
     .country_code = "CN",
 };
 
-static struct sockaddr_in dest;
 /**
  * @brief wifi_sta_connect
  *        wifi station mode connect start
@@ -36,7 +36,46 @@ static void wifi_sta_connect(char* ssid, char* password)
     wifi_interface = wifi_mgmr_sta_enable();
     wifi_mgmr_sta_connect(wifi_interface, ssid, password, NULL, NULL, 0, 0);
 }
+/**
+ * @brief tcp_client_task
+ *
+ * @param arg
+ */
+static void tcp_client_task(void* arg)
+{
+    blog_info("tcp client task run\r\n");
+    int socketfd;
+    int ret = 0;
+    char* tcp_buff = pvPortMalloc(512);
+    memset(tcp_buff, 0, 512);
+    socketfd = tcp_client_init(TCP_SERVER_IP, TCP_SERVER_PORT);
+    if (!tcp_client_connect(socketfd)) {
+        blog_info("%s:tcp client connect OK\r\n", __func__);
+    }
+    else goto __exit;
+    if (tcp_client_send(socketfd, "hell tcp server")<0) {
+        printf("tcp client send fail\r\n");
+        goto __exit;
+    }
+    else
+        blog_info("tcp client send OK\r\n");
+    while (1) {
 
+        ret = tcp_client_receive(socketfd, tcp_buff);
+
+        if (ret>0) {
+            blog_info("%s:tcp receive data:%s \r\n", __func__, tcp_buff);
+            if (strstr(tcp_buff, "close")) goto __exit;
+            memset(tcp_buff, 0, 512);
+        }
+
+        vTaskDelay(100/portTICK_PERIOD_MS);
+    }
+__exit:
+    vPortFree(tcp_buff);
+    tcp_client_deinit(socketfd);
+    vTaskDelete(NULL);
+}
 /**
  * @brief event_cb_wifi_event
  *      wifi connet ap event Callback function
@@ -88,17 +127,21 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
         case CODE_WIFI_ON_CONNECTED:
         {
             printf("[APP] [EVT] connected %lld\r\n", aos_now_ms());
+
         }
         break;
         case CODE_WIFI_ON_PRE_GOT_IP:
         {
             printf("[APP] [EVT] connected %lld\r\n", aos_now_ms());
+
         }
         break;
         case CODE_WIFI_ON_GOT_IP:
         {
             printf("[APP] [EVT] GOT IP %lld\r\n", aos_now_ms());
             printf("[SYS] Memory left is %d Bytes\r\n", xPortGetFreeHeapSize());
+            //WiFi connection succeeded, create TCP client task
+            xTaskCreate(tcp_client_task, (char*)"tcp_client_task", 1024*2, NULL, 16, NULL);
         }
         break;
         case CODE_WIFI_ON_PROV_SSID:
