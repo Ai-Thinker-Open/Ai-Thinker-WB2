@@ -26,6 +26,8 @@ GPATH
 
 # emacs
 .dir-locals.el
+.cproject
+.project
 
 # emacs temp file suffixes
 *~
