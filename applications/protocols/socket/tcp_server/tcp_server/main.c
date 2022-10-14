@@ -21,9 +21,10 @@
 #include <cli.h>
 #include <hal_wifi.h>
 #include <lwip/init.h>
+#include "tcp_server.h"
 
-#define ROUTER_SSID "your ssid"
-#define ROUTER_PWD "your password"
+#define ROUTER_SSID "FAE@Seahi"
+#define ROUTER_PWD "fae12345678"
  //This is Ai-Thinker Remote TCP Server: http://tt.ai-thinker.com:8000/ttcloud
 #define TCP_SERVER_IP "122.114.122.174"
 #define TCP_SERVER_PORT 7878
@@ -46,6 +47,28 @@ static void wifi_sta_connect(char* ssid, char* password)
     wifi_mgmr_sta_connect(wifi_interface, ssid, password, NULL, NULL, 0, 0);
 }
 
+static void tcp_accpet_handle_task(void* arg)
+{
+    int socket_fd = *(int*)arg;
+    int ret = 0;
+
+    while (1) {
+        ret = read(socket_fd, );
+    }
+    vTaskDelete(NULL);
+}
+/**
+ * @brief tcp_server_task
+ *
+ * @param arg
+ */
+static void tcp_server_task(void* arg)
+{
+    int socket_fd;
+    socket_fd = tcp_server_init(NULL, 7878);
+    tcp_server_accept(socket_fd, tcp_accpet_handle_task);
+    vTaskDelete(NULL);
+}
 /**
  * @brief event_cb_wifi_event
  *      wifi connet ap event Callback function
@@ -110,7 +133,8 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
         {
             printf("[APP] [EVT] GOT IP %lld\r\n", aos_now_ms());
             printf("[SYS] Memory left is %d Bytes\r\n", xPortGetFreeHeapSize());
-
+            // wifi connection succeeded, create tcp server task
+            xTaskCreate(tcp_server_task, "tcp_server_task", 2048, NULL, 16, NULL);
         }
         break;
         case CODE_WIFI_ON_PROV_SSID:
@@ -177,7 +201,6 @@ static void proc_main_entry(void* pvParameters)
     aos_post_event(EV_WIFI, CODE_WIFI_ON_INIT_DONE, 0);
     vTaskDelete(NULL);
 }
-
 
 void main()
 {
