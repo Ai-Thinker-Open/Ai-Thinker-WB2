@@ -45,7 +45,7 @@
 
 static BL_RST_REASON_E s_rst_reason = BL_RST_POWER_OFF;
 
-static char *RST_REASON_ARRAY[] = {
+static char* RST_REASON_ARRAY[] = {
     "BL_RST_POWER_OFF",
     "BL_RST_HARDWARE_WATCHDOG",
     "BL_RST_FATAL_EXCEPTION",
@@ -67,7 +67,8 @@ int bl_sys_rstinfo_set(BL_RST_REASON_E val)
 {
     if (val == BL_RST_SOFTWARE_WATCHDOG) {
         RST_REASON = REASON_WDT;
-    } else if (val == BL_RST_SOFTWARE) {
+    }
+    else if (val == BL_RST_SOFTWARE) {
         RST_REASON = REASON_SOFTWARE;
     }
 
@@ -78,18 +79,20 @@ void bl_sys_rstinfo_init(void)
 {
     if (RST_REASON == REASON_WDT) {
         s_rst_reason = BL_RST_SOFTWARE_WATCHDOG;
-    } else if (RST_REASON == REASON_SOFTWARE) {
+    }
+    else if (RST_REASON == REASON_SOFTWARE) {
         s_rst_reason = BL_RST_SOFTWARE;
-    } else {
+    }
+    else {
         s_rst_reason = BL_RST_POWER_OFF;
     }
 
     bl_sys_rstinfo_set(BL_RST_SOFTWARE_WATCHDOG);
 }
 
-int bl_sys_rstinfo_getsting(char *info)
+int bl_sys_rstinfo_getsting(char* info)
 {
-    memcpy(info, (char *)RST_REASON_ARRAY[s_rst_reason], strlen(RST_REASON_ARRAY[s_rst_reason]));
+    memcpy(info, (char*)RST_REASON_ARRAY[s_rst_reason], strlen(RST_REASON_ARRAY[s_rst_reason]));
     *(info + strlen(RST_REASON_ARRAY[s_rst_reason])) = '\0';
     return 0;
 }
@@ -183,7 +186,7 @@ int bl_sys_early_init(void)
 {
 #if 0
     // hclk 40 Mhz
-    GLB_Set_System_CLK_Div(3,0);
+    GLB_Set_System_CLK_Div(3, 0);
     SystemCoreClockSet(40*1000*1000);
 #else
     // default 80Mhz
@@ -194,8 +197,8 @@ int bl_sys_early_init(void)
     /* we ensure that the vdd core voltage is normal(1.2V) and the chip will work normally */
     uint8_t Ldo11VoutSelValue;
     extern BL_Err_Type EF_Ctrl_Read_Ldo11VoutSel_Opt(uint8_t *Ldo11VoutSelValue);
-    
-    if(0 == EF_Ctrl_Read_Ldo11VoutSel_Opt(&Ldo11VoutSelValue)){
+
+    if (0 == EF_Ctrl_Read_Ldo11VoutSel_Opt(&Ldo11VoutSelValue)) {
         HBN_Set_Ldo11_Soc_Vout((HBN_LDO_LEVEL_Type)Ldo11VoutSelValue);
     }
 
@@ -204,7 +207,7 @@ int bl_sys_early_init(void)
 
     extern void freertos_risc_v_trap_handler(void); //freertos_riscv_ram/portable/GCC/RISC-V/portASM.S
     write_csr(mtvec, &freertos_risc_v_trap_handler);
-    
+
     /* reset here for use wtd first then init hwtimer later*/
     GLB_AHB_Slave1_Reset(BL_AHB_SLAVE1_TMR);
     /*debuger may NOT ready don't print anything*/
