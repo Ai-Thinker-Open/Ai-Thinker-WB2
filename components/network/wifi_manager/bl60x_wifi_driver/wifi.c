@@ -187,6 +187,7 @@ static void netif_status_callback(struct netif* netif)
                 "  IP: %s\r\n", ip4addr_ntoa(netif_ip4_addr(netif)));
     bl_os_printf("  MK: %s\r\n", ip4addr_ntoa(netif_ip4_netmask(netif)));
     bl_os_printf("  GW: %s\r\n", ip4addr_ntoa(netif_ip4_gw(netif)));
+
     if (ip4_addr_isany(netif_ip4_addr(netif))) {
         wifi_mgmr_api_ip_update();
     }
