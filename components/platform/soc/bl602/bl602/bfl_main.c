@@ -280,6 +280,24 @@ static void _dump_boot_info(void)
     puts("------------------------------------------------------------\r\n");
 }
 
+#include "bl602_glb.h"
+
+void log_port_reset(void)
+{
+    GLB_GPIO_Cfg_Type cfg;
+
+    cfg.drive = 0;
+    cfg.smtCtrl = 1;
+    cfg.gpioPin = 16;
+    cfg.gpioFun = GPIO0_FUN_UNUSED3; // all the function number of GPIO is the same, we use def from GPIO0 here
+    cfg.gpioMode = GPIO_MODE_OUTPUT;
+    cfg.pullType = GPIO_PULL_NONE;
+    GLB_GPIO_Init(&cfg);
+
+    cfg.gpioPin = 7;
+    GLB_GPIO_Init(&cfg);
+}
+
 static void system_early_init(void)
 {
 
@@ -305,6 +323,12 @@ void bfl_main()
 {
     TaskHandle_t aos_loop_proc_task;
     bl_sys_early_init();
+
+#ifdef SYS_REBOOT_LOG_ENABLE
+    /*Init UART In the first place*/
+    log_port_reset();
+#endif
+
     /*Init UART In the first place*/
     hosal_uart_init(&uart_stdio);
     _dump_boot_info();
