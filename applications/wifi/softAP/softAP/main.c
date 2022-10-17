@@ -30,7 +30,13 @@ static wifi_conf_t ap_conf = {
     .country_code = "CN",
 };
 static wifi_interface_t ap_interface;
-
+/**
+ * @brief wifi_ap_ip_set
+ *      Set the IP address of soft AP
+ * @param ip_addr IPV4 addr
+ * @param netmask netmask
+ * @param gw DNS
+ */
 static void wifi_ap_ip_set(char* ip_addr, char* netmask, char* gw)
 {
     struct netif* ap_netif = netif_find("ap1");

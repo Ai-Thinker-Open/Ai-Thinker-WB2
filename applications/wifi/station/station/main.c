@@ -18,8 +18,8 @@
 #include <wifi_mgmr_ext.h>
 #include <hal_wifi.h>
 
-#define ROUTER_SSID "ssid"
-#define ROUTER_PWD "password"
+#define ROUTER_SSID "FAE@Seahi"
+#define ROUTER_PWD "fae12345678"
 
 static wifi_conf_t conf =
 {
