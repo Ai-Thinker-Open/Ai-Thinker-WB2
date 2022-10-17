@@ -28,8 +28,8 @@ make flash p=/dev/ttyUSBx b=921600
 `/dev/ttyUSBx`is the port number of the Ai-WB2 connection, usually ttyUSB0
 
 ## Example Output
-```c
-...
+```shell
+(other log)...
 Server ip Address : 192.168.31.156 port:7878
 -----------------> AABA Request:
     A-MSDU: Permitted
@@ -48,7 +48,7 @@ Server ip Address : 192.168.31.156 port:7878
 [      7387][INFO: main.c:  62] tcp client send OK
 ...
 ```
-After the TCP client connects, it sends a "hello tcp server" to the server.The server sends a `close` message to close the connection.
+After the TCP client connects, it sends a "*hello tcp server*" to the server.The server sends a `close` message to close the connection.
 
 ## Troubleshooting
 

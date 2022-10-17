@@ -90,7 +90,7 @@ connect failure, ssid = ssid, index = -1
 ...
 
 ```
-<<If there is a connection error, this log message will be sent repeatedly
+**If there is a connection error, this log message will be sent repeatedly**
 
 ## Troubleshooting
 
