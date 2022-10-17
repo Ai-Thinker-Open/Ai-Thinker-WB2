@@ -20,7 +20,9 @@
 #include "lwip/inet.h"
 #include "lwip/netdb.h"
 #include "tcp_server.h"
+#define MAX_CLIENT_NUM 4
 static struct sockaddr_in s_dest;
+static tcp_client_msg_t tcp_client;
 /**
  * @brief tcp_server_init
  *        TCP Server Initialization Function
@@ -28,9 +30,9 @@ static struct sockaddr_in s_dest;
  * @param s_port server port
  * @return Network identifier:socket fd
  */
+int socketfd = 0;
 int tcp_server_init(char* s_ip, int s_port)
 {
-    int socketfd = 0;
     struct netif* s_netif;
     if (s_ip==NULL) {
         s_netif = netif_find("st1");
@@ -54,7 +56,7 @@ int tcp_server_init(char* s_ip, int s_port)
     }
     printf("tcp server start ip:%s:%d\r\n", inet_ntoa(s_dest.sin_addr.s_addr), ntohs(s_dest.sin_port));
     //listening connections.The maximum number of connections is 4
-    ret = listen(socketfd, 4);
+    ret = listen(socketfd, MAX_CLIENT_NUM);
     if (ret!=0) {
         printf("Error occured during listen: errno %d\r\n", ret);
         return -1;
@@ -69,28 +71,32 @@ int tcp_server_init(char* s_ip, int s_port)
  * @param tcp_accpet_cb
  * @return int
  */
-static int sock_fd;
+static int sock_fd[MAX_CLIENT_NUM];
 int tcp_server_accept(int socketfd, tcp_accpet_t tcp_accpet_cb)
 {
     struct sockaddr_in s_addr;
-
+    int sock_cnt = 0;
     u32_t socket_len = sizeof(s_addr);
     while (1) {
-        sock_fd = accept(socketfd, (struct sockaddr*)&s_addr, &socket_len);
-        if (sock_fd<0) {
-            printf("Unable to accept connection: errno %d\r\n", sock_fd);
+        sock_fd[sock_cnt] = accept(socketfd, (struct sockaddr*)&s_addr, &socket_len);
+        if (sock_fd[sock_cnt]<0) {
+            printf("Unable to accept connection: errno %d\r\n", sock_fd[sock_cnt]);
             return -1;
         }
-        else if (sock_fd>0) {
-
-            xTaskCreate(tcp_accpet_cb, "tcp_accpet_cb", 512, &s_addr, 17, NULL);
-            printf("client:%s:%d\r\n", inet_ntoa(s_addr.sin_addr.s_addr), sock_fd);
+        else if (sock_fd[sock_cnt]>0) {
+            tcp_client.ip_addr = (void*)&s_addr;
+            tcp_client.socket_fd = sock_fd[sock_cnt];
+            tcp_client.socket_id = sock_cnt;
+            xTaskCreate(tcp_accpet_cb, "tcp_accpet_cb", 512, &tcp_client, 17, NULL);
+            printf("client:%s:%d,id:%d\r\n", inet_ntoa(s_addr.sin_addr.s_addr), sock_fd[sock_cnt], sock_cnt);
+            sock_cnt++;
         }
         else {
             goto _exit;
         }
     }
 _exit:
+    tcp_server_deinit();
     return 0;
 }
 /**
@@ -100,18 +106,37 @@ _exit:
  * @param data
  * @return int
  */
-int tcp_server_send(int socket_fd, char* data)
+int tcp_server_send(int socket_id, char* data)
 {
-    return write(sock_fd, data, strlen(data));
+    return write(sock_fd[socket_id], data, strlen(data));
 }
 /**
- * @brief
+ * @brief tcp_server_receive
  *
  * @param socket_fd
  * @param recv_data
  * @return int
  */
-int tcp_server_receive(int socket_fd, char* recv_data)
+int tcp_server_receive(int socket_id, char* recv_data)
 {
-
+    return read(sock_fd[socket_id], recv_data, 1024);
+}
+/**
+ * @brief tcp_server_close
+ *
+ * @param socket_id
+ * @return int
+ */
+int tcp_server_close(int socket_id)
+{
+    return close(sock_fd[socket_id]);
+}
+/**
+ * @brief tcp_server_deinit
+ *
+ * @return int
+ */
+int tcp_server_deinit(void)
+{
+    return close(socketfd);
 }

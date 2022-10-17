@@ -23,8 +23,8 @@
 #include <lwip/init.h>
 #include "tcp_server.h"
 
-#define ROUTER_SSID "FAE@Seahi"
-#define ROUTER_PWD "fae12345678"
+#define ROUTER_SSID "your ssid"
+#define ROUTER_PWD "your password"
  //This is Ai-Thinker Remote TCP Server: http://tt.ai-thinker.com:8000/ttcloud
 #define TCP_SERVER_IP "122.114.122.174"
 #define TCP_SERVER_PORT 7878
@@ -46,14 +46,25 @@ static void wifi_sta_connect(char* ssid, char* password)
     wifi_interface = wifi_mgmr_sta_enable();
     wifi_mgmr_sta_connect(wifi_interface, ssid, password, NULL, NULL, 0, 0);
 }
-
-static void tcp_accpet_handle_task(void* arg)
+/**
+ * @brief tcp_accpet_handle_cb
+ *
+ * @param arg
+ */
+static void tcp_accpet_handle_cb(void* arg)
 {
-    int socket_fd = *(int*)arg;
+    tcp_client_msg_t* tcp_client_msg = (tcp_client_msg_t*)arg;
+    struct sockaddr_in* socket_addr = (struct sockaddr_in*)tcp_client_msg->ip_addr;
     int ret = 0;
-
+    char data[1024] = { 0 };
     while (1) {
-        ret = read(socket_fd, );
+        ret = tcp_server_receive(tcp_client_msg->socket_id, data);
+        if (ret>0) {
+            printf("%s:%s\r\n", inet_ntoa(socket_addr->sin_addr.s_addr), data);
+            tcp_server_send(tcp_client_msg->socket_id, data);
+            if (strstr(data, "close")!=NULL) tcp_server_close(tcp_client_msg->socket_id);
+        }
+        vTaskDelay(500/portTICK_PERIOD_MS);
     }
     vTaskDelete(NULL);
 }
@@ -66,7 +77,7 @@ static void tcp_server_task(void* arg)
 {
     int socket_fd;
     socket_fd = tcp_server_init(NULL, 7878);
-    tcp_server_accept(socket_fd, tcp_accpet_handle_task);
+    tcp_server_accept(socket_fd, tcp_accpet_handle_cb);
     vTaskDelete(NULL);
 }
 /**
@@ -199,6 +210,7 @@ static void proc_main_entry(void* pvParameters)
     aos_register_event_filter(EV_WIFI, event_cb_wifi_event, NULL);
     hal_wifi_start_firmware_task();
     aos_post_event(EV_WIFI, CODE_WIFI_ON_INIT_DONE, 0);
+
     vTaskDelete(NULL);
 }
 
