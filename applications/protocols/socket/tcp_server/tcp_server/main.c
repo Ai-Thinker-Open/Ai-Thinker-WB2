@@ -25,8 +25,7 @@
 
 #define ROUTER_SSID "your ssid"
 #define ROUTER_PWD "your password"
- //This is Ai-Thinker Remote TCP Server: http://tt.ai-thinker.com:8000/ttcloud
-#define TCP_SERVER_IP "122.114.122.174"
+
 #define TCP_SERVER_PORT 7878
 
 static wifi_conf_t conf = {
