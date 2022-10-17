@@ -13,10 +13,10 @@
 #include <lwip/init.h>
 #include "udp_client.h"
 
-#define ROUTER_SSID "FAE@Seahi"
-#define ROUTER_PWD "fae12345678"
+#define ROUTER_SSID "your ssid"
+#define ROUTER_PWD "your password"
 
-#define UDP_SERVER_IP "192.168.1.100"
+#define UDP_SERVER_IP "127.0.0.0"
 #define UDP_SERVER_PORT 7878
 
 static wifi_conf_t conf = {
@@ -73,6 +73,7 @@ static void udp_client_task(void* arg)
     }
 __exit:
     vPortFree(tcp_buff);
+    udp_client_send(socketfd, "client close");
     udp_client_deinit(socketfd);
     vTaskDelete(NULL);
 }

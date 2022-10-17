@@ -92,7 +92,7 @@ int udp_client_receive(int sockect_fd, char* data)
  */
 int udp_client_deinit(int socket_fd)
 {
-    shutdown(socket_fd, SHUT_RDWR);
+    shutdown(socket_fd, SHUT_WR);
     return close(socket_fd);
 }
 
