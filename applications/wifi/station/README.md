@@ -11,7 +11,7 @@ Compile with instructions and download firmware.
 ```shell
 make -j16 flash p=/dev/ttyUSB0 b=921600
 ```
-<j16:j16 is the number of cores in the system
+**j16:j16 is the number of cores in the system**
 
 ## Example Output
 ### Connection succeeded
