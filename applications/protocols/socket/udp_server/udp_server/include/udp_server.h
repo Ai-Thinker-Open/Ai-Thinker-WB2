@@ -24,8 +24,6 @@ typedef struct udp_client_msg {
 
 int udp_server_init(char* s_ip, int s_port);
 int udp_server_accept(int socketfd, udp_accpet_t udp_accpet_cb);
-int udp_server_receive(int socket_id, char* recv_data);
-int udp_server_send(int socket_id, char* data);
-int udp_server_close(int socket_id);
+
 int udp_server_deinit(void);
 #endif
