@@ -1,5 +1,5 @@
 /**
- * @file udp_muliticast.c
+ * @file udp_multicast.c
  * @author your name (you@domain.com)
  * @brief
  * @version 0.1
@@ -29,7 +29,7 @@ static struct sockaddr_in s_dest;
  * @param mutc_port
  * @return int
  */
-int muliticast_init(char* mutc_addr, int mutc_port)
+int multicast_init(char* mutc_addr, int mutc_port)
 {
     int socke_fd = socket(PF_INET, SOCK_DGRAM, 0);
     if (socke_fd<0) return -1;
@@ -70,7 +70,7 @@ int muliticast_init(char* mutc_addr, int mutc_port)
  * @param socke_fd
  * @return int
  */
-int muliticast_deinit(int socke_fd)
+int multicast_deinit(int socke_fd)
 {
     memset(&s_dest, 0, sizeof(s_dest));
     return close(socke_fd);

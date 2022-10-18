@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := udp_muliticast
+PROJECT_NAME := udp_multicast
 PROJECT_PATH := $(abspath .)
 PROJECT_BOARD := evb
 export PROJECT_PATH PROJECT_BOARD

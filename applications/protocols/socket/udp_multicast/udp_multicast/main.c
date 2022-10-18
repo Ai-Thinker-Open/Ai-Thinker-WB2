@@ -21,16 +21,14 @@
 #include <cli.h>
 #include <hal_wifi.h>
 #include <lwip/init.h>
-#include "udp_muliticast.h"
+#include "udp_multicast.h"
 
 #define ROUTER_SSID "ssid"
 #define ROUTER_PWD "password"
- // MULITICAST_ADDR: 224.0.0.0 ~ 239.255.255.255
-#define MULITICAST_ADDR "224.0.1.0"
-#define MULITICAST_PORT 7878
+ // multicast_ADDR: 224.0.0.0 ~ 239.255.255.255
+#define MULTICAST_ADDR "224.0.1.0"
+#define MULTICAST_PORT 7878
 
-
-#define MULITICAST_MODE MULITICAST_MODE_SENDER
 static wifi_conf_t conf = {
     .country_code = "CN",
 };
@@ -48,39 +46,39 @@ static void wifi_sta_connect(char* ssid, char* password)
     wifi_mgmr_sta_connect(wifi_interface, ssid, password, NULL, NULL, 0, 0);
 }
 /**
- * @brief udp_muliticast_task
+ * @brief udp_multicast_task
  *
  * @param arg
  */
-static void udp_muliticast_task(void* arg)
+static void udp_multicast_task(void* arg)
 {
     int socket_fd = 0;
     struct sockaddr_in send_addr;
     char* udp_buf = pvPortMalloc(512);
     int socklen = sizeof(send_addr);
 
-    socket_fd = muliticast_init(MULITICAST_ADDR, MULITICAST_PORT);
+    socket_fd = multicast_init(MULTICAST_ADDR, MULTICAST_PORT);
     if (socket_fd<0) goto __exit;
-    blog_info("<<<<<<<<<<<<<<<<<<udp muliticast start<<<<<<<<<<<<<\r\n");
-    blog_info("muliticast addr:%s:%d\r\n", MULITICAST_ADDR, MULITICAST_PORT);
+    blog_info("<<<<<<<<<<<<<<<<<<udp multicast start<<<<<<<<<<<<<\r\n");
+    blog_info("multicast addr:%s:%d\r\n", MULTICAST_ADDR, MULTICAST_PORT);
     while (1) {
         memset(udp_buf, 0, 512);
         //Read multicast data
         if (recvfrom(socket_fd, udp_buf, 512, MSG_DONTWAIT, (struct sockaddr*)&send_addr, (socklen_t*)&socklen)>0) {
             blog_info("%s:%s\r\n", inet_ntoa(send_addr.sin_addr.s_addr), udp_buf);
             //Forward the read data to multicast
-            send_addr.sin_port = htons(MULITICAST_PORT);
-            send_addr.sin_addr.s_addr = inet_addr(MULITICAST_ADDR);
+            send_addr.sin_port = htons(MULTICAST_PORT);
+            send_addr.sin_addr.s_addr = inet_addr(MULTICAST_ADDR);
             if (sendto(socket_fd, udp_buf, strlen(udp_buf), 0, (struct sockaddr*)&send_addr, socklen)>0) {
-                blog_info("udp muliticast data:%s\r\n", udp_buf);
+                blog_info("udp multicast data:%s\r\n", udp_buf);
             }
         }
         vTaskDelay(50/portTICK_PERIOD_MS);
     }
 __exit:
-    blog_info("muliticast close\r\n");
+    blog_info("multicast close\r\n");
     vPortFree(udp_buf);
-    muliticast_deinit(socket_fd);
+    multicast_deinit(socket_fd);
     vTaskDelete(NULL);
 }
 /**
@@ -147,8 +145,8 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
         {
             printf("[APP] [EVT] GOT IP %lld\r\n", aos_now_ms());
             printf("[SYS] Memory left is %d Bytes\r\n", xPortGetFreeHeapSize());
-            // wifi connection succeeded, create udp muliticast task
-            xTaskCreate(udp_muliticast_task, "udp_muliticast_task", 2048, NULL, 16, NULL);
+            // wifi connection succeeded, create udp multicast task
+            xTaskCreate(udp_multicast_task, "udp_multicast_task", 2048, NULL, 16, NULL);
         }
         break;
         case CODE_WIFI_ON_PROV_SSID:
