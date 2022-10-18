@@ -14,14 +14,6 @@
 
 typedef void (*udp_accpet_t)(void*);
 
-typedef struct udp_client_msg {
-    int socket_fd;
-    void* ip_addr;
-    int socket_id;
-
-}udp_client_msg_t;
-
-
 int udp_server_init(char* s_ip, int s_port);
 int udp_server_accept(int socketfd, udp_accpet_t udp_accpet_cb);
 

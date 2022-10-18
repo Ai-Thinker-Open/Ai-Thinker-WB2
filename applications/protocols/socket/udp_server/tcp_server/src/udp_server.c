@@ -19,12 +19,10 @@
 #include "lwip/udp.h"
 #include "lwip/inet.h"
 #include "lwip/netdb.h"
-#include "udp_server.h"
-
 
 #define MAX_CLIENT_NUM 4
 static struct sockaddr_in s_dest;
-static udp_client_msg_t udp_client;
+
 /**
  * @brief udp_server_init
  *        UDP Server Initialization Function
@@ -60,28 +58,6 @@ int udp_server_init(char* s_ip, int s_port)
     //listening connections.The maximum number of connections is 4
 
     return socketfd;
-}
-/**
- * @brief udp_server_send
- *
- * @param socket_fd
- * @param data
- * @return int
- */
-int udp_server_send(int socket_id, char* data)
-{
-    return 0;
-}
-/**
- * @brief udp_server_receive
- *
- * @param socket_fd
- * @param recv_data
- * @return int
- */
-int udp_server_receive(int socket_id, char* recv_data)
-{
-    return 0;
 }
 /**
  * @brief udp_server_deinit
