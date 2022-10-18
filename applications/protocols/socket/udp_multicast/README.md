@@ -6,9 +6,9 @@ You need to modify it according to your own AP configuration.
 #define ROUTER_SSID "ssid"
 #define ROUTER_PWD "password"
 ```
-**Server default configuration**
+**Multicast default configuration**
 
-- muliticast addr: `224.0.1.0`
+- Muliticast addr: `224.0.1.0`
 - Port: `7878`
 
 You can go to the main The macro definition in c modifies the IP address and port number of multicast
@@ -26,7 +26,7 @@ make -j16 flash p=/dev/ttyUSB0 b=921600
 **j16:j16 is the number of cores in the system**
 
 ## Example Output
-### Server started successfully
+### Multicast started successfully
 ```shell
 (other log)...
 [WF][SM] Exiting connecting state

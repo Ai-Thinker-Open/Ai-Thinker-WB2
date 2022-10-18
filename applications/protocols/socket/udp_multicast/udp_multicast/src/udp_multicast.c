@@ -23,11 +23,11 @@
 #define MAX_CLIENT_NUM 4
 static struct sockaddr_in s_dest;
 /**
- * @brief muliticast_receiver_init
- *
- * @param mutc_addr
- * @param mutc_port
- * @return int
+ * @brief multicast_receiver_init
+ *      UDP multicast initialization
+ * @param mutc_addr multicast addr
+ * @param mutc_port multicast port
+ * @return success: socket fd  fail:-1
  */
 int multicast_init(char* mutc_addr, int mutc_port)
 {
@@ -65,10 +65,10 @@ int multicast_init(char* mutc_addr, int mutc_port)
     return socke_fd;
 }
 /**
- * @brief muliticast_sender_deinit
- *
- * @param socke_fd
- * @return int
+ * @brief muliticast_deinit
+ *      UDP multicast de initialization
+ * @param socke_fd socket fd
+ * @return success:0  fail:-1
  */
 int multicast_deinit(int socke_fd)
 {
