@@ -13,8 +13,8 @@
 #include <lwip/init.h>
 #include "mqtt_client.h"
 
-#define ROUTER_SSID "FAE@Seahi"
-#define ROUTER_PWD "fae12345678"
+#define ROUTER_SSID "your ssid"
+#define ROUTER_PWD "your password"
 
 static wifi_conf_t conf = {
     .country_code = "CN",
@@ -101,7 +101,7 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
         {
             blog_info("[APP] [EVT] GOT IP %lld", aos_now_ms());
             blog_info("[SYS] Memory left is %d Bytes", xPortGetFreeHeapSize());
-
+            //Start the connection of MQTT
             xMqttConnectWifiNotify(WIFI_CONNECTED);
             mqtt_client_start();
         }

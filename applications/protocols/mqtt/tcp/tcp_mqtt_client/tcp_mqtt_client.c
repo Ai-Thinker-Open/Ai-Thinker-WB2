@@ -22,8 +22,6 @@
 #define MQTT_DATA_PUBLISH "publish/topic"
 #define MQTT_DATA_SUBLISH "subscribe/topic"
 
-xTaskHandle xHandlerMqtt = NULL;
-
 void TaskXMqttRecieve(void* p)
 {
 
@@ -40,7 +38,7 @@ void TaskXMqttRecieve(void* p)
                 case xMQTT_TYPE_RECIEVE_MSG:
                     blog_info("xQueueReceive topic: %s:%s", rMsg.topic, rMsg.payload);
                     strcpy((char*)sMsg.topic, MQTT_DATA_PUBLISH);
-                    sprintf((char*)sMsg.payload, "{\"xMqttVersion\":%s,\"freeHeap\":%d}", getXMqttVersion(), xPortGetFreeHeapSize());
+                    sprintf((char*)sMsg.payload, "{\"xMqttVersion\":\"%s\",\"freeHeap\":%d}", getXMqttVersion(), xPortGetFreeHeapSize());
                     sMsg.payloadlen = strlen((char*)sMsg.payload);
                     sMsg.qos = 1;
                     sMsg.retained = 0;
@@ -53,6 +51,7 @@ void TaskXMqttRecieve(void* p)
                     strcpy((char*)rMsg.topic, MQTT_DATA_SUBLISH);
                     rMsg.qos = 1;
                     mqtt_client_subscribe(&rMsg);
+                    //Subscribe to publishing topics at the same time
                     strcpy((char*)rMsg.topic, MQTT_DATA_PUBLISH);
                     rMsg.qos = 0;
                     mqtt_client_subscribe(&rMsg);
