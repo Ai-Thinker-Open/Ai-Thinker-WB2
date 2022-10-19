@@ -3,21 +3,21 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include "blog.h"
-TaskHandle_t xHandleTasMQTT = NULL;                   // 任务句柄，删除任务用
-static wifi_stauts_t wifi_status = WIFI_DISCONNECTED; // 创建局部变量
-uint8_t buff_receive[RECV_BUFF_SIZE] = { 0 };           // socket通信 数据接收buff
+TaskHandle_t xHandleTasMQTT = NULL;
+static wifi_stauts_t wifi_status = WIFI_DISCONNECTED;
+uint8_t buff_receive[RECV_BUFF_SIZE] = { 0 };
 uint8_t mqtt_pack[MQTT_PACK_SIZE] = { 0 };
 
 static char* XMQTT_SELF_VERSION = "xMQTT_v3.1";
 
 static mqtt_client_config_t xMqttConfig;
-//mqtt收包缓存变量(队列项)
+
 static mqtt_msg_t rMqttMsg;
-//mqtt发包缓存变量(队列项)
+
 static mqtt_msg_t wMqttMsg;
 
-static xQueueHandle mqttSendMsgQueue = NULL; //mqtt发送数据队列
-static xQueueHandle mqttRcvMsgQueue = NULL;  //mqtt接收数据队列
+static xQueueHandle mqttSendMsgQueue = NULL;
+static xQueueHandle mqttRcvMsgQueue = NULL;
 
 /*** tcp start **/
 int mqtt_tcp_connect(const char* host, const int port);
@@ -96,7 +96,7 @@ void mqtt_disconnect(void)
 {
     memset(mqtt.Pack, 0, MQTT_PACK_SIZE);
     uint16_t len = MQTTSerialize_disconnect(mqtt.Pack, MQTT_PACK_SIZE);
-    tcp_send(connect_socket, mqtt.Pack, len, 500); // 发送
+    tcp_send(connect_socket, mqtt.Pack, len, 500);
     close(connect_socket);
 }
 
@@ -104,7 +104,7 @@ void TaskMainMqtt(void* pvParameters)
 {
 
     MQTTPacket_connectData pack = MQTTPacket_connectData_initializer;
-    mqtt.pingCnt = 0; // 清零
+    mqtt.pingCnt = 0;
     pack.MQTTVersion = xMqttConfig.MQTTVersion;
     pack.keepAliveInterval = xMqttConfig.keepAliveInterval;
     pack.cleansession = xMqttConfig.cleansession;
@@ -112,8 +112,7 @@ void TaskMainMqtt(void* pvParameters)
     pack.password.cstring = xMqttConfig.password;
     pack.clientID.cstring = xMqttConfig.clientID;
 
-    mqtt.LinkFlag = MQTT_DISCONNECTED; // 初始化
-
+    mqtt.LinkFlag = MQTT_DISCONNECTED;
     uint8_t msgtypes = CONNECT;
     uint32_t curtick = xTaskGetTickCount();
 
@@ -143,12 +142,12 @@ void TaskMainMqtt(void* pvParameters)
                     {
                         msgid++;
                         len = MQTTSerialize_subscribe(mqtt.Pack, MQTT_PACK_SIZE, wMqttMsg.dup, msgid, 1, &topicName, (int*)&wMqttMsg.qos);
-                        tcp_send(connect_socket, mqtt.Pack, len, 500); // 发送
+                        tcp_send(connect_socket, mqtt.Pack, len, 500);
                     }
                     else if (xMQTT_TYPE_SYSTEM_PUB_TOPIC == wMqttMsg.type)
                     {
                         len = MQTTSerialize_publish(mqtt.Pack, MQTT_PACK_SIZE, wMqttMsg.dup, wMqttMsg.qos, wMqttMsg.retained, packetid, topicName, wMqttMsg.payload, wMqttMsg.payloadlen);
-                        tcp_send(connect_socket, mqtt.Pack, len, 500); // 发送
+                        tcp_send(connect_socket, mqtt.Pack, len, 500);
                     }
                     vTaskDelay(1000 / portTICK_RATE_MS);
                 }
@@ -157,18 +156,18 @@ void TaskMainMqtt(void* pvParameters)
             if ((xTaskGetTickCount() - curtick) > (pack.keepAliveInterval * 1000 / portTICK_RATE_MS))
             {
 
-                if (mqtt.LinkFlag == MQTT_CONNECTED) // 已经连上
+                if (mqtt.LinkFlag == MQTT_CONNECTED)
                 {
                     curtick = xTaskGetTickCount();
-                    mqtt_ping_request(); // 发送心跳包
+                    mqtt_ping_request();
                     mqtt.pingCnt++;
-                    if (mqtt.pingCnt > 3) // 已经失去连接
+                    if (mqtt.pingCnt > 3)
                     {
                         blog_debug("MQTT lost link... ");
-                        mqtt_disconnect(); // 释放socket资源
+                        mqtt_disconnect();
                         mqtt.pingCnt = 0;
                         mqtt.LinkFlag = MQTT_DISCONNECTED;
-                        msgtypes = CONNECT; // 重新开始新的连接
+                        msgtypes = CONNECT;
                         rMqttMsg.type = xMQTT_TYPE_DISCONNECTED;
                         xQueueSend(mqttRcvMsgQueue, &rMqttMsg, 0);
                     }
@@ -185,10 +184,10 @@ void TaskMainMqtt(void* pvParameters)
         else
         {
             blog_error("mqtt_handle_task wifi status fail...");
-            mqtt_disconnect(); // 释放socket资源
+            mqtt_disconnect();
             mqtt.pingCnt = 0;
             mqtt.LinkFlag = MQTT_DISCONNECTED;
-            msgtypes = CONNECT; // 重新开始新的连接
+            msgtypes = CONNECT;
         }
 
         switch (msgtypes)
@@ -205,27 +204,27 @@ void TaskMainMqtt(void* pvParameters)
 
                 break;
 
-                //连接状态或者重连
+
             case CONNECT:
-                // printf(  "connectting borkerHost: %s : %d", xMqttConfig.borkerHost, xMqttConfig.borkerPort);
+
                 rMqttMsg.type = xMQTT_TYPE_DISCONNECTED;
                 xQueueSend(mqttRcvMsgQueue, &rMqttMsg, 0);
                 memset(mqtt.Pack, 0, MQTT_PACK_SIZE);
                 len = MQTTSerialize_connect(mqtt.Pack, MQTT_PACK_SIZE, &pack);
                 mqtt.LinkFlag = MQTT_DISCONNECTED;
-                if (mqtt_tcp_connect(xMqttConfig.borkerHost, xMqttConfig.borkerPort) != 0) // 连接MQTT服务器
+                if (mqtt_tcp_connect(xMqttConfig.borkerHost, xMqttConfig.borkerPort) != 0)
                 {
                     mqtt.LinkFlag = MQTT_DISCONNECTED;
                     vTaskDelay(1000 / portTICK_RATE_MS);
                     msgtypes = CONNECT;
                     break;
                 }
-                tcp_send(connect_socket, mqtt.Pack, len, 500); // 发送
+                tcp_send(connect_socket, mqtt.Pack, len, 500);
 
                 break;
 
             case CONNACK:
-                //复位队列
+
                 xQueueReset(mqttSendMsgQueue);
                 xQueueReset(mqttRcvMsgQueue);
                 blog_debug("MQTT server connect success !!");
@@ -254,13 +253,13 @@ void TaskMainMqtt(void* pvParameters)
                 rMqttMsg.type = xMQTT_TYPE_RECIEVE_MSG;
                 xQueueSend(mqttRcvMsgQueue, &rMqttMsg, (portTickType)10);
 
-                if (mqtt.LinkFlag == MQTT_CONNECTED) // 已经连上
+                if (mqtt.LinkFlag == MQTT_CONNECTED)
                 {
                     if (qos != 0)
                     {
                         memset(mqtt.Pack, 0, MQTT_PACK_SIZE);
                         len = MQTTSerialize_ack(mqtt.Pack, MQTT_PACK_SIZE, PUBACK, dup, packetid);
-                        tcp_send(connect_socket, mqtt.Pack, len, 500); // 发送
+                        tcp_send(connect_socket, mqtt.Pack, len, 500);
                     }
                 }
 
@@ -283,7 +282,7 @@ void TaskMainMqtt(void* pvParameters)
                 }
                 else if (((len = MQTTSerialize_ack(mqtt.Pack, MQTT_PACK_SIZE, (msgtypes == PUBREC) ? PUBREL : PUBCOMP, 0, packetid)) != 0))
                 {
-                    tcp_send(connect_socket, mqtt.Pack, len, 500); // 发送
+                    tcp_send(connect_socket, mqtt.Pack, len, 500);
                 }
                 msgtypes = 0;
             }
@@ -310,7 +309,7 @@ void TaskMainMqtt(void* pvParameters)
             case PINGREQ:
                 memset(mqtt.Pack, 0, MQTT_PACK_SIZE);
                 len = MQTTSerialize_pingreq(mqtt.Pack, MQTT_PACK_SIZE);
-                tcp_send(connect_socket, mqtt.Pack, len, 500); // 发送
+                tcp_send(connect_socket, mqtt.Pack, len, 500);
                 blog_debug("sending ping...");
                 msgtypes = 0;
 
@@ -318,11 +317,11 @@ void TaskMainMqtt(void* pvParameters)
 
             case PINGRESP:
                 msgtypes = 0;
-                mqtt.pingCnt = 0; // 计数清零
+                mqtt.pingCnt = 0;
                 break;
         }
 
-        recvBuff.buff_len = tcp_receive(connect_socket, recvBuff.buff, RECV_BUFF_SIZE, 250); // 非阻塞
+        recvBuff.buff_len = tcp_receive(connect_socket, recvBuff.buff, RECV_BUFF_SIZE, 250);
         if (recvBuff.buff_len > 0)
         {
             msgtypes = (enum msgTypes)MQTTPacket_read(mqtt.Pack, MQTT_PACK_SIZE, transport_getdata);
@@ -442,8 +441,7 @@ static int mqtt_read(int my_socket, unsigned char* buffer, unsigned int len, uns
                 }
                 else if (rc <= 0)
                 {
-                    //recvLen = rc; // 删除 bug
-                    //printf("recvLen <0 = %d",recvLen);
+
                     break;
                 }
             } while (recvLen < len && xTaskCheckForTimeOut(&xTimeOut, &xTicksToWait) == pdFALSE);
@@ -537,7 +535,7 @@ int mqtt_tcp_connect(const char* host, const int port)
         inet_ntop(AF_INET, &(((struct sockaddr_in*)cur->ai_addr)->sin_addr), ip, 128);
 
         //printf("DNS IP: %s:%d", ip, port);
-        connect_socket = socket(AF_INET, SOCK_STREAM, 0); // 创建套接字描述符
+        connect_socket = socket(AF_INET, SOCK_STREAM, 0);
         if (connect_socket < 0)
         {
             ret = -1;
@@ -545,11 +543,11 @@ int mqtt_tcp_connect(const char* host, const int port)
             continue;
         }
 
-        bzero(&serverAddr, sizeof(struct sockaddr_in)); // 清零
+        bzero(&serverAddr, sizeof(struct sockaddr_in));
         serverAddr.sin_family = AF_INET;
         serverAddr.sin_addr.s_addr = inet_addr((const char*)ip);
         //serverAddr.sin_addr.s_addr = inet_addr((const char*)("192.168.1.124"));
-        serverAddr.sin_port = htons(port); // 默认以8080端口连接
+        serverAddr.sin_port = htons(port);
 
         if (connect(connect_socket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) == 0)
         {
@@ -559,7 +557,7 @@ int mqtt_tcp_connect(const char* host, const int port)
         }
         else
         {
-            blog_error("error = %d", errno); // #define EHOSTUNREACH 113 // No route to host 无法路由到主机
+            blog_error("error = %d", errno);
         }
         close(connect_socket);
         ret = -1;
