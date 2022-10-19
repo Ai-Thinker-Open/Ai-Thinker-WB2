@@ -21,6 +21,8 @@ static wifi_conf_t conf = {
 };
 
 static xTaskHandle CreatedTask = NULL;
+
+void TaskXMqttRecieve(void* p);
 /**
  * @brief wifi_sta_connect
  *        wifi station mode connect start
@@ -159,19 +161,19 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
         }
     }
 }
-void TaskXMqttRecieve(void* p);
+
 static void proc_main_entry(void* pvParameters)
 {
 
     mqtt_client_config_t xMqttConfig =
     {
         .MQTTVersion = 4,
-        .borkerHost = "broker-cn.emqx.io", //固定
-        .borkerPort = 1883,            //固定
+        .borkerHost = "host",
+        .borkerPort = 1883,
         .mqttCommandTimeout = 6000,
-        .username = "sasdx",       //产品id
-        .password = "fasdwe", //鉴权信息
-        .clientID = "521331497",   //设备Id
+        .username = "mqttUserName",
+        .password = "password",
+        .clientID = "clientID",
         .keepAliveInterval = 60,
         .cleansession = true,
     };
@@ -189,6 +191,6 @@ void main()
     blog_info("[OS] Starting TCP/IP Stack...");
     tcpip_init(NULL, NULL);
     blog_info("[OS] proc_main_entry task...");
-
+    blog_set_level_log_component(BLOG_LEVEL_INFO, "tcp_mqtt_client");
     xTaskCreate(proc_main_entry, (char*)"main_entry", 1024, NULL, 15, NULL);
 }

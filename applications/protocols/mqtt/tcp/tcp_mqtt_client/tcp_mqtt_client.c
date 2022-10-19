@@ -19,8 +19,8 @@
 #include "blog.h"
 #include "mqtt_client.h"
 
-#define MQTT_DATA_PUBLISH "devPub"
-#define MQTT_DATA_SUBLISH "devSub"
+#define MQTT_DATA_PUBLISH "publish/topic"
+#define MQTT_DATA_SUBLISH "subscribe/topic"
 
 xTaskHandle xHandlerMqtt = NULL;
 
@@ -36,11 +36,9 @@ void TaskXMqttRecieve(void* p)
         {
             switch (rMsg.type)
             {
-                //接收到新的消息下发
+                //Receive new messages and send them
                 case xMQTT_TYPE_RECIEVE_MSG:
-                    blog_info("xQueueReceive topic: %s ", rMsg.topic);
-                    blog_info("xQueueReceive payload: %s", rMsg.payload);
-                    blog_info("[SYS] Memory left is %d Bytes", xPortGetFreeHeapSize());
+                    blog_info("xQueueReceive topic: %s:%s", rMsg.topic, rMsg.payload);
                     strcpy((char*)sMsg.topic, MQTT_DATA_PUBLISH);
                     sprintf((char*)sMsg.payload, "{\"xMqttVersion\":%s,\"freeHeap\":%d}", getXMqttVersion(), xPortGetFreeHeapSize());
                     sMsg.payloadlen = strlen((char*)sMsg.payload);
@@ -50,7 +48,7 @@ void TaskXMqttRecieve(void* p)
                     mqtt_client_publish(&sMsg);
 
                     break;
-                    //连接Mqtt服务器成功
+                    //mqtt client connection succeeded
                 case xMQTT_TYPE_CONNECTED:
                     strcpy((char*)rMsg.topic, MQTT_DATA_SUBLISH);
                     rMsg.qos = 1;
@@ -60,19 +58,19 @@ void TaskXMqttRecieve(void* p)
                     mqtt_client_subscribe(&rMsg);
                     blog_info("xMQTT : xMQTT_TYPE_CONNECTED");
                     break;
-                    //断开Mqtt服务器成功
+                    //The mqtt client was disconnected successfully
                 case xMQTT_TYPE_DISCONNECTED:
                     blog_info("xMQTT : xMQTT_TYPE_DISCONNECTED");
                     break;
-                    //正在连接Mqtt服务器
+                    //Connecting to MQTT server
                 case xMQTT_TYPE_CONNECTTING:
                     blog_info("xMQTT : xMQTT_TYPE_CONNECTTING");
                     break;
-                    //订阅主题成功
+                    //Topic subscription succeeded
                 case xMQTT_TYPE_SUB_SUCCESS:
                     blog_info("xMQTT : xMQTT_TYPE_SUB_SUCCESS");
                     break;
-                    // ping心跳服务器
+                    // Ping the heartbeat packet
                 case xMQTT_TYPE_SEND_PING:
                     blog_info("xMQTT : xMQTT_TYPE_SEND_PING");
                     break;
