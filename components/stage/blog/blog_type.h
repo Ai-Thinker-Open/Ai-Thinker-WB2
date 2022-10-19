@@ -29,6 +29,7 @@
  */
 #ifndef __BLOG_TYPE_H__
 #define __BLOG_TYPE_H__
+ 
 
 typedef enum _blog_leve {
     BLOG_LEVEL_ALL = 0,
