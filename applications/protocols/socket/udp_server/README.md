@@ -1,4 +1,4 @@
-# tcp_server Example
+# udp_server Example
 ## Configuration project
 By default, the connected wifi AP in this project is `ssid="ssid"` and `password="password"`.
 You need to modify it according to your own AP configuration.
