@@ -1,11 +1,10 @@
-# Example: Ai-WB2 Series SoC Module GPIO usage
+# Example: Ai-WB2 Series SoC Module ADC usage
 
 ## Hardware Setup and Wiring
 
 | Ai-WB2 Series SoC Module Pinout | Peripheral Pinout |
 |---|---|
-| IO14 | LED |
-| IO8 | Button |
+| ADC | Voltage Probe (i.e. 3.3V or 5V VCC pinout) |
 | 3V3 | VCC |
 | GND | GND |
 
