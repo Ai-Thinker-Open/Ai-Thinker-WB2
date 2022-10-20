@@ -16,9 +16,9 @@ Then configure the IP address and port number of the TCP server
 **Compile command**
 
 ```shell
-    make -j8
+    make -j16
 ```
-`-j8`is the number of cores in the system.
+`-j16`is the number of cores in the system.
 
 **download**
 
