@@ -7,7 +7,7 @@ Please configure the ssid and password that need to be connected to WiFi in adva
 #define ROUTER_PWD "your password"
 ```
 ## Configure mqttt client
-In the `proc_main_entry` function in `Main. c`, you need to modify the xMqttConfig structure to connect to the remote MQTT server.
+In the `proc_main_entry` function in `Main.c`, you need to modify the xMqttConfig structure to connect to the remote MQTT server.
 It is suggested that all members in the structure should be assigned values, which can be configured by referring to this project. However, borkerHost, borkerPort, username, password and clientID must be reconfigured.
 ```c
 mqtt_client_config_t xMqttConfig =
@@ -70,7 +70,7 @@ After the device receives the message from the subscription topic, it will send 
 **Compile command**
 
 ```shell
-    make -j16
+make -j16
 ```
 `-j16`is the number of cores in the system.
 

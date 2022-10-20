@@ -1,5 +1,5 @@
 /**
- * @file mqtt.c
+ * @file tcp_mqtt_client.c
  * @author your name (you@domain.com)
  * @brief
  * @version 0.1
@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-
 #include <FreeRTOS.h>
 #include <task.h>
 #include <event_groups.h>
@@ -44,7 +43,6 @@ void TaskXMqttRecieve(void* p)
                     sMsg.retained = 0;
                     sMsg.dup = 0;
                     mqtt_client_publish(&sMsg);
-
                     break;
                     //mqtt client connection succeeded
                 case xMQTT_TYPE_CONNECTED:
