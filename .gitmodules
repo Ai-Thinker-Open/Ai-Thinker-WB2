@@ -10,3 +10,6 @@
 [submodule "tools/flash_tool"]
 	path = tools/flash_tool
 	url = https://e.coding.net/axk/aithinker_wb2/flash_tool.git
+[submodule "u8g2"]
+	path = applications/peripheral/demo_spi/components/u8g2/u8g2
+	url = https://github.com/olikraus/u8g2.git
