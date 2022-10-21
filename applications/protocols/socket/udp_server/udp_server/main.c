@@ -73,7 +73,7 @@ static void udp_server_task(void* arg)
     }
 __exit:
     vPortFree(udp_buf);
-    udp_client_deinit(socket_fd);
+    udp_server_deinit();
     vTaskDelete(NULL);
 }
 /**
