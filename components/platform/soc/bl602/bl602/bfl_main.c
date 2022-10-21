@@ -324,7 +324,7 @@ void bfl_main()
     TaskHandle_t aos_loop_proc_task;
     bl_sys_early_init();
 
-#ifdef SYS_REBOOT_LOG_ENABLE
+#ifdef SYS_REBOOT_LOG_DISENABLE
     /*Init UART In the first place*/
     log_port_reset();
 #endif
