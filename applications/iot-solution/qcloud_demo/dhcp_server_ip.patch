@@ -1,0 +1,13 @@
+diff --git a/components/network/lwip_dhcpd/dhcp_server_raw.c b/components/network/lwip_dhcpd/dhcp_server_raw.c
+index ae6dce40..2c4ec5f4 100644
+--- a/components/network/lwip_dhcpd/dhcp_server_raw.c
++++ b/components/network/lwip_dhcpd/dhcp_server_raw.c
+@@ -38,7 +38,7 @@
+ 
+ /* the DHCP server address */
+ #ifndef DHCPD_SERVER_IP
+-    #define DHCPD_SERVER_IP "192.168.169.1"
++    #define DHCPD_SERVER_IP "192.168.4.1"
+ #endif
+ 
+ #define DHCP_DEBUG_PRINTF
