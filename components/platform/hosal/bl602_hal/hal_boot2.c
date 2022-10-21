@@ -80,11 +80,13 @@ static void _dump_partition(void)
     USER_UNUSED(part);
 
     blog_info("======= PtTable_Config @%p=======", part);
-    blog_info("magicCode 0x%08X;", (unsigned int)(part->ptTable.magicCode));
-    blog_info(" version 0x%04X;", part->ptTable.version);
-    blog_info(" entryCnt %u;", part->ptTable.entryCnt);
-    blog_info(" age %lu;", part->ptTable.age);
-    blog_info(" crc32 0x%08X", (unsigned int)part->ptTable.crc32);
+    blog_info("magicCode 0x%08X; version 0x%04X; entryCnt %u; age %lu; crc32 0x%08X",
+    (unsigned int)(part->ptTable.magicCode),
+    part->ptTable.version,
+    part->ptTable.entryCnt,
+    part->ptTable.age,
+    (unsigned int)part->ptTable.crc32
+    );
 
     blog_info("idx  type device activeIndex     name   Address[0]  Address[1]  Length[0]   Length[1]   age");
     for (i = 0; i < part->ptTable.entryCnt; i++) {
