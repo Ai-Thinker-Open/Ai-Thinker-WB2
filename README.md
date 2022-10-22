@@ -24,9 +24,24 @@ In order to use Ai-WB2 Development Framework with the Ai-WB2, you need to instal
 if you are coding in the China , recommend you to clone the repository :
 
 `git clone --recursive https://gitee.com/Ai-Thinker-Open/Ai-Thinker-WB2` 
-
-
-## Step 2. Compiling
+## Step 2. Modify Permission
+Modify the permissions of the compilation tool chain to enable executable functions.
+- Darwin
+```shell
+ cd toolchain/riscv/Darwin/
+ . chmod755.sh 
+```
+- Linux
+```shell
+ cd toolchain/riscv/Linux/
+ . chmod755.sh 
+```
+- MSYS
+```shell
+ cd toolchain/riscv/MSYS/
+ . chmod755.sh 
+```
+## Step 3. Compiling
 
 For example, run the cd applications/get-started/helloworld project to compile :
 
@@ -35,7 +50,7 @@ cd applications/get-started/helloworld
 make -j8
 ```
 
-## Step 3. download
+## Step 4. download
 
 Please connect your Ai-WB2 Serial Development board , and always press the BURN button , then press the EN button . Next , Release all keys.
 
