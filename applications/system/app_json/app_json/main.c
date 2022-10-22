@@ -14,11 +14,13 @@
 #include <bl_sys_time.h>
 #include <blog.h>
 #include <cJSON.h>
- /**
-  * @brief TaskCreateJSON
-  *
-  * @param pvParameters
-  */
+
+char* str_unfm = NULL;
+/**
+ * @brief TaskCreateJSON
+ *
+ * @param pvParameters
+ */
 static void TaskCreateJSON(void* pvParameters)
 {
 
@@ -48,16 +50,15 @@ static void TaskCreateJSON(void* pvParameters)
     cJSON_AddFalseToObject(cjson_test, "KOL");
 
     str = cJSON_Print(cjson_test);
-    char* str_unfm = cJSON_PrintUnformatted(cjson_test);
+    str_unfm = cJSON_PrintUnformatted(cjson_test);
 
-
-    char* str_print = cJSON_Print(cjson_test);
-    if (str_print != NULL)
+    if (str != NULL)
     {
-        blog_info("%s", str_print);
+        blog_info("%s", str);
         blog_info("%s", str_unfm);
-        cJSON_free(str_print);
-        str_print = NULL;
+        cJSON_free(str);
+
+        str = NULL;
     }
 
     if (cjson_test != NULL)
@@ -72,9 +73,10 @@ static void TaskCreateJSON(void* pvParameters)
  */
 static void TaskParseJSON(void* pvParameters)
 {
-    char* str_json = "{\"name\":\"aithinker-xuhongv\",\"age\":22,\"address\":{\"country\":\"China\",\"zip-code\":123},\"skill\":[\"C\",\"C++\",\"JavaScript\",\"Java\",\"Python\"],\"KOL\":false}";
-
+    char* str_json = str_unfm;
     cJSON* root = cJSON_Parse(str_json);
+    if (root==NULL) goto __err;
+
     cJSON* p_name = cJSON_GetObjectItem(root, "name");
     blog_info("name=%s", p_name->valuestring);
 
@@ -101,8 +103,10 @@ static void TaskParseJSON(void* pvParameters)
     for (i = 0; i < subject_arr_size; ++i)
     {
         item = cJSON_GetArrayItem(subject_arr, i);
-        blog_info("id:%d, skills=%s\n", i, item->valuestring);
+        blog_info("id:%d, skills=%s", i, item->valuestring);
     }
+__err:
+    cJSON_free(str_unfm);
 
     if (root != NULL)
     {
