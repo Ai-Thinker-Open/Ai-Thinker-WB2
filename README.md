@@ -24,6 +24,7 @@ In order to use Ai-WB2 Development Framework with the Ai-WB2, you need to instal
 if you are coding in the China , recommend you to clone the repository :
 
 `git clone --recursive https://gitee.com/Ai-Thinker-Open/Ai-Thinker-WB2` 
+
 ## Step 2. Modify Permission
 Modify the permissions of the compilation tool chain to enable executable functions.
 - Darwin
