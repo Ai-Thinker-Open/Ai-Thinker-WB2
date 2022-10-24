@@ -149,7 +149,7 @@ static void update_mac_config_with_order(const void* fdt, int offset1, const cha
                     goto break_scan;
                 }
                 else {
-                    blog_debug("get MAC from B failed\");
+                    blog_debug("get MAC from B failed");
                 }
             }
             break;
