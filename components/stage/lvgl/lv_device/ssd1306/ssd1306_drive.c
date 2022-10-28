@@ -72,9 +72,6 @@
 // Charge Pump (pg.62)
 #define OLED_CMD_SET_CHARGE_PUMP            0x8D    // follow with 0x14
 
-#define MY_DISP_HOR_RES    128
-#define MY_DISP_VER_RES    64
-
 static hosal_i2c_dev_t oled_iic_dev;
 
 static uint8_t ssd1306_buff[MY_DISP_HOR_RES * MY_DISP_VER_RES / 8];

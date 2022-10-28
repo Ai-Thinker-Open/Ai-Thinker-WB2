@@ -13,6 +13,8 @@
 #include <stdbool.h>
 #include "ssd1306_drive.h"
 #include "blog.h"
+
+
  /*********************
   *      DEFINES
   *********************/
@@ -24,9 +26,8 @@
 #ifndef MY_DISP_VER_RES
 #warning Please define or replace the macro MY_DISP_HOR_RES with the actual screen height, default value 240 is used for now.
 #define MY_DISP_VER_RES    64
-#define LV_VER_RES_MAX     10
 #endif
-
+#define LV_VER_RES_MAX     10
 /**********************
  *      TYPEDEFS
  **********************/

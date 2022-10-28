@@ -19,11 +19,32 @@
 
 #include <stdint.h>
 
-/*====================
-   COLOR SETTINGS
- *====================*/
+  /*========================
+  * Setting the Display Size
+  *=========================*/
 
- /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
+#define MY_DISP_HOR_RES    
+#define MY_DISP_VER_RES   
+  /* ===================================================
+  * Set display direction
+  * LV_DISPLAY_ORIENTATION_LANDSCAPE :normal
+  * LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED: inversion
+  *=====================================================*/
+
+#define LV_DISPLAY_ORIENTATION_LANDSCAPE 
+  // #define LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED 
+
+    /*========================================
+    *         Set color display
+    *  LV_INVERT_COLORS:Negative display
+    *=========================================*/
+    // #define LV_INVERT_COLORS  
+
+    /*====================
+         COLOR SETTINGS
+   *====================*/
+
+   /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
 #define LV_COLOR_DEPTH 1
 
 /*Swap the 2 bytes of RGB565 color. Useful if the display has an 8-bit interface (e.g. SPI)*/
@@ -98,6 +119,7 @@
   /*=======================
    * FEATURE CONFIGURATION
    *=======================*/
+
 
    /*-------------
     * Drawing
