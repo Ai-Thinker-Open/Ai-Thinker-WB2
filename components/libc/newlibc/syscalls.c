@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <reent.h>
 #include <errno.h>
 #include <stdio.h>
@@ -68,11 +39,6 @@ malloc_table_info_t malloc_table_info;
 #define SYS_TRACE_MEM_STATS_ENTRY_NUM 100
 mem_stats_t mem_stats[SYS_TRACE_MEM_STATS_ENTRY_NUM];
 
-bool set_monitor;
-uint32_t callerAddr;
-uint32_t mallocCnt = 0;
-uint32_t freeCnt = 0;
-
 void trace_malloc(void *ptr, size_t size, void *caller)
 {
     int i;
@@ -87,11 +53,6 @@ void trace_malloc(void *ptr, size_t size, void *caller)
                 malloc_entry[i].ptr = ptr;
                 malloc_entry[i].size = size;
                 malloc_entry[i].caller = caller;
-                if(set_monitor && callerAddr == (uint32_t)caller)
-                {
-                    mallocCnt++;
-                    printf("trace_malloc, caller=%08lx, ptr=%08lx, mallocCnt=%lu\r\n", callerAddr, (uint32_t)malloc_entry[i].ptr, mallocCnt);
-                }
                 break;
             }
         }
@@ -117,11 +78,6 @@ void trace_free(void *ptr, void *caller)
     if(!malloc_table_info.table_full){
         for(i = 0; i < SYS_TRACE_MEM_ENTRY_NUM; i++){
             if(malloc_entry[i].ptr == ptr){
-                if(set_monitor && callerAddr == (uint32_t)malloc_entry[i].caller)
-                {
-                    freeCnt++;
-                    printf("trace_free, caller=%08lx, ptr=%08lx, freeCnt=%lu\r\n", callerAddr, (uint32_t)malloc_entry[i].ptr, freeCnt);
-                }
                 malloc_entry[i].ptr = NULL;
                 break;
             }
@@ -146,10 +102,6 @@ void trace_realloc(void *ptr_new, void *ptr_old, size_t size, void *caller)
                     malloc_entry[i].ptr = ptr_new;
                     malloc_entry[i].size = size;
                     malloc_entry[i].caller = caller;
-                    if(set_monitor && callerAddr == (uint32_t)malloc_entry[i].caller)
-                    {
-                        printf("trace_realloc, caller=%08lx, ptr=%08lx\r\n", callerAddr, (uint32_t)malloc_entry[i].ptr);
-                    }
                     break;
                 }
             }
@@ -211,7 +163,6 @@ void mem_trace_stats()
     }
     printf("Current left size is %d bytes\r\n", xPortGetFreeHeapSize());
 }
-
 #endif
 
 /* Reentrant versions of system calls.  */
@@ -591,7 +542,3 @@ These functions are implemented and replaced by the 'common/time.c' file
 int _gettimeofday_r(struct _reent *ptr, struct timeval *__tp, void *__tzp);
 _CLOCK_T_  _times_r(struct _reent *ptr, struct tms *ptms);
 */
-void newlibc_init(void)
-{
-    /*dummy functions*/
-}

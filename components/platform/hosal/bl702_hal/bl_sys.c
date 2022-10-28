@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <bl702_romdriver.h>
 #include <bl702_glb.h>
 #include <bl702_timer.h>
@@ -35,10 +6,8 @@
 #include <stdbool.h>
 #include "bl_sys.h"
 #include "bl_flash.h"
-#include "bl_hbn.h"
 
 volatile bool sys_log_all_enable = true;
-ATTR_HBN_NOINIT_SECTION static int wdt_triger_counter;
 
 BL_RST_REASON_E bl_sys_rstinfo_get(void)
 {
@@ -134,48 +103,6 @@ int bl_sys_em_config(void)
         case 16 * 1024:
         {
             GLB_Set_EM_Sel(GLB_EM_16KB);
-        }
-        break;
-        default:
-        {
-            /*nothing here*/
-        }
-    }
-
-    return 0;
-}
-
-int bl_sys_cache_config(void)
-{
-    extern uint8_t __CACHE_SIZE;
-    volatile uint32_t cache_size;
-
-    cache_size = (uint32_t)&__CACHE_SIZE;
-
-    switch (cache_size) {
-        case 0 * 1024:
-        {
-            RomDriver_L1C_Cache_Enable_Set(0x0F);
-        }
-        break;
-        case 4 * 1024:
-        {
-            RomDriver_L1C_Cache_Enable_Set(0x07);
-        }
-        break;
-        case 8 * 1024:
-        {
-            RomDriver_L1C_Cache_Enable_Set(0x03);
-        }
-        break;
-        case 12 * 1024:
-        {
-            RomDriver_L1C_Cache_Enable_Set(0x01);
-        }
-        break;
-        case 16 * 1024:
-        {
-            RomDriver_L1C_Cache_Enable_Set(0x00);
         }
         break;
         default:
@@ -297,14 +224,6 @@ int bl_sys_default_active_config(void)
 
 int bl_sys_early_init(void)
 {
-    if(BL_RST_WDT == bl_sys_rstinfo_get()){
-        wdt_triger_counter++;
-        bl_sys_rstinfo_clr();
-    }
-    else{
-        wdt_triger_counter = 0;
-    }
-
     bl_flash_init();
 
     extern BL_Err_Type HBN_Aon_Pad_IeSmt_Cfg(uint8_t padCfg);
@@ -316,14 +235,11 @@ int bl_sys_early_init(void)
     PDS_Trim_RC32M();
     HBN_Trim_RC32K();
 
-#if (defined(CFG_PDS_ENABLE) && CFG_PDS_LEVEL == 31) || defined(CFG_HBN_ENABLE)
+#if defined(CFG_PDS_ENABLE) || defined(CFG_HBN_ENABLE)
     HBN_Set_Ldo11_All_Vout(HBN_LDO_LEVEL_1P00V);
-#endif
-
-#if !(defined(CFG_PDS_ENABLE) || defined(CFG_HBN_ENABLE))
+#else
     GLB_Set_System_CLK(GLB_DLL_XTAL_32M, GLB_SYS_CLK_DLL144M);
     HBN_Set_XCLK_CLK_Sel(HBN_XCLK_CLK_XTAL);
-    GLB_Set_SF_CLK(1, GLB_SFLASH_CLK_96M, 1);
 #endif
 
     GLB_Set_MTimer_CLK(1, GLB_MTIMER_CLK_BCLK, SystemCoreClockGet()/(GLB_Get_BCLK_Div()+1)/4000000 - 1);
@@ -357,9 +273,3 @@ int bl_sys_init(void)
 
     return 0;
 }
-
-int bl_sys_wdt_rst_count_get()
-{
-    return wdt_triger_counter;
-}
-

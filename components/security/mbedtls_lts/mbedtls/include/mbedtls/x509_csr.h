@@ -5,7 +5,13 @@
  */
 /*
  *  Copyright The Mbed TLS Contributors
- *  SPDX-License-Identifier: Apache-2.0
+ *  SPDX-License-Identifier: Apache-2.0 OR GPL-2.0-or-later
+ *
+ *  This file is provided under the Apache License 2.0, or the
+ *  GNU General Public License v2.0 or later.
+ *
+ *  **********
+ *  Apache License 2.0:
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may
  *  not use this file except in compliance with the License.
@@ -18,17 +24,38 @@
  *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
+ *
+ *  **********
+ *
+ *  **********
+ *  GNU General Public License v2.0 or later:
+ *
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License along
+ *  with this program; if not, write to the Free Software Foundation, Inc.,
+ *  51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ *  **********
  */
 #ifndef MBEDTLS_X509_CSR_H
 #define MBEDTLS_X509_CSR_H
 
 #if !defined(MBEDTLS_CONFIG_FILE)
-#include "mbedtls/config.h"
+#include "config.h"
 #else
 #include MBEDTLS_CONFIG_FILE
 #endif
 
-#include "mbedtls/x509.h"
+#include "x509.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -151,7 +178,8 @@ void mbedtls_x509_csr_init( mbedtls_x509_csr *csr );
 void mbedtls_x509_csr_free( mbedtls_x509_csr *csr );
 #endif /* MBEDTLS_X509_CSR_PARSE_C */
 
-/** \} name Structures and functions for X.509 Certificate Signing Requests (CSR) */
+/* \} name */
+/* \} addtogroup x509_module */
 
 #if defined(MBEDTLS_X509_CSR_WRITE_C)
 /**
@@ -181,7 +209,7 @@ int mbedtls_x509write_csr_set_subject_name( mbedtls_x509write_csr *ctx,
  *                  private key used to sign the CSR when writing it)
  *
  * \param ctx       CSR context to use
- * \param key       Asymmetric key to include
+ * \param key       Asymetric key to include
  */
 void mbedtls_x509write_csr_set_key( mbedtls_x509write_csr *ctx, mbedtls_pk_context *key );
 
@@ -296,8 +324,6 @@ int mbedtls_x509write_csr_pem( mbedtls_x509write_csr *ctx, unsigned char *buf, s
                        void *p_rng );
 #endif /* MBEDTLS_PEM_WRITE_C */
 #endif /* MBEDTLS_X509_CSR_WRITE_C */
-
-/** \} addtogroup x509_module */
 
 #ifdef __cplusplus
 }

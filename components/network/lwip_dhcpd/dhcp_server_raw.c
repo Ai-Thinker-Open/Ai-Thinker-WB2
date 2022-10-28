@@ -18,9 +18,10 @@
 #include <lwip/sockets.h>
 #include <lwip/inet_chksum.h>
 #include <netif/etharp.h>
+#include <ethernetif.h>
 #include <lwip/ip.h>
 #include <lwip/init.h>
-
+#include <aos/yloop.h>
 
 #include <lwip/prot/dhcp.h>
 
@@ -183,7 +184,6 @@ dhcp_client_find(struct dhcp_server *dhcpserver, struct dhcp_msg *msg,
                 return node;
             } else {
                 puts("IP Found, but MAC address is NOT the same\r\n");
-                return node;  //FIXME use hostname instead of mac address
             }
         }
     }
@@ -503,6 +503,8 @@ dhcp_server_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_addr_t
 
                         ip_2_ip4(&addr)->addr = INADDR_BROADCAST;
                         udp_sendto_if(pcb, q, &addr, port, dhcp_server->netif);
+
+                        aos_post_event(EV_WIFI, CODE_WIFI_ON_AP_STA_GOT_IP, (unsigned long)node);
                     }
                     else
                     {
@@ -644,7 +646,7 @@ dhcp_server_start(struct netif *netif, ip4_addr_t *start, ip4_addr_t *end)
 
     ip_set_option(dhcp_server->pcb, SOF_BROADCAST);
     /* set up local and remote port for the pcb */
-    udp_bind(dhcp_server->pcb, IP_ADDR_ANY, DHCP_SERVER_PORT);
+    udp_bind(dhcp_server->pcb, &netif->ip_addr, DHCP_SERVER_PORT);
     //udp_connect(dhcp_server->pcb, IP_ADDR_ANY, DHCP_CLIENT_PORT);
     /* set up the recv callback and argument */
     udp_recv(dhcp_server->pcb, dhcp_server_recv, dhcp_server);
@@ -682,48 +684,46 @@ err_t dhcp_server_stop(struct netif *netif)
     return ERR_OK;
 }
 
-static void set_if(struct netif *netif, char* ip_addr, char* gw_addr, char* nm_addr)
-{
-    ip4_addr_t *ip;
-    ip4_addr_t addr;
-
-    ip = (ip4_addr_t *)&addr;
-
-    /* set ip address */
-    if ((ip_addr != NULL) && ip4addr_aton(ip_addr, &addr)) {
-        netif_set_ipaddr(netif, ip);
-    }
-
-    /* set gateway address */
-    if ((gw_addr != NULL) && ip4addr_aton(gw_addr, &addr)) {
-        netif_set_gw(netif, ip);
-    }
-
-    /* set netmask address */
-    if ((nm_addr != NULL) && ip4addr_aton(nm_addr, &addr)) {
-        netif_set_netmask(netif, ip);
-    }
-}
-
 //TODO better dhcpd_stop flow?
 void dhcpd_start(struct netif *netif)
 {
     err_t res;
+    ip4_addr_t ip, mask;
+    char ip_addr[16];
+    char mask_addr[16];
+    int client_ip_min;
+    int client_ip_max;
+
+    extern int wifi_mgmr_ap_dhcp_range_get(uint32_t *ip, uint32_t *mask, int *start, int *end);
+    if (wifi_mgmr_ap_dhcp_range_get(&ip.addr, &mask.addr, &client_ip_min, &client_ip_max) == 0) {
+        strcpy(ip_addr, ip4addr_ntoa(&ip));
+        strcpy(mask_addr, ip4addr_ntoa(&mask));
+    }
+    else {
+        strcpy(ip_addr, DHCPD_SERVER_IP);
+        strcpy(mask_addr, "255.255.255.0");
+        client_ip_min = DHCPD_CLIENT_IP_MIN;
+        client_ip_max = DHCPD_CLIENT_IP_MAX;
+    }
+
 
     if (1)
     {
+        extern void set_if(struct netif *netif, char* ip_addr, char* gw_addr, char* nm_addr);
+
         dhcp_stop(netif);
 
-        set_if(netif, DHCPD_SERVER_IP, "0.0.0.0", "255.255.255.0");
+        set_if(netif, ip_addr, "0.0.0.0", mask_addr);
 
         netif_set_up(netif);
     }
 
     {
-        char str_tmp[4 * 4 + 4] = DHCPD_SERVER_IP;
+        char str_tmp[4 * 4 + 4];
         char *p = str_tmp;
         ip4_addr_t ip_start, ip_end;
 
+        strcpy(str_tmp, ip_addr);
         p = strchr(str_tmp, '.');
         if (p)
         {
@@ -740,10 +740,10 @@ void dhcpd_start(struct netif *netif)
         }
         p = p + 1; /* move to xxx.xxx.xxx.^ */
 
-        sprintf(p, "%d", DHCPD_CLIENT_IP_MIN);
+        sprintf(p, "%d", client_ip_min);
         ip4addr_aton(str_tmp, &ip_start);
         DEBUG_PRINTF("ip_start: [%s]\r\n", str_tmp);
-        sprintf(p, "%d", DHCPD_CLIENT_IP_MAX);
+        sprintf(p, "%d", client_ip_max);
         ip4addr_aton(str_tmp, &ip_end);
         DEBUG_PRINTF("ip_start: [%s]\r\n", str_tmp);
 

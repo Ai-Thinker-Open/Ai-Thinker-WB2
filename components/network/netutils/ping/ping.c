@@ -1,34 +1,4 @@
 /*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
-/*
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
  *
@@ -134,10 +104,11 @@ static u8_t ping_recv(void *arg, struct raw_pcb *pcb, struct pbuf *p, const ip_a
             find_hdr = find_and_extract(&env->req_list, iecho->seqno);
 
             if (find_hdr) {
-                printf("%" PRId16 " bytes from %s: icmp_seq=%d ttl=%d time=%" PRId32 " ms\r\n ", p->tot_len, ipaddr_ntoa(&env->dest), ntohs(iecho->seqno), *((uint8_t *)p->payload + 8), (sys_now() - find_hdr->send_time));
+                printf("%d bytes from %s: icmp_seq=%d ttl=%d time=%lu ms\r\n ", p->tot_len, ipaddr_ntoa(&env->dest), ntohs(iecho->seqno), *((uint8_t *)p->payload + 8), (sys_now() - find_hdr->send_time));
 
                 utils_memp_free(env->pool, find_hdr);
                 env->node_num--;
+                env->ping_time = sys_now() - find_hdr->send_time;
                 pbuf_free(p);
                 return 1; /* eat the packet */
             }
@@ -177,6 +148,7 @@ static void ping_send(struct ping_var *env)
         utils_list_push_back(&env->req_list, (struct utils_list_hdr*)time_hdr);
         env->node_num++;
         env->requests_count++;
+        env->ping_time = 0;
     }
 
 clean:

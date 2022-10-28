@@ -28,11 +28,8 @@ COMPONENT_SRCS := src/utils_hex.c \
                   src/utils_memp.c \
                   src/utils_tlv_bl.c \
                   src/utils_base64.c \
-                  src/utils_bitmap_window.c \
-                  src/utils_sha256.c \
                   src/test/test_utils_base64.c \
                   src/test/test_utils_ringblk.c \
-                  src/test/test_utils_bitmap_window.c \
                   #src/utils_hmac_sha1_fast.c \
                   #src/utils_psk_fast.c \
 
@@ -53,15 +50,8 @@ COMPONENT_SRCS := src/utils_hex.c \
                   src/utils_string.c \
                   src/utils_memp.c \
                   src/utils_tlv_bl.c \
-                  src/utils_sha256.c \
-                  src/utils_base64.c \
-
-ifeq ("$(CPU_ID)", "M0")
-COMPONENT_SRCS += src/utils_bitmap_window.c \
                   src/test/test_utils_ringblk.c \
-                  src/test/test_utils_bitmap_window.c \
 
-endif
 else
 COMPONENT_SRCS := src/utils_hex.c \
                   src/utils_crc.c \
@@ -82,10 +72,8 @@ COMPONENT_SRCS := src/utils_hex.c \
                   src/utils_memp.c \
                   src/utils_tlv_bl.c \
                   src/utils_base64.c \
-                  src/utils_bitmap_window.c \
                   src/test/test_utils_base64.c \
                   src/test/test_utils_ringblk.c \
-                  src/test/test_utils_bitmap_window.c \
 
 endif
 endif

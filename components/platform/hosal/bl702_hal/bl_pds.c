@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include "bl_pds.h"
 #include "bl_irq.h"
 #include "bl_flash.h"
@@ -76,7 +47,7 @@ static const PDS_DEFAULT_LV_CFG_Type pdsCfgLevel0 = {
         .pdsRstSocEn             = 0,
         .pdsRC32mOn              = 0,
         .pdsLdoVselEn            = 0,
-        .pdsRamLowPowerWithClkEn = 0,
+        .pdsRamLowPowerWithClkEn = 1,
         .cpu0WfiMask             = 0,
         .ldo11Off                = 1,
         .pdsForceRamClkEn        = 0,
@@ -165,7 +136,7 @@ static const PDS_DEFAULT_LV_CFG_Type pdsCfgLevel1 = {
         .pdsRstSocEn             = 0,
         .pdsRC32mOn              = 0,
         .pdsLdoVselEn            = 0,
-        .pdsRamLowPowerWithClkEn = 0,
+        .pdsRamLowPowerWithClkEn = 1,
         .cpu0WfiMask             = 0,
         .ldo11Off                = 1,
         .pdsForceRamClkEn        = 0,
@@ -254,7 +225,7 @@ static const PDS_DEFAULT_LV_CFG_Type pdsCfgLevel2 = {
         .pdsRstSocEn             = 0,
         .pdsRC32mOn              = 0,
         .pdsLdoVselEn            = 0,
-        .pdsRamLowPowerWithClkEn = 0,
+        .pdsRamLowPowerWithClkEn = 1,
         .cpu0WfiMask             = 0,
         .ldo11Off                = 1,
         .pdsForceRamClkEn        = 0,
@@ -343,7 +314,7 @@ static const PDS_DEFAULT_LV_CFG_Type pdsCfgLevel3 = {
         .pdsRstSocEn             = 0,
         .pdsRC32mOn              = 0,
         .pdsLdoVselEn            = 0,
-        .pdsRamLowPowerWithClkEn = 0,
+        .pdsRamLowPowerWithClkEn = 1,
         .cpu0WfiMask             = 0,
         .ldo11Off                = 1,
         .pdsForceRamClkEn        = 0,
@@ -432,7 +403,7 @@ static const PDS_DEFAULT_LV_CFG_Type pdsCfgLevel4 = {
         .pdsRstSocEn             = 0,
         .pdsRC32mOn              = 0,
         .pdsLdoVselEn            = 0,
-        .pdsRamLowPowerWithClkEn = 0,
+        .pdsRamLowPowerWithClkEn = 1,
         .cpu0WfiMask             = 0,
         .ldo11Off                = 1,
         .pdsForceRamClkEn        = 0,
@@ -521,7 +492,7 @@ static const PDS_DEFAULT_LV_CFG_Type pdsCfgLevel5 = {
         .pdsRstSocEn             = 0,
         .pdsRC32mOn              = 0,
         .pdsLdoVselEn            = 0,
-        .pdsRamLowPowerWithClkEn = 0,
+        .pdsRamLowPowerWithClkEn = 1,
         .cpu0WfiMask             = 0,
         .ldo11Off                = 1,
         .pdsForceRamClkEn        = 0,
@@ -610,7 +581,7 @@ static const PDS_DEFAULT_LV_CFG_Type pdsCfgLevel6 = {
         .pdsRstSocEn             = 0,
         .pdsRC32mOn              = 0,
         .pdsLdoVselEn            = 0,
-        .pdsRamLowPowerWithClkEn = 0,
+        .pdsRamLowPowerWithClkEn = 1,
         .cpu0WfiMask             = 0,
         .ldo11Off                = 1,
         .pdsForceRamClkEn        = 0,
@@ -699,7 +670,7 @@ static const PDS_DEFAULT_LV_CFG_Type pdsCfgLevel7 = {
         .pdsRstSocEn             = 0,
         .pdsRC32mOn              = 0,
         .pdsLdoVselEn            = 0,
-        .pdsRamLowPowerWithClkEn = 0,
+        .pdsRamLowPowerWithClkEn = 1,
         .cpu0WfiMask             = 0,
         .ldo11Off                = 1,
         .pdsForceRamClkEn        = 0,
@@ -891,12 +862,6 @@ static uint8_t wakeupEvent = 0;
 /* Wakeup Pin, will get according to wakeup event */
 static uint32_t wakeupPin = 0;
 
-/* Backup 0x4202DFF4, which will be overwritten by bootrom */
-static uint32_t patchBootrom = 0;
-
-/* Flag whether cpu registers are stored or not */
-static uint8_t cpuRegStored = 0;
-
 
 static void bl_pds_set_sf_ctrl(SPI_Flash_Cfg_Type *pFlashCfg)
 {
@@ -929,7 +894,6 @@ static void bl_pds_set_sf_ctrl(SPI_Flash_Cfg_Type *pFlashCfg)
 
 static void bl_pds_xtal_cfg(void)
 {
-#if 0
     uint32_t tmpVal;
     
     // optimize xtal ready time
@@ -951,7 +915,6 @@ static void bl_pds_xtal_cfg(void)
     tmpVal = BL_SET_REG_BITS_VAL(tmpVal, AON_XTAL_RDY_INT_SEL_AON, 0);
     tmpVal = BL_SET_REG_BITS_VAL(tmpVal, AON_XTAL_INN_CFG_EN_AON, 1);
     BL_WR_REG(AON_BASE, AON_TSEN, tmpVal);
-#endif
 #endif
 }
 
@@ -1088,7 +1051,6 @@ void bl_pds_gpio_wakeup_cfg_ex(uint32_t bitmap)
             GLB_GPIO_Init(&gpioCfg);
             
             GLB_Set_GPIO_IntMod(pin, GLB_GPIO_INT_CONTROL_ASYNC, GLB_GPIO_INT_TRIG_NEG_PULSE);
-            GLB_GPIO_IntClear(pin, SET);
             GLB_GPIO_IntMask(pin, UNMASK);
         }else{
             GLB_GPIO_IntMask(pin, MASK);
@@ -1121,9 +1083,6 @@ static void ATTR_PDS_SECTION bl_pds_restore_flash(SPI_Flash_Cfg_Type *pFlashCfg)
     *(volatile uint32_t *)0x4000E030 = 0;
     
     RomDriver_SF_Cfg_Init_Flash_Gpio((devInfo.flash_cfg<<2)|devInfo.sf_swap_cfg, 1);
-    
-    *(volatile uint32_t *)0x40000130 |= (1U << 16);  // enable GPIO25 input
-    *(volatile uint32_t *)0x40000134 |= (1U << 16);  // enable GPIO27 input
     
     RomDriver_SFlash_Init(&sfCtrlCfg);
     
@@ -1397,25 +1356,6 @@ static void ATTR_PDS_SECTION bl_pds_fastboot_entry(void)
     // Restore EM select
     BL_WR_REG(GLB_BASE, GLB_SEAM_MISC, emSel);
     
-    // Restore 0x4202DFF4, which will be overwritten by bootrom
-    *(volatile uint32_t *)0x4202DFF4 = patchBootrom;
-    
-    // Disable global interrupt
-    __disable_irq();
-    
-    // Set interrupt vector
-    extern void freertos_risc_v_trap_handler(void);
-    write_csr(mtvec, &freertos_risc_v_trap_handler);
-    
-    // Set cpuRegStored flag
-    cpuRegStored = 1;
-    
-    // Call user callback
-    bl_pds_fastboot_done_callback();
-    
-    // Clear cpuRegStored flag
-    cpuRegStored = 0;
-    
     // Restore cpu registers
     bl_pds_restore_cpu_reg();
 }
@@ -1498,8 +1438,7 @@ static int ATTR_NOINLINE ATTR_PDS_SECTION bl_pds_pre_process_1(uint32_t pdsLevel
     if(pdsLevel >= 4 && HBN_Get_Status_Flag() != HBN_STATUS_ENTER_FLAG){
         HBN_Set_Wakeup_Addr((uint32_t)bl_pds_fastboot_entry);
         HBN_Set_Status_Flag(HBN_STATUS_ENTER_FLAG);
-        patchBootrom = *(volatile uint32_t *)0x4202DFF4;
-        *store = !cpuRegStored;
+        *store = 1;
     }else{
         *store = 0;
     }
@@ -1703,9 +1642,4 @@ int bl_pds_get_wakeup_source(void)
 uint32_t bl_pds_get_wakeup_gpio(void)
 {
     return wakeupPin;
-}
-
-__attribute__((weak)) void ATTR_PDS_SECTION bl_pds_fastboot_done_callback(void)
-{
-    
 }

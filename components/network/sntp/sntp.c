@@ -283,6 +283,9 @@ sntp_format_time(s32_t sec)
 }
 #endif /* LWIP_DEBUG && !sntp_format_time */
 static uint32_t ntp_sec, ntp_frag, time_obtained;
+static uint32_t ntp_update_delay = SNTP_UPDATE_DELAY;
+typedef void (*ntp_sync_cb)(void);
+static ntp_sync_cb ntp_time_sync_cb = NULL;
 
 /**
  * SNTP processing of received timestamp
@@ -335,7 +338,9 @@ sntp_process(const struct sntp_timestamps *timestamps)
   ntp_sec = sec + DIFF_SEC_1970_2036;
   ntp_frag = frac;
   time_obtained = xTaskGetTickCount();
-  bl_sys_time_update(((uint64_t)ntp_sec) * 1000 + SNTP_FRAC_TO_US(ntp_frag) / 1000);
+  if (ntp_time_sync_cb)
+    ntp_time_sync_cb();
+  bl_sys_time_update(((uint64_t)ntp_sec) * 1000 + ntp_frag / 1000);
   taskEXIT_CRITICAL();
 
   LWIP_UNUSED_ARG(frac); /* might be unused if only seconds are set */
@@ -532,7 +537,8 @@ sntp_recv(void *arg, struct udp_pcb *pcb, struct pbuf *p, const ip_addr_t *addr,
       /* Correct response, reset retry timeout */
       SNTP_RESET_RETRY_TIMEOUT();
 
-      sntp_update_delay = (u32_t)SNTP_UPDATE_DELAY;
+      //sntp_update_delay = (u32_t)SNTP_UPDATE_DELAY;
+      sntp_update_delay = ntp_update_delay;
       sys_timeout(sntp_update_delay, sntp_request, NULL);
       LWIP_DEBUGF(SNTP_DEBUG_STATE, ("sntp_recv: Scheduled next time request: %"U32_F" ms\n",
                                      sntp_update_delay));
@@ -909,5 +915,15 @@ sntp_getservername(u8_t idx)
   return NULL;
 }
 #endif /* SNTP_SERVER_DNS */
+
+void sntp_settimesynccb(ntp_sync_cb cb)
+{
+    ntp_time_sync_cb = cb;
+}
+
+void sntp_setupdatedelay(uint32_t delay)
+{
+    ntp_update_delay = delay*1000;
+}
 
 #endif /* LWIP_UDP */

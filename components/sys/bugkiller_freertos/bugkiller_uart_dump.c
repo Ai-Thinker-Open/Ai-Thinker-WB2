@@ -1,43 +1,6 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <stdio.h>
-
-#ifdef BL602
 #include "bl602.h"
-#elif defined BL808
-#include "bl808.h"
-#include "bl808_common.h"
-#elif defined BL616
-#include "common.h"
-#endif
-
+#include "bugkiller_uart_dump.h"
 #include "uart_reg.h"
 void uart_dump_printf(uint32_t addr);
 
@@ -141,14 +104,12 @@ void uart_dump_printf(uint32_t addr)
     if(BL_GET_REG_BITS_VAL(tmpVal,UART_CR_URX_END_EN)){
         printf("Interrupt enable of urx_end_int\r\n");
     }
-#ifdef BL602
     if(BL_GET_REG_BITS_VAL(tmpVal,UART_CR_UTX_FIFO_EN)){
         printf("Interrupt enable of utx_fifo_int\r\n");
     }
     if(BL_GET_REG_BITS_VAL(tmpVal,UART_CR_URX_FIFO_EN)){
         printf("Interrupt enable of urx_fifo_int\r\n");
     }
-#endif
     if(BL_GET_REG_BITS_VAL(tmpVal,UART_CR_URX_RTO_EN)){
         printf("Interrupt enable of urx_rto_int\r\n");
     }
@@ -170,14 +131,12 @@ void uart_dump_printf(uint32_t addr)
     if(BL_GET_REG_BITS_VAL(tmpVal,UART_URX_END_INT)){
         printf("UART RX transfer end interrupt (set according to cr_urx_len)\r\n");
     }
-#ifdef BL602
     if(BL_GET_REG_BITS_VAL(tmpVal,UART_UTX_FIFO_INT)){
         printf("UART TX FIFO ready (tx_fifo_cnt > tx_fifo_th) interrupt, auto-cleared when data is pushed\r\n");
     }
     if(BL_GET_REG_BITS_VAL(tmpVal,UART_URX_FIFO_INT)){
         printf("UART RX FIFO ready (rx_fifo_cnt > rx_fifo_th) interrupt, auto-cleared when data is popped\r\n");
     }
-#endif
     if(BL_GET_REG_BITS_VAL(tmpVal,UART_URX_RTO_INT)){
         printf("UART RX Time-out interrupt\r\n");
     }

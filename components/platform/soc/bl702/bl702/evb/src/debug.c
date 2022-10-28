@@ -480,7 +480,6 @@ int vsnprintf(char *buffer, size_t n, const char *format, va_list ap)
 	const char *p = format;
 	char ch;
 	char *q = buffer;
-	char *tmp = NULL;
 	size_t o = 0;		/* Number of characters output */
 	uintmax_t val = 0;
 	int rank = rank_int;	/* Default rank */
@@ -784,10 +783,8 @@ int vsnprintf(char *buffer, size_t n, const char *format, va_list ap)
 					break;
 				case 'f':
 					{
-					    tmp = q;
-					    q = flt(q, va_arg(ap, double), width, prec, ch, SIGN);
-					    o += q - tmp;
-					    continue;
+						q = flt(q, va_arg(ap, double), width, prec, ch, SIGN);
+        		continue;
 					}
 
 				default:	/* Anything else, including % */

@@ -54,4 +54,4 @@ int audio_start(uint8_t reason, uint8_t stream);
 int audio_stop(uint8_t reason);
 int audio_transfer(uint8_t *buf, uint16_t len);
 
-#endif 
+#endif

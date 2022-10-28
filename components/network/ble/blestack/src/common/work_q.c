@@ -41,10 +41,10 @@ void handle_work_queue(void)
 {
     struct k_work *work;
     work = k_fifo_get(&g_work_queue_main.fifo, K_NO_WAIT);
-    
+
     if (atomic_test_and_clear_bit(work->flags, K_WORK_STATE_PENDING)) {
         work->handler(work);
-    }  
+    }
 }
 #else
 static void work_queue_main(void *p1)

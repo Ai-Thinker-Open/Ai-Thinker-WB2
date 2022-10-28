@@ -31,6 +31,7 @@ typedef struct vfs_uart_dev {
     void         *taskhdl;
     uint8_t      read_block_flag;
     void         *priv;
+    uint32_t     read_timeout_ms;
 } vfs_uart_dev_t;
 
 /* uart driver struct */
@@ -179,12 +180,19 @@ ssize_t vfs_uart_read(file_t *fp, void *buf, size_t nbytes)
             ret = 0;
 
             /* block */
-            timeout = (UART_READ_CFG_BLOCK == uart_dev->read_block_flag) ? AOS_WAIT_FOREVER : 0;
+            if (UART_READ_CFG_BLOCK == uart_dev->read_block_flag) {
+                if (uart_dev->read_timeout_ms == 0)
+                    timeout = AOS_WAIT_FOREVER;
+                else
+                    timeout = uart_dev->read_timeout_ms;
+            }
+            else
+                timeout = 0;
 
             while (1) {
                 ret += xStreamBufferReceive(uart_dev->rx_ringbuf_handle,
                                             buf + ret, nbytes - ret, timeout);
-                if ((ret == nbytes) || (timeout == 0)) {
+                if ((ret == nbytes) || (timeout != AOS_WAIT_FOREVER)) {
                     break;
                 }
             }
@@ -355,6 +363,7 @@ int vfs_uart_ioctl(file_t *fp, int cmd, unsigned long arg)
         case IOCTL_UART_IOC_READ_BLOCK:
         {
             uart_dev->read_block_flag = UART_READ_CFG_BLOCK;
+            uart_dev->read_timeout_ms = (uint32_t)arg;
         }
         break;
         case IOCTL_UART_IOC_READ_NOBLOCK:
