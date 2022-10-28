@@ -50,4 +50,12 @@ Access the IP address of the module through the browser of the PC or other devic
 打开浏览器，访问模组的IP地址，模组将响应该请求，回复一个网页过来，效果如附件：（注意：访问该IP的设备需与模组在同一局域网下，即：连接同一个AP热点）
 ```
 
-![image-20221028111958357](C:\Users\Rita\AppData\Roaming\Typora\typora-user-images\image-20221028111958357.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5a6J5L-h5Y-v56eR5oqA,size_10#pic_center)
+![IP access](img/ip_access.png?x-oss-process=image/watermark,type_ZHJvaWRzYW5zZmFsbGJhY2s,shadow_50,text_Q1NETiBA5a6J5L-h5Y-v56eR5oqA,size_10#pic_center)
+
+
+## Troubleshooting
+```
+For any technical queries, please open an [issue](https://github.com/Ai-Thinker-Open/Ai-Thinker-WB2/issues) on GitHub. We will get back to you soon.
+
+若有任何问题，请在github中提交一个[issue](https://github.com/Ai-Thinker-Open/Ai-Thinker-WB2/issues)，我们会尽快回复。
+```

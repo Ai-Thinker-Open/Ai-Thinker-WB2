@@ -53,3 +53,9 @@ Open the serial port debugging assistant software,select the COM port of the dev
 打开“串口调试助手软件”，选择并打开开发板的COM口，最后按下复位键启动程序。
 ```
 
+## Troubleshooting
+```
+For any technical queries, please open an [issue](https://github.com/Ai-Thinker-Open/Ai-Thinker-WB2/issues) on GitHub. We will get back to you soon.
+
+若有任何问题，请在github中提交一个[issue](https://github.com/Ai-Thinker-Open/Ai-Thinker-WB2/issues)，我们会尽快回复。
+```
