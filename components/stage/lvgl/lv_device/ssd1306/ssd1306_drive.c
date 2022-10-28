@@ -17,6 +17,7 @@
 #include "ssd1306_drive.h"
 #include "lv_port_disp.h"
 
+
 #define OLED_IIC_FREQ_10K 10000
 #define OLED_IIC_FREQ_20K 20000
 #define OLED_IIC_FREQ_50K 50000
@@ -71,6 +72,8 @@
 
 // Charge Pump (pg.62)
 #define OLED_CMD_SET_CHARGE_PUMP            0x8D    // follow with 0x14
+
+
 
 static hosal_i2c_dev_t oled_iic_dev;
 
