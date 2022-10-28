@@ -11,7 +11,6 @@ COMPONENT_PRIV_INCLUDEDIRS :=./ basic default mono
 COMPONENT_SRCS := $(shell find -L ./ -name \*.c)
 
 
-
 COMPONENT_OBJS := $(patsubst %.c,%.o, $(COMPONENT_SRCS))
 
 COMPONENT_SRCDIRS := ./ basic default mono

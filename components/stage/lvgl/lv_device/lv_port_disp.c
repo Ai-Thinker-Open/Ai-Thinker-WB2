@@ -11,19 +11,20 @@
  *********************/
 #include "lv_port_disp.h"
 #include <stdbool.h>
-
+#include "ssd1306_drive.h"
+#include "blog.h"
  /*********************
   *      DEFINES
   *********************/
 #ifndef MY_DISP_HOR_RES
 #warning Please define or replace the macro MY_DISP_HOR_RES with the actual screen width, default value 320 is used for now.
-#define MY_DISP_HOR_RES    320
+#define MY_DISP_HOR_RES    128
 #endif
 
 #ifndef MY_DISP_VER_RES
 #warning Please define or replace the macro MY_DISP_HOR_RES with the actual screen height, default value 240 is used for now.
-#define MY_DISP_VER_RES    240
-#define LV_VER_RES_MAX     1
+#define MY_DISP_VER_RES    64
+#define LV_VER_RES_MAX     10
 #endif
 
 /**********************
@@ -50,7 +51,7 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
   /**********************
    *   GLOBAL FUNCTIONS
    **********************/
-
+static lv_disp_drv_t disp_drv;
 void lv_port_disp_init(void)
 {
     /*-------------------------
@@ -84,11 +85,13 @@ void lv_port_disp_init(void)
       */
 
       /* Example for 1) */
+                         /*A buffer for 10 rows*/
     static lv_disp_draw_buf_t draw_buf_dsc_1;
-    static lv_color_t buf_1[MY_DISP_HOR_RES * 10];                          /*A buffer for 10 rows*/
-    lv_disp_draw_buf_init(&draw_buf_dsc_1, buf_1, NULL, MY_DISP_HOR_RES * 10);   /*Initialize the display buffer*/
+    static lv_color_t buf_1[MY_DISP_HOR_RES * 8];
+    lv_disp_draw_buf_init(&draw_buf_dsc_1, buf_1, NULL, MY_DISP_HOR_RES * 8);   /*Initialize the display buffer*/
 
     /* Example for 2) */
+
     static lv_disp_draw_buf_t draw_buf_dsc_2;
     static lv_color_t buf_2_1[MY_DISP_HOR_RES * 10];                        /*A buffer for 10 rows*/
     static lv_color_t buf_2_2[MY_DISP_HOR_RES * 10];                        /*An other buffer for 10 rows*/
@@ -105,7 +108,7 @@ void lv_port_disp_init(void)
      * Register the display in LVGL
      *----------------------------------*/
 
-    static lv_disp_drv_t disp_drv;                         /*Descriptor of a display driver*/
+     /*Descriptor of a display driver*/
     lv_disp_drv_init(&disp_drv);                    /*Basic initialization*/
 
     /*Set up the functions to access to your display*/
@@ -130,6 +133,7 @@ void lv_port_disp_init(void)
 
      /*Finally register the driver*/
     lv_disp_drv_register(&disp_drv);
+
 }
 
 /**********************
@@ -140,6 +144,7 @@ void lv_port_disp_init(void)
 static void disp_init(void)
 {
     /*You code here*/
+    oled_i2c_driver_init(OLED_IIC_SCL, OLED_IIC_SDA);
 }
 
 volatile bool disp_flush_enabled = true;
@@ -168,17 +173,19 @@ static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_colo
 
         int32_t x;
         int32_t y;
+
         for (y = area->y1; y <= area->y2; y++) {
             for (x = area->x1; x <= area->x2; x++) {
                 /*Put a pixel to the display. For example:*/
                 /*put_px(x, y, *color_p)*/
+                oled_drive_set_pixels(x, y, color_p->full);
                 color_p++;
             }
         }
     }
-
     /*IMPORTANT!!!
      *Inform the graphics library that you are ready with the flushing*/
+    oled_refresh_screen();
     lv_disp_flush_ready(disp_drv);
 }
 
