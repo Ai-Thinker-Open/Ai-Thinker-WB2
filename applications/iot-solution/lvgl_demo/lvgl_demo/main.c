@@ -10,12 +10,11 @@
 #include "lv_port_disp.h"
 #include <hosal_timer.h>
 
-#include "oled_drive.h"
-
 static void timer_cb(void* arg)
 {
     lv_tick_inc(1);
 }
+
 
 void main(void)
 {
@@ -36,12 +35,10 @@ void main(void)
     hosal_timer_init(&lv_timer_dev);
     hosal_timer_start(&lv_timer_dev);
 
-
     lv_obj_t* label1 = lv_label_create(lv_scr_act());
-
     lv_label_set_text(label1, "Hello lvgl");
-    // lv_obj_center(label1);
     lv_obj_align(label1, LV_ALIGN_CENTER, 1, 1);
+
     while (1) {
         vTaskDelay(10/portTICK_PERIOD_MS);
         lv_timer_handler();
