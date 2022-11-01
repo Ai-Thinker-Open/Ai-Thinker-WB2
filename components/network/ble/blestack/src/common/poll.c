@@ -211,8 +211,8 @@ int k_poll(struct k_poll_event *events, int num_events, s32_t timeout)
         #else
         polling = polling_events(events, num_events, timeout, &last_registered);
         #endif
-        
-        if (polling == false) {   
+
+        if (polling == false) {
             goto exit;
         }
         #if (BFLB_BT_CO_THREAD)

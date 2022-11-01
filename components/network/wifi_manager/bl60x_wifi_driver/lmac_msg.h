@@ -1,32 +1,11 @@
 
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
+/**
+ ****************************************************************************************
  *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
+ * @file lmac_msg.h
+ * Copyright (C) Bouffalo Lab 2016-2018
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ ****************************************************************************************
  */
 
 
@@ -811,7 +790,8 @@ struct scanu_start_req
     bool no_cck;
     /// MISC flags
     uint32_t flags;
-    /// channel scan time
+
+    uint8_t scan_mode;
     uint32_t duration_scan;
 };
 
@@ -1048,8 +1028,6 @@ struct me_rc_set_rate_req
     u8_l sta_idx;
     /// Rate configuration to be set
     u16_l fixed_rate_cfg;
-    /// Force power table update
-    u16_l power_table_req;
 };
 
 
@@ -1171,6 +1149,23 @@ struct sm_disconnect_ind
     bool_l ft_over_ds;
 };
 
+/// Structure containing the parameters of the @ref SM_CONNECT_ABORT_REQ message.
+struct sm_connect_abort_req
+{
+    /// Index of the VIF.
+    uint8_t vif_idx;
+};
+
+/// Structure containing the parameters of the @ref SM_CONNECT_ABORT_CFM message.
+struct sm_connect_abort_cfm
+{
+    /// Status. If 0, it means that the disconnection procedure will be aborted and that
+    /// a subsequent @ref SM_DISCONNECT_IND message will be forwarded once the procedure is
+    /// completed.
+    /// If 1, it means that the scan procdure will be aborted.
+    uint8_t status;
+};
+
 struct
 {
     /// TASK 
@@ -1273,9 +1268,6 @@ struct apm_start_req
     /// AP Passphrase
     uint8_t phrase[MAX_PSK_PASS_PHRASE_LEN];
     uint8_t phrase_tail[1];
-    // Buf for storing IE
-    uint8_t bcn_buf_len;
-    uint8_t bcn_buf[64];
 };
 
 /// Structure containing the parameters of the @ref APM_START_CFM message.

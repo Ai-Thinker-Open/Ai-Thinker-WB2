@@ -1392,7 +1392,7 @@ int bt_conn_send_cb(struct bt_conn *conn, struct net_buf *buf,
         net_buf_put(&conn->tx_queue, buf);
 #if defined(BFLB_BLE)
         k_sem_give(&g_poll_sem);
-#endif    
+#endif
 #else//BFLB_BT_CO_THREAD
 
 	net_buf_put(&conn->tx_queue, buf);
@@ -1645,7 +1645,7 @@ void bt_conn_process_tx(struct bt_conn *conn)
     if(tx_buf)
         buf = tx_buf;
     else
-        buf = net_buf_get(&conn->tx_queue, K_NO_WAIT);    
+        buf = net_buf_get(&conn->tx_queue, K_NO_WAIT);
     #else
 	/* Get next ACL packet for connection */
 	buf = net_buf_get(&conn->tx_queue, K_NO_WAIT);

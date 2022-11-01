@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <bl_hbn.h>
 #include <bl_irq.h>
 #include <bl_flash.h>
@@ -53,10 +24,6 @@ typedef __PACKED_STRUCT
 
 #define FAST_BOOT_TEST             0
 #define TEST_GPIO                  22
-
-
-/* ACOMP Pin List */
-static const GLB_GPIO_Type acompPinList[8] = {8, 15, 17, 11, 12, 14, 7, 9};
 
 
 /* Cache Way Disable, will get from l1c register */
@@ -121,7 +88,6 @@ static void bl_hbn_set_sf_ctrl(SPI_Flash_Cfg_Type *pFlashCfg)
 
 static void bl_hbn_xtal_cfg(void)
 {
-#if 0
     uint32_t tmpVal;
     
     // optimize xtal ready time
@@ -143,7 +109,6 @@ static void bl_hbn_xtal_cfg(void)
     tmpVal = BL_SET_REG_BITS_VAL(tmpVal, AON_XTAL_RDY_INT_SEL_AON, 0);
     tmpVal = BL_SET_REG_BITS_VAL(tmpVal, AON_XTAL_INN_CFG_EN_AON, 1);
     BL_WR_REG(AON_BASE, AON_TSEN, tmpVal);
-#endif
 #endif
 }
 
@@ -231,49 +196,6 @@ void bl_hbn_gpio_wakeup_cfg(uint8_t pin_list[], uint8_t pin_num)
     }
 }
 
-void bl_hbn_acomp_wakeup_cfg(uint8_t acomp_id, uint8_t ch_sel, uint8_t edge_sel)
-{
-    AON_ACOMP_CFG_Type cfg = {
-        .muxEn = ENABLE,                                          /*!< ACOMP mux enable */
-        .posChanSel = ch_sel,                                     /*!< ACOMP positive channel select */
-        .negChanSel = AON_ACOMP_CHAN_0P3125VBAT,                  /*!< ACOMP negtive channel select */
-        .levelFactor = AON_ACOMP_LEVEL_FACTOR_1,                  /*!< ACOMP level select factor */
-        .biasProg = AON_ACOMP_BIAS_POWER_MODE1,                   /*!< ACOMP bias current control */
-        .hysteresisPosVolt = AON_ACOMP_HYSTERESIS_VOLT_50MV,      /*!< ACOMP hysteresis voltage for positive */
-        .hysteresisNegVolt = AON_ACOMP_HYSTERESIS_VOLT_50MV,      /*!< ACOMP hysteresis voltage for negtive */
-    };
-    
-    GLB_GPIO_Func_Init(GPIO_FUN_ANALOG, (GLB_GPIO_Type *)&acompPinList[ch_sel], 1);
-    
-    AON_ACOMP_Init((AON_ACOMP_ID_Type)acomp_id, &cfg);
-    AON_ACOMP_Enable((AON_ACOMP_ID_Type)acomp_id);
-    
-    if(edge_sel == HBN_ACOMP_EDGE_RISING){
-        if(acomp_id == 0){
-            HBN_Enable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
-            HBN_Disable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
-        }else{
-            HBN_Enable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
-            HBN_Disable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
-        }
-    }else if(edge_sel == HBN_ACOMP_EDGE_FALLING){
-        if(acomp_id == 0){
-            HBN_Disable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
-            HBN_Enable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
-        }else{
-            HBN_Disable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
-            HBN_Enable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
-        }
-    }else{
-        if(acomp_id == 0){
-            HBN_Enable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
-            HBN_Enable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
-        }else{
-            HBN_Enable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
-            HBN_Enable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
-        }
-    }
-}
 
 // must be placed in hbncode section
 static void ATTR_HBN_CODE_SECTION bl_hbn_restore_flash(SPI_Flash_Cfg_Type *pFlashCfg)
@@ -283,9 +205,6 @@ static void ATTR_HBN_CODE_SECTION bl_hbn_restore_flash(SPI_Flash_Cfg_Type *pFlas
     *(volatile uint32_t *)0x4000F02C &= ~((0x3F << 16) | (0x3F << 24));
     
     RomDriver_SF_Cfg_Init_Flash_Gpio((devInfo.flash_cfg<<2)|devInfo.sf_swap_cfg, 1);
-    
-    *(volatile uint32_t *)0x40000130 |= (1U << 16);  // enable GPIO25 input
-    *(volatile uint32_t *)0x40000134 |= (1U << 16);  // enable GPIO27 input
     
     RomDriver_SFlash_Init(&sfCtrlCfg);
     
@@ -622,7 +541,7 @@ void bl_hbn_enter_with_fastboot(uint32_t hbnSleepCycles)
     *(volatile uint32_t *)(AON_BASE + AON_RF_TOP_AON_OFFSET) &= ~(uint32_t)((1<<0)|(1<<1)|(1<<2));
 #endif
     
-    BL_WR_REG(HBN_BASE, HBN_IRQ_CLR, 0x0050001F);
+    BL_WR_REG(HBN_BASE, HBN_IRQ_CLR, 0x1F);
     
     if(hbnSleepCycles != 0){
         HBN_Get_RTC_Timer_Val(&valLow, &valHigh);
@@ -643,13 +562,9 @@ void bl_hbn_enter_with_fastboot(uint32_t hbnSleepCycles)
 
 int bl_hbn_get_wakeup_source(void)
 {
-    // irq_rtc is cleared in bootrom, so we assume wakeup by RTC if not wakeup by GPIO and ACOMP
+    // irq_rtc is cleared in bootrom, so we assume wakeup by RTC if not wakeup by GPIO
     if(hbnIrqStatus & 0x1F){
         return HBN_WAKEUP_BY_GPIO;
-    }else if(hbnIrqStatus & (1U << 20)){
-        return HBN_WAKEUP_BY_ACOMP0;
-    }else if(hbnIrqStatus & (1U << 22)){
-        return HBN_WAKEUP_BY_ACOMP1;
     }else{
         return HBN_WAKEUP_BY_RTC;
     }

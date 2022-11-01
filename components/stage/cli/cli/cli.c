@@ -1,31 +1,5 @@
 /*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Copyright (C) 2015-2017 Alibaba Group Holding Limited
  */
 
 #include <stdlib.h>
@@ -609,11 +583,6 @@ static int get_input(char *inbuf, unsigned int *bp, char *buffer_cb, int count)
     return 0;
 }
 
-__attribute__((weak)) void _extra_command(char *cmd_string)
-{
-
-}
-
 /* Print out a bad command string, including a hex
  * representation of non-printable characters.
  * Non-printable characters show as "\0xXX".
@@ -642,7 +611,7 @@ static void cli_main_input(char *buffer, int count)
             cli_history_input();
         }
 #endif
-        _extra_command(msg);
+
         ret = handle_input(msg);
         if (ret == 1) {
             print_bad_command(msg);
@@ -1033,7 +1002,7 @@ static void ls_cmd(char *buf, int len, int argc, char **argv)
     int env = 0;
 
     st = pvPortMalloc(sizeof(struct stat));
-    memset(st, 0, sizeof(struct stat));
+    memset(stat, 0, sizeof(struct stat));
     memset(path_name, 0, sizeof(path_name));
 
     if (argc == 2) {

@@ -1,32 +1,11 @@
 
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
+/**
+ ****************************************************************************************
  *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
+ * @file bl_rx.c
+ * Copyright (C) Bouffalo Lab 2016-2018
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ ****************************************************************************************
  */
 
 #include <stdio.h>
@@ -57,7 +36,6 @@ static void* cb_beacon_ind_env;
 static wifi_event_probe_resp_ind_cb_t cb_probe_resp_ind;
 static void* cb_probe_resp_ind_env;
 static wifi_event_pkt_cb_t cb_pkt;
-static wifi_event_pkt_cb_adv_t cb_pkt_adv;
 static void* cb_pkt_env;
 static wifi_event_rssi_cb_t cb_rssi;
 static void* cb_rssi_env;
@@ -88,7 +66,10 @@ static const struct reason_code sm_reason_list[] = {
     {WLAN_FW_DISCONNECT_BY_USER_WITH_DEAUTH, "user disconnect and send deauth"},
     {WLAN_FW_DISCONNECT_BY_USER_NO_DEAUTH, "user disconnect but no send deauth"},
     {WLAN_FW_DISCONNECT_BY_FW_PS_TX_NULLFRAME_FAILURE, "fw disconnect(tx nullframe failures)"},
-    {WLAN_FW_TRAFFIC_LOSS, "fw disconnect(traffic loss)"},
+    {WLAN_FW_CONNECT_ABORT_BY_USER_WITH_DEAUTH, "user connect abort and send deauth"},
+    {WLAN_FW_CONNECT_ABORT_BY_USER_NO_DEAUTH, "user connect abort without sending deauth"},
+    {WLAN_FW_CONNECT_ABORT_WHEN_JOINING_NETWORK, "user connect abort when joining network"},
+    {WLAN_FW_CONNECT_ABORT_WHEN_SCANNING, "user connect abort when scanning"},
 };
 
 static const struct reason_code apm_reason_list[] = {
@@ -180,22 +161,6 @@ int bl_rx_pkt_cb_register(void *env, wifi_event_pkt_cb_t cb)
 int bl_rx_pkt_cb_unregister(void *env)
 {
     cb_pkt = NULL;
-    cb_pkt_env = NULL;
-
-    return 0;
-}
-
-int bl_rx_pkt_adv_cb_register(void *env, wifi_event_pkt_cb_adv_t cb)
-{
-    cb_pkt_adv = cb;
-    cb_pkt_env = env;
-
-    return 0;
-}
-
-int bl_rx_pkt_adv_cb_unregister(void *env)
-{
-    cb_pkt_adv = NULL;
     cb_pkt_env = NULL;
 
     return 0;
@@ -435,7 +400,7 @@ static void _rx_handle_beacon(struct scanu_result_ind *ind, struct ieee80211_mgm
         ind_new.wps = 0;
     }
 
-    /* TODO: Only consider 2.4G and bgn mode 
+    /* TODO: Only consider 2.4G and bgn mode
      * (NO 5G and a/ac/ax) / (NO g-only and n-only difference)
      */
     #define MAC_ELTID_HT_CAPA                45
@@ -458,6 +423,7 @@ static void _rx_handle_beacon(struct scanu_result_ind *ind, struct ieee80211_mgm
         int parsed_wpa_ie_len = 0;
         int i;
         bool tkip = false, ccmp = false;
+        bool group_tkip = false, group_ccmp = false;
 
         #define MAC_ELTID_RSN_IEEE               48
         elmt_addr = mac_ie_find(var_part_addr, var_part_len, MAC_ELTID_RSN_IEEE);
@@ -499,12 +465,18 @@ static void _rx_handle_beacon(struct scanu_result_ind *ind, struct ieee80211_mgm
                 int cipher = ciphers[j];
                 if (cipher == WIFI_CIPHER_TYPE_TKIP) {
                     tkip = true;
+                    if (cipher == gc)
+                        group_tkip = true;
                 }
                 if (cipher == WIFI_CIPHER_TYPE_CCMP) {
                     ccmp = true;
+                    if (cipher == gc)
+                        group_ccmp = true;
                 }
                 if (cipher == WIFI_CIPHER_TYPE_TKIP_CCMP) {
                     tkip = ccmp = true;
+                    if (cipher == gc)
+                        group_tkip = group_ccmp = true;
                 }
             }
         }
@@ -513,6 +485,7 @@ static void _rx_handle_beacon(struct scanu_result_ind *ind, struct ieee80211_mgm
         } else if (parsed_wpa_ie_len == 0) {
             ind_new.auth = WIFI_EVENT_BEACON_IND_AUTH_WEP;
             ind_new.cipher = WIFI_EVENT_BEACON_IND_CIPHER_WEP;
+            ind_new.group_cipher = WIFI_EVENT_BEACON_IND_CIPHER_WEP;
         }
 
         if (ccmp) {
@@ -523,6 +496,15 @@ static void _rx_handle_beacon(struct scanu_result_ind *ind, struct ieee80211_mgm
         }
         if (tkip && ccmp) {
             ind_new.cipher = WIFI_EVENT_BEACON_IND_CIPHER_TKIP_AES;
+        }
+        if (group_ccmp) {
+            ind_new.group_cipher = WIFI_EVENT_BEACON_IND_CIPHER_AES;
+        }
+        if (group_tkip) {
+            ind_new.group_cipher = WIFI_EVENT_BEACON_IND_CIPHER_TKIP;
+        }
+        if (group_tkip && group_ccmp) {
+            ind_new.group_cipher = WIFI_EVENT_BEACON_IND_CIPHER_TKIP_AES;
         }
     } else {
         /*This is an open BSS*/
@@ -830,12 +812,9 @@ void bl_rx_e2a_handler(void *arg)
     wifi_hw.cmd_mgr.msgind(&wifi_hw.cmd_mgr, msg, msg_hdlrs[MSG_T(msg->id)][MSG_I(msg->id)]);
 }
 
-void bl_rx_pkt_cb(uint8_t *pkt, int len, void *pkt_wrap, bl_rx_info_t *info)
+void bl_rx_pkt_cb(uint8_t *pkt, int len)
 {
     if (cb_pkt) {
-        cb_pkt(cb_pkt_env, pkt, len, info);
-    }
-    if (cb_pkt_adv) {
-        cb_pkt_adv(cb_pkt_env, pkt_wrap, info);
+        cb_pkt(cb_pkt_env, pkt, len);
     }
 }

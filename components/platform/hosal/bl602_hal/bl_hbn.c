@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 
 #include <stdio.h>
 #include <stdint.h>
@@ -151,35 +122,44 @@ int bl_hbn_enter(hbn_type_t *hbn, uint32_t *time)
         .ldoLevel=HBN_LDO_LEVEL_1P10V,                        /*!< LDO level */
     };
 
-    if (hbn) {
+    /*if (hbn) {
         blog_info("hbn.buflen = %d\r\n", hbn->buflen);
         blog_info("hbn.active = %d\r\n", hbn->active);
         blog_buf(hbn->buf, hbn->buflen);
-    }
+    }*/
 
     cfg.sleepTime = (*time + 999) / 1000; 
-    if ((!hbn->buf) || ((hbn->buflen != 1) && (hbn->buflen != 2))) {
+   /* if ((!hbn->buf) || (hbn->buflen > 2)) {
         blog_error("not support arg.\r\n");
         return -1;
+    }*/
+
+    int i;
+    for (i=0; i<hbn->buflen; i++) {
+        if ((hbn->buf[i]&0x7F) == 7) {
+            cfg.gpioWakeupSrc |= HBN_WAKEUP_GPIO_7;
+            if (hbn->buf[i]&0x80)
+                cfg.gpioTrigType = HBN_GPIO_INT_TRIGGER_ASYNC_RISING_EDGE;
+        } else if ((hbn->buf[i]&0x7F) == 8) {
+            cfg.gpioWakeupSrc |= HBN_WAKEUP_GPIO_8;
+            if (hbn->buf[i]&0x80)
+                cfg.gpioTrigType=HBN_GPIO_INT_TRIGGER_ASYNC_RISING_EDGE;
+        } else if (hbn->buf[i] == 0xFF) {
+            ;
+        } else {
+            printf("invalid arg.\r\n");
+            return -1;
+        }
     }
 
-    if ((hbn->buflen == 1) && ((hbn->buf[0] == 7) || (hbn->buf[0] == 8))) {
-        if (hbn->buf[0] == 7) {
-            blog_info("hbn gpio7.\r\n");
-            cfg.gpioWakeupSrc=HBN_WAKEUP_GPIO_7;
-        } else {
-            blog_info("hbn gpio8.\r\n");
-            cfg.gpioWakeupSrc=HBN_WAKEUP_GPIO_8;
+    if (hbn->buflen > 0) {
+        printf("hbn");
+        for (i=0; i<hbn->buflen; i++) {
+            printf(" gpio%d", hbn->buf[i]);
         }
-    } else if (((hbn->buflen == 2) && (hbn->buf[0] == 7) && (hbn->buf[1] == 8)) ||
-               ((hbn->buflen == 2) && (hbn->buf[0] == 8) && (hbn->buf[1] == 7))
-              ) {
-        blog_info("hbn gpio_all.\r\n");
-        cfg.gpioWakeupSrc=HBN_WAKEUP_GPIO_ALL;
-    } else {
-        blog_error("invalid arg.\r\n");
-        return -1;
+        printf(".\r\n");
     }
+
     cfg.flashCfg = bl_flash_get_flashCfg();
 
     HBN_Clear_IRQ(HBN_INT_GPIO7);

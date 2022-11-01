@@ -22,6 +22,7 @@ COMPONENT_SRCS := bl702_hal/bl_uart.c \
                   bl702_hal/bl_flash.c \
                   bl702_hal/bl_pwm.c \
                   bl702_hal/bl_sec_aes.c \
+                  bl702_hal/bl_sec_sha.c \
                   bl702_hal/bl_wireless.c \
                   bl702_hal/bl_wdt.c \
                   bl702_hal/bl_emac.c \
@@ -51,7 +52,6 @@ COMPONENT_SRCS := bl702_hal/bl_uart.c \
                   bl702_hal/hal_hwtimer.c \
                   bl702_hal/hal_tcal.c \
                   bl702_hal/hal_button.c \
-                  sec_common/bl_sec_pka.c \
 
 ifeq ($(CONFIG_USE_CAMERA),1)
 COMPONENT_SRCS += bl702_hal/bl_cam.c
@@ -61,7 +61,7 @@ ifeq ($(CONFIG_USE_PSRAM),1)
 COMPONENT_SRCS +=  bl702_hal/bl_psram.c
 endif
 
-COMPONENT_SRCDIRS := bl702_hal sec_common
+COMPONENT_SRCDIRS := bl702_hal
 
 COMPONENT_OBJS := $(patsubst %.c,%.o, $(COMPONENT_SRCS))
 COMPONENT_OBJS := $(patsubst %.cpp,%.o, $(COMPONENT_OBJS))

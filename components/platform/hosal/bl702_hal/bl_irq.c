@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <stdint.h>
 #include <stdio.h>
 
@@ -105,7 +76,7 @@ void bl_irq_default(void)
     }
 }
 
-void (*handler_list[2][16 + 64])(void) = {
+static void (*handler_list[2][16 + 64])(void) = {
     
 };
 
@@ -404,9 +375,6 @@ void exception_entry(uint32_t mcause, uint32_t mepc, uint32_t mtval, uintptr_t *
     } else if ((mcause & 0x3ff) == EXCPT_STORE_MISALIGNED){
         misaligned_store_trap(regs, mcause, mepc);
     } else {
-        extern int bl_sys_wdt_rst_count_get();
-        printf("wdt reset count %d\r\n", bl_sys_wdt_rst_count_get());
-
         registerdump(tasksp);
         __dump_exception_code_str(mcause & 0xFFFF);
         backtrace_now((int (*)(const char *fmt, ...))printf, regs);
@@ -414,7 +382,8 @@ void exception_entry(uint32_t mcause, uint32_t mepc, uint32_t mtval, uintptr_t *
             /*Deap loop now*/
 #ifdef SYS_ENABLE_COREDUMP
             /* For stack check */
-            extern uintptr_t _sp_main;
+            extern uintptr_t _sp_main, _sp_base;
+
             /* XXX change sp to irq stack base */
             __asm__ volatile("add sp, x0, %0" ::"r"(&_sp_main));
             bl_coredump_run();
@@ -454,3 +423,4 @@ void bl_irq_restore(int flags)
                     : /* no output */
                     : "r"(flags));
 }
+

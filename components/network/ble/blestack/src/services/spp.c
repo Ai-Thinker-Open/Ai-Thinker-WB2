@@ -49,7 +49,7 @@ static int spp_write_data(struct bt_conn *conn,	const struct bt_gatt_attr *attr,
     return len;
 }
 
-/** 
+/**
  *@Dynamic spp service attribution list
  */
 static struct bt_gatt_attr svc1_attr[] = {
@@ -190,7 +190,7 @@ void bt_dyn_register_spp_srv(void)
 
     bt_gatts_add_char(++attr,BT_GATT_CHRC_NOTIFY);
     bt_gatts_add_desc(++attr);
-    
+
     bt_gatts_add_char(++attr,BT_GATT_CHRC_INDICATE);
     bt_gatts_add_desc(++attr);
 
@@ -214,4 +214,3 @@ void bt_dyn_unregister_spp_srv(void)
     bt_gatts_del_service(svc1_index);
     bt_gatts_del_service(svc2_index);
 }
-

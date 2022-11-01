@@ -1,33 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
-
 /**
 * iperf-liked network performance tool
 *
@@ -50,13 +20,7 @@
 
 #define IPERF_PORT_LOCAL    5002
 #define IPERF_PORT          5001
-#if defined(CFG_CHIP_BL808)
-#define IPERF_BUFSZ         (16 * 1300)
-#elif defined(CFG_CHIP_BL606P)
-#define IPERF_BUFSZ         (16 * 1300)
-#else
 #define IPERF_BUFSZ         (4 * 1300)
-#endif
 #define IPERF_BUFSZ_UDP     (1 * 1300)
 #define DEBUG_HEADER        "[NET] [IPC] "
 #define DEFAULT_HOST_IP     "192.168.11.1"
@@ -110,7 +74,7 @@ static void iperf_client_tcp(void *arg)
     char *host = (char*) arg;
     uint64_t bytes_transfered = 0;
 
-    char speed[64] = { 0 };
+    char speed[32] = { 0 };
     float f_min = 8000.0, f_max = 0.0;
 
     exit_flag = 0;
@@ -381,7 +345,7 @@ static void iperf_server_udp_recv_fn(void *arg, struct udp_pcb *pcb, struct pbuf
     const ip_addr_t *addr, u16_t port)
 {
     struct iperf_server_udp_ctx *ctx = (struct iperf_server_udp_ctx *)arg;
-    char speed[64] = { 0 };
+    char speed[32] = { 0 };
     UDP_datagram udp_header;
 
     // 接收数据，等待接收时间
@@ -410,7 +374,7 @@ static void iperf_server_udp_recv_fn(void *arg, struct udp_pcb *pcb, struct pbuf
         HTONL_PTR(&hdr->outorder_cnt, ctx->out_of_order_cnt);
         HTONL_PTR(&hdr->datagrams, ctx->datagram_cnt);
 
-        printf("iperf finish...\r\nreceive:%" PRId32 ",out of order:%" PRId32 "\r\n",
+        printf("iperf finish...\r\nreceive:%ld,out of order:%ld\r\n",
             ctx->datagram_cnt, ctx->out_of_order_cnt);
         udp_sendto(pcb, p, addr, port);
 
@@ -434,7 +398,7 @@ static void iperf_server_udp_recv_fn(void *arg, struct udp_pcb *pcb, struct pbuf
         if (ctx->f_max < f_now) {
             ctx->f_max = f_now;
         }
-        snprintf(speed, sizeof(speed), "%.4f(%.4f %.4f %.4f) Mbps, out of order: %" PRId32 ".\r\n",
+        snprintf(speed, sizeof(speed), "%.4f(%.4f %.4f %.4f) Mbps, out of order: %lu.\r\n",
                 f_now,
                 ctx->f_min,
                 f_avg,
@@ -539,7 +503,7 @@ static void iperf_server(void *arg)
     uint32_t tick0, tick1, tick2;
     int sock = -1, connected, bytes_received, recvlen;
     struct sockaddr_in server_addr, client_addr;
-    char speed[64] = { 0 };
+    char speed[32] = { 0 };
     char *host = (char*)arg;
     uint64_t bytes_transfered = 0;
     float f_min = 8000.0, f_max = 0.0;

@@ -206,8 +206,6 @@ void wpa_sta_connect(wifi_connect_parm_t *parm)
 #ifdef DEBUG_PRINT
     dump_connect_parm(parm);
 #endif
-    wpa_sm_set_state(WPA_AUTHENTICATING);
-
     wpa_set_parm_at_connect(parm);
     wpa_set_4way_handshake_timer();
 }
@@ -248,7 +246,6 @@ static void wpa_sta_disconnected_cb(uint8_t reason_code)
             break;
 #endif
         default:
-            wpa_sm_set_state(WPA_DISCONNECTED);
             wpa_clear_4way_handshake_timer();
             bl_wpa3_free_sae_data();
 #ifdef CONFIG_PMKSA_CACHE
@@ -281,7 +278,6 @@ static const struct wpa_funcs wpa_cb = {
 #ifdef CONFIG_WPA3_SAE
     .wpa3_build_sae_msg = wpa3_build_sae_msg,
     .wpa3_parse_sae_msg = wpa3_parse_sae_msg,
-    .wpa3_clear_sae     = bl_wpa3_free_sae_data,
 #else
     .wpa3_build_sae_msg = NULL,
     .wpa3_parse_sae_msg = NULL,

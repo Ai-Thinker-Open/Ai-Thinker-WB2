@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #ifndef __BL60x_FW_API_H__
 #define __BL60x_FW_API_H__
 
@@ -266,8 +237,6 @@ typedef enum wifi_fw_event_id
     MM_FORCE_IDLE_REQ,
     /// Message indicating that the switch to the scan channel is done
     MM_SCAN_CHANNEL_START_IND,
-    /// Message indicating that the scan can end early
-    MM_SCAN_CHANNEL_END_EARLY,
     /// Message indicating that the scan on the channel is finished
     MM_SCAN_CHANNEL_END_IND,
 
@@ -290,6 +259,10 @@ typedef enum wifi_fw_event_id
     SCAN_CANCEL_REQ,
     /// Cancel scan confirmation
     SCAN_CANCEL_CFM,
+
+    /// Abort scan request
+    SCAN_ABORT_REQ,
+    SCAN_ABORT_CFM,
 
     /*
      * Section of internal SCAN messages. No SCAN API messages should be defined below this point
@@ -407,6 +380,10 @@ typedef enum wifi_fw_event_id
     SM_DISCONNECT_IND,
     /// Timeout message for procedures requiring a response from peer
     SM_RSP_TIMEOUT_IND,
+    /// Request to cancel connect when connecting
+    SM_CONNECT_ABORT_REQ,
+    /// Confirmation of connect abort
+    SM_CONNECT_ABORT_CFM,
     /// MAX number of messages
     SM_MAX,
 } ke_msg_id_t;
@@ -439,7 +416,10 @@ typedef enum wifi_fw_event_id
 #define WLAN_FW_DISCONNECT_BY_USER_WITH_DEAUTH                   19
 #define WLAN_FW_DISCONNECT_BY_USER_NO_DEAUTH                     20
 #define WLAN_FW_DISCONNECT_BY_FW_PS_TX_NULLFRAME_FAILURE         21
-#define WLAN_FW_TRAFFIC_LOSS                                     22
+#define WLAN_FW_CONNECT_ABORT_BY_USER_WITH_DEAUTH                22
+#define WLAN_FW_CONNECT_ABORT_BY_USER_NO_DEAUTH                  23
+#define WLAN_FW_CONNECT_ABORT_WHEN_JOINING_NETWORK               24
+#define WLAN_FW_CONNECT_ABORT_WHEN_SCANNING                      25
 
 
 /*--------------------------------------------------------------------*/

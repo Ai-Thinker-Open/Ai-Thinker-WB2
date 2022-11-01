@@ -80,8 +80,11 @@ uint8_t discover_ongoing = BT_GATT_ITER_STOP;
 extern int bt_gatt_discover_continue(struct bt_conn *conn, struct bt_gatt_discover_params *params);
 #endif
 #endif /* CONFIG_BT_GATT_CLIENT */
-
+#if defined (CONFIG_BT_GAP_APPEARANCE_WRITABLE) || defined (CONFIG_BT_GAP_SERVER_CHAR_DYNAMIC)
+static u16_t gap_appearance = CONFIG_BT_DEVICE_APPEARANCE;
+#else
 static const u16_t gap_appearance = CONFIG_BT_DEVICE_APPEARANCE;
+#endif
 
 #if defined(CONFIG_BT_GATT_DYNAMIC_DB)
 static sys_slist_t db;
@@ -136,6 +139,22 @@ static ssize_t read_appearance(struct bt_conn *conn,
 	return bt_gatt_attr_read(conn, attr, buf, len, offset, &appearance,
 				 sizeof(appearance));
 }
+#if defined(CONFIG_BT_GAP_APPEARANCE_WRITABLE)
+static ssize_t write_appearance(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+			 void *buf, u16_t len, u16_t offset)
+{
+	if (offset) {
+		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+	}
+
+	if (len > sizeof(u16_t)) {
+		return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+	}
+
+	gap_appearance = (u16_t)buf;
+	return len;
+}
+#endif
 
 #if defined (CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS)
 /* This checks if the range entered is valid */
@@ -149,6 +168,56 @@ BUILD_ASSERT((CONFIG_BT_PERIPHERAL_PREF_MIN_INT == 0xffff) ||
 	     (CONFIG_BT_PERIPHERAL_PREF_MIN_INT <=
 	     CONFIG_BT_PERIPHERAL_PREF_MAX_INT));
 
+
+#if defined(CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS_WRITABLE) || defined(CONFIG_BT_GAP_SERVER_CHAR_DYNAMIC)
+struct ppcp{
+	u16_t min_int;
+	u16_t max_int;
+	u16_t latency;
+	u16_t timeout;
+} __packed;
+
+const struct ppcp null_ppcp = {0,0,0,0};
+struct ppcp global_ppcp = {0};
+
+static ssize_t read_ppcp(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+			 void *buf, u16_t len, u16_t offset)
+{
+	if(!memcmp(&global_ppcp,&null_ppcp,sizeof(null_ppcp))){
+		global_ppcp.min_int = sys_cpu_to_le16(CONFIG_BT_PERIPHERAL_PREF_MIN_INT);
+		global_ppcp.max_int = sys_cpu_to_le16(CONFIG_BT_PERIPHERAL_PREF_MAX_INT);
+		global_ppcp.latency = sys_cpu_to_le16(CONFIG_BT_PERIPHERAL_PREF_SLAVE_LATENCY);
+		global_ppcp.timeout = sys_cpu_to_le16(CONFIG_BT_PERIPHERAL_PREF_TIMEOUT);
+	}
+	return bt_gatt_attr_read(conn, attr, buf, len, offset, &global_ppcp,
+				 sizeof(struct ppcp));
+}
+
+static ssize_t write_ppcp(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+			 void *buf, u16_t len, u16_t offset)
+{
+	struct ppcp *set_ppcp = (struct ppcp *)buf;
+	if (offset) {
+		return BT_GATT_ERR(BT_ATT_ERR_INVALID_OFFSET);
+	}
+
+	if (len > sizeof(struct ppcp)) {
+		return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
+	}
+
+	if((set_ppcp->min_int > 3200 && set_ppcp->min_int < 0xffff) ||
+		(set_ppcp->max_int > 3200 && set_ppcp->max_int < 0xffff) ||
+		(set_ppcp->timeout > 3200 && set_ppcp->timeout < 0xffff) ||
+		(set_ppcp->min_int == 0xffff) ||
+		(set_ppcp->min_int <= set_ppcp->max_int)){
+		return BT_GATT_ERR(BT_ATT_ERR_VALUE_NOT_ALLOWED);
+	}
+
+	memcpy(&global_ppcp,set_ppcp,sizeof(struct ppcp));
+
+	return len;
+}
+#else
 static ssize_t read_ppcp(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 			 void *buf, u16_t len, u16_t offset)
 {
@@ -167,6 +236,7 @@ static ssize_t read_ppcp(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 	return bt_gatt_attr_read(conn, attr, buf, len, offset, &ppcp,
 				 sizeof(ppcp));
 }
+#endif
 #endif
 
 #if defined(CONFIG_BT_CENTRAL) && defined(CONFIG_BT_PRIVACY)
@@ -198,16 +268,27 @@ BT_GATT_SERVICE_DEFINE(_2_gap_svc,
 	BT_GATT_CHARACTERISTIC(BT_UUID_GAP_DEVICE_NAME, BT_GATT_CHRC_READ,
 			       BT_GATT_PERM_READ, read_name, NULL, NULL),
 #endif /* CONFIG_BT_DEVICE_NAME_GATT_WRITABLE */
+#if defined(CONFIG_BT_GAP_APPEARANCE_WRITABLE)
+	BT_GATT_CHARACTERISTIC(BT_UUID_GAP_APPEARANCE, BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
+			       BT_GATT_PERM_READ | BT_GATT_PERM_WRITE,
+			       read_appearance, write_appearance, NULL),
+#else
 	BT_GATT_CHARACTERISTIC(BT_UUID_GAP_APPEARANCE, BT_GATT_CHRC_READ,
 			       BT_GATT_PERM_READ, read_appearance, NULL, NULL),
+#endif
 #if defined(CONFIG_BT_CENTRAL) && defined(CONFIG_BT_PRIVACY)
 	BT_GATT_CHARACTERISTIC(BT_UUID_CENTRAL_ADDR_RES,
 			       BT_GATT_CHRC_READ, BT_GATT_PERM_READ,
 			       read_central_addr_res, NULL, NULL),
 #endif /* CONFIG_BT_CENTRAL && CONFIG_BT_PRIVACY */
 #if defined(CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS)
+#if defined(CONFIG_BT_GAP_PERIPHERAL_PREF_PARAMS_WRITABLE)
+	BT_GATT_CHARACTERISTIC(BT_UUID_GAP_PPCP, BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE,
+			       BT_GATT_PERM_READ | BT_GATT_PERM_WRITE, read_ppcp, write_ppcp, NULL),
+#else
 	BT_GATT_CHARACTERISTIC(BT_UUID_GAP_PPCP, BT_GATT_CHRC_READ,
 			       BT_GATT_PERM_READ, read_ppcp, NULL, NULL),
+#endif
 #endif
 #if defined(BFLB_BLE_DISABLE_STATIC_ATTR)
 };
@@ -5303,4 +5384,41 @@ int bt_gatts_del_service(uint16_t svc_id)
     return ret;
 }
 #endif
+#endif
+
+#if defined(CONFIG_BT_GAP_SERVER_CHAR_DYNAMIC)
+bool bt_gatt_gap_set_devname(const char *name)
+{
+	if (strlen(name) > CONFIG_BT_DEVICE_NAME_MAX) {
+		return false;
+	}
+	bt_set_name(name);
+
+	return true;
+}
+
+bool bt_gatt_gap_set_gap_appearance(uint16_t appearance)
+{
+	gap_appearance = appearance;
+
+	return true;
+}
+
+bool bt_gatt_gap_set_ppcp(uint16_t min_int, uint16_t max_int, uint16_t latency, uint16_t timeout)
+{
+	if((min_int > 3200 && min_int < 0xffff) ||
+	   (max_int > 3200 && max_int < 0xffff) ||
+	   (timeout > 3200 && timeout < 0xffff) ||
+	   (min_int == 0xffff) ||
+	   (min_int > max_int)){
+		return false;
+	}
+
+	global_ppcp.min_int = sys_cpu_to_le16(min_int);
+	global_ppcp.max_int = sys_cpu_to_le16(max_int);
+	global_ppcp.latency = sys_cpu_to_le16(latency);
+	global_ppcp.timeout = sys_cpu_to_le16(timeout);
+
+	return true;
+}
 #endif

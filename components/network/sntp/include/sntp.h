@@ -77,6 +77,10 @@ int sntp_get_time(uint32_t *seconds, uint32_t *frags);
 
 int sntp_cli_init(void);
 
+typedef void (*ntp_sync_cb)(void);
+void sntp_settimesynccb(ntp_sync_cb cb);
+void sntp_setupdatedelay(uint32_t delay);
+
 #ifdef __cplusplus
 }
 #endif

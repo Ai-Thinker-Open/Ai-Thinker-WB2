@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #ifndef __WIFI_MGMR_H__
 #define __WIFI_MGMR_H__
 #include <stdint.h>
@@ -37,13 +8,15 @@
 #include "bl_os_private.h"
 
 #define WIFI_MGMR_SCAN_ITEMS_MAX (50)
-#define WIFI_MGMR_PROFILES_MAX (1)
+#define WIFI_MGMR_PROFILES_MAX (2)
 #define WIFI_MGMR_MQ_MSG_SIZE (128 + 64 + 32)
-#define WIFI_MGMR_MQ_MSG_COUNT (1)
+#define WIFI_MGMR_MQ_MSG_COUNT (3)
 
 #define MAC_ADDR_LIST(m) (m)[0], (m)[1], (m)[2], (m)[3], (m)[4], (m)[5]
 #define WIFI_MGMR_CONNECT_PMF_CAPABLE_BIT       (1 << 0)
 #define WIFI_MGMR_CONNECT_PMF_REQUIRED_BIT      (1 << 1)
+
+#define WIFI_MGMR_STA_DISCONNECT_DELAY          (1000) //ms
 
 /**
  ****************************************************************************************
@@ -167,9 +140,7 @@ typedef struct wifi_mgmr_ap_msg {
     uint32_t ssid_len;
     char psk[64];
     char psk_tail[1];
-    uint8_t use_dhcp_server;
     uint32_t psk_len;
-    int8_t max_sta_supported;
 } wifi_mgmr_ap_msg_t;
 
 #pragma pack(pop)
@@ -222,6 +193,7 @@ typedef struct wifi_mgmr_scan_item {
     uint8_t cipher;
     uint8_t is_used;
     uint8_t wps;
+    uint8_t group_cipher;
 } wifi_mgmr_scan_item_t;
 
 struct wlan_netif {
@@ -246,12 +218,11 @@ struct wlan_netif {
 
 #define MAX_FIXED_CHANNELS_LIMIT (14)
 typedef struct wifi_mgmr_scan_params {
-    uint8_t bssid[6];
     uint16_t channel_num;
     uint16_t channels[MAX_FIXED_CHANNELS_LIMIT];
     struct mac_ssid ssid;
     uint8_t scan_mode;
-    uint32_t duration_scan;  
+    uint32_t duration_scan;
 } wifi_mgmr_scan_params_t;
 
 typedef struct wifi_mgmr_connect_ind_stat_info {
@@ -300,6 +271,9 @@ typedef struct wifi_mgmr {
     uint8_t ready;//TODO mgmr init process
     char country_code[3];
     uint8_t disable_autoreconnect;
+    uint16_t autoreconnect_num;
+    uint16_t autoreconnect_interval;
+    uint16_t autoreconnect_repeat_count;
     uint16_t ap_bcn_int;
     int channel_nums;
 
@@ -312,9 +286,11 @@ typedef struct wifi_mgmr {
 #define WIFI_MGMR_PENDING_TASK_SCAN_BIT      (1 << 0)
 #define WIFI_MGMR_PENDING_TASK_IP_UPDATE_BIT (1 << 1)
 #define WIFI_MGMR_PENDING_TASK_IP_GOT_BIT    (1 << 2)
+#define WIFI_MGMR_PENDING_TASK_CONNECT_BIT   (1 << 3)
             unsigned int scan       :   1;
             unsigned int ip_update  :   1;
             unsigned int ip_got     :   1;
+            unsigned int connect    :   1;
         } bits;
     } pending_task;
     /*Feature Bits*/
@@ -328,13 +304,13 @@ typedef struct wifi_mgmr {
 #define MAX_HOSTNAME_LEN_CHECK 32
     char hostname[MAX_HOSTNAME_LEN_CHECK];
     void *dns_server;
+#ifdef DEBUG_CONNECT_UNLIMIT
+    unsigned long connect_time;
+#endif
 } wifi_mgmr_t;
 
-/// Constant value corresponding to the Broadcast MAC address
-extern const struct mac_addr mac_addr_bcst;
 int wifi_mgmr_pending_task_set(uint32_t bits);
 int wifi_mgmr_event_notify(wifi_mgmr_msg_t *msg, int use_block);
-int wifi_mgmr_detailed_state_get_internal(int *state, int *state_d);
 int wifi_mgmr_state_get_internal(int *state);
 int wifi_mgmr_status_code_clean_internal(void);
 int wifi_mgmr_status_code_get_internal(int *s_code);
@@ -349,6 +325,7 @@ char *wifi_mgmr_auth_to_str(uint8_t auth);
 char *wifi_mgmr_cipher_to_str(uint8_t cipher);
 int wifi_mgmr_api_fw_tsen_reload(void);
 int wifi_mgmr_scan_beacon_save( wifi_mgmr_scan_item_t *scan );
+int wifi_mgmr_sta_state_get_internal(int *state);
 
 static inline int wifi_mgmr_scan_item_is_timeout(wifi_mgmr_t *mgmr, wifi_mgmr_scan_item_t *item)
 {

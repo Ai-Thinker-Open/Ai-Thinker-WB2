@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
@@ -65,8 +36,7 @@ uint32_t _$coredump_binary_id$_ __attribute__((used, section(".coredump_binary_i
 extern uintptr_t _sp_main, _sp_base;
 extern uint8_t _ld_ram_size1, _ld_ram_addr1;
 extern uint8_t _ld_ram_size2, _ld_ram_addr2;
-extern uint8_t _ld_ram_size3, _ld_ram_addr3;
-extern uint8_t _ld_ram_size4, _ld_ram_addr4;
+
 //#define DEBUG
 
 #ifdef DEBUG
@@ -125,6 +95,17 @@ static const dump_handler_t dump_handler_list[DUMP_TYPE_MAX] = {
     dump_wifi_reg_others,
 };
 
+static const struct reg_hdr {
+    uintptr_t start_addr;
+    uintptr_t end_addr;
+    unsigned int length;
+} reg_hdr[] = {
+    {(uintptr_t)0x24B00000, (unsigned int)0x24B0055C, 0x55c},
+    {(uintptr_t)0x24B08000, (unsigned int)0x24B08560, 0x560},
+    {(uintptr_t)0x24C00000, (unsigned int)0x24C0003C, 0x3c},
+    {(uintptr_t)0x24C00800, (unsigned int)0x24C008BC, 0xbc},
+};
+
 /* Define default ram dump list */
 static const struct mem_hdr {
   uintptr_t addr;
@@ -136,40 +117,20 @@ static const struct mem_hdr {
     {(uintptr_t)test_data, (unsigned int)sizeof(test_data), DUMP_BASE64_BYTE, "test_data_byte"},
     {(uintptr_t)test_data, (unsigned int)sizeof(test_data), DUMP_BASE64_WORD, "test_data_word"},
     {(uintptr_t) "asdasdasdasdasdsada", 0, DUMP_ASCII, "test_string"},
-#elif BL602
+#else
     {(uintptr_t)&_ld_ram_addr1, (unsigned int)&_ld_ram_size1, DUMP_BASE64_BYTE, "ram"},
     {(uintptr_t)&_ld_ram_addr2, (unsigned int)&_ld_ram_size2, DUMP_BASE64_BYTE, "wifi_ram"},
-    {(uintptr_t)0x24B00000, (unsigned int)0x55c, DUMP_BASE64_WORD, "0x24B00000-0x24B0055C"},
-    {(uintptr_t)0x24B08000, (unsigned int)0x560, DUMP_BASE64_WORD, "0x24B08000-0x24B08560"},
-    {(uintptr_t)0x24C00000, (unsigned int)0x3c, DUMP_BASE64_WORD, "0x24C00000-0x24C0003C"},
-    {(uintptr_t)0x24C00800, (unsigned int)0xbc, DUMP_BASE64_WORD, "0x24C00800-0x24C008BC"},
-    {(uintptr_t)0xf0000000, (unsigned int)0x20, DUMP_REG_OTHERS, "others_reg"},
-
-    {(uintptr_t)0x40000000, (unsigned int)0x318, DUMP_BASE64_WORD, "GLB_reg"},
-    {(uintptr_t)0x4000A100, (unsigned int)0x8F, DUMP_BASE64_WORD, "uart1_reg"},
-    {(uintptr_t)0x4000A420, (unsigned int)0x98, DUMP_BASE64_WORD, "pwm_reg"},
-    {(uintptr_t)0x4000E404, (unsigned int)0x04, DUMP_BASE64_WORD, "PDS_reg"},
-    {(uintptr_t)0x4000F030, (unsigned int)0x04, DUMP_BASE64_WORD, "HBN_reg"},
-#elif BL702
-    {(uintptr_t)&_ld_ram_addr1, (unsigned int)&_ld_ram_size1, DUMP_BASE64_BYTE, "tcm_ocram"},
-    {(uintptr_t)&_ld_ram_addr2, (unsigned int)&_ld_ram_size2, DUMP_BASE64_BYTE, "hbnram"},
-    {(uintptr_t)&_ld_ram_addr3, (unsigned int)&_ld_ram_size3, DUMP_BASE64_BYTE, "stack"},
-#elif BL702L
-    {(uintptr_t)&_ld_ram_addr1, (unsigned int)&_ld_ram_size1, DUMP_BASE64_BYTE, "tcm_ocram"},
-    {(uintptr_t)&_ld_ram_addr2, (unsigned int)&_ld_ram_size2, DUMP_BASE64_BYTE, "hbnram"},
-    {(uintptr_t)&_ld_ram_addr3, (unsigned int)&_ld_ram_size3, DUMP_BASE64_BYTE, "stack"},
-#elif BL808
-    {(uintptr_t)&_ld_ram_addr1, (unsigned int)&_ld_ram_size1, DUMP_BASE64_BYTE, "ram_psram"},
-    {(uintptr_t)&_ld_ram_addr2, (unsigned int)&_ld_ram_size2, DUMP_BASE64_BYTE, "ram_wifi"},
-    {(uintptr_t)&_ld_ram_addr3, (unsigned int)&_ld_ram_size3, DUMP_BASE64_BYTE, "ram_memory"},
-    {(uintptr_t)&_ld_ram_addr4, (unsigned int)&_ld_ram_size4, DUMP_BASE64_BYTE, "xram_memory"},
-#elif WB03
-    {(uintptr_t)&_ld_ram_addr1, (unsigned int)&_ld_ram_size1, DUMP_BASE64_BYTE, "ram_tcm"},
-    {(uintptr_t)&_ld_ram_addr2, (unsigned int)&_ld_ram_size2, DUMP_BASE64_BYTE, "ram_wifi"},
-#elif BL616
-    {(uintptr_t)&_ld_ram_addr1, (unsigned int)&_ld_ram_size1, DUMP_BASE64_BYTE, "ram_tcm"},
-    {(uintptr_t)&_ld_ram_addr2, (unsigned int)&_ld_ram_size2, DUMP_BASE64_BYTE, "ram_wifi"},
-    {(uintptr_t)&_ld_ram_addr3, (unsigned int)&_ld_ram_size3, DUMP_BASE64_BYTE, "ram_code"},
+    {(uintptr_t)0x24B00000, (unsigned int)reg_hdr[0].length, DUMP_BASE64_WORD, "dump 0x24B00000-0x24B0055C"},
+    {(uintptr_t)0x24B08000, (unsigned int)reg_hdr[1].length, DUMP_BASE64_WORD, "dump 0x24B08000-0x24B08560"},
+    {(uintptr_t)0x24C00000, (unsigned int)reg_hdr[2].length, DUMP_BASE64_WORD, "dump 0x24C00000-0x24C0003C"},
+    {(uintptr_t)0x24C00800, (unsigned int)reg_hdr[3].length, DUMP_BASE64_WORD, "dump 0x24C00800-0x24C008BC"},
+    {(uintptr_t)0xf0000000, (unsigned int)0x20, DUMP_REG_OTHERS, "dump others reg"},
+ 
+    {(uintptr_t)0x40000000, (unsigned int)0x318, DUMP_BASE64_WORD, "dump GLB reg"},
+    {(uintptr_t)0x4000A100, (unsigned int)0x8F, DUMP_BASE64_WORD, "dump uart1 reg"},
+    {(uintptr_t)0x4000A420, (unsigned int)0x98, DUMP_BASE64_WORD, "dump pwm reg"},
+    {(uintptr_t)0x4000E404, (unsigned int)0x04, DUMP_BASE64_WORD, "dump PDS reg"},
+    {(uintptr_t)0x4000F030, (unsigned int)0x04, DUMP_BASE64_WORD, "dump HBN reg"},
 #endif
 };
 

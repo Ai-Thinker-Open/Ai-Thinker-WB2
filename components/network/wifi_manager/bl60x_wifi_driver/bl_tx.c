@@ -1,31 +1,10 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
+/**
+ ****************************************************************************************
  *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
+ * @file bl_tx.c
+ * Copyright (C) Bouffalo Lab 2016-2018
  *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ ****************************************************************************************
  */
 
 #include <string.h>
@@ -45,64 +24,29 @@ int internel_cal_size_tx_hdr = sizeof(struct bl_txhdr);
 extern struct bl_hw wifi_hw;
 static struct bl_hw *bl_hw_static = &wifi_hw;
 
-#ifndef ARRAY_LEN
-#define ARRAY_LEN(a) (sizeof(a) / sizeof((a)[0]))
-#endif
-
-#if defined(CFG_CHIP_BL808) || defined(CFG_CHIP_BL606P)
 void bl_tx_push(struct bl_hw *bl_hw, struct bl_txhdr *txhdr)
 {
     volatile struct hostdesc *host;
     uint32_t* p = txhdr->p;
-    uint32_t len;
 
-    volatile struct txdesc_host *txdesc_host;
+    host = &(ipc_host_txdesc_get(bl_hw->ipc_env)->host);
+    ASSERT_ERR(host);//TODO protect when host is NULL
 
-    //host = &(ipc_host_txdesc_get(bl_hw->ipc_env)->host);
-    txdesc_host = ipc_host_txdesc_get(bl_hw->ipc_env);
-    ASSERT_ERR(txdesc_host);//TODO protect when host is NULL
-    host = &(txdesc_host->host);
-
-    memcpy((void *)host, &txhdr->host, sizeof(*host));
-
-    len = 0;
-    for (size_t i = 0; i < ARRAY_LEN(host->pbuf_chained_len); ++i) {
-        if (host->pbuf_chained_len[i] == 0) {
-            break;
+    {
+        u8 *src, *dst;
+        int i;
+        dst = (typeof(dst))host;
+        src = (typeof(src))&txhdr->host;
+        for (i = 0; i < sizeof(*host) / sizeof(*src); i++) {
+            *dst++ = *src++;
         }
-        memcpy((uint8_t *)txdesc_host->eth_packet + len, (void *)host->pbuf_chained_ptr[i], host->pbuf_chained_len[i]);
-        len += host->pbuf_chained_len[i];
-
-        host->pbuf_chained_ptr[i] = 0;
-        host->pbuf_chained_len[i] = 0;
     }
-    host->pbuf_chained_ptr[0] = (uint32_t)(&(txdesc_host->eth_packet[0]));
-    host->pbuf_chained_len[0] = len;
 
     ipc_host_txdesc_push(bl_hw->ipc_env, p);
 #ifdef CFG_BL_STATISTIC
     bl_hw->stats.cfm_balance++;
 #endif
 }
-#else
-void bl_tx_push(struct bl_hw *bl_hw, struct bl_txhdr *txhdr)
-{
-    volatile struct hostdesc *host;
-    uint32_t* p = txhdr->p;
-    volatile struct txdesc_host *txdesc_host;
-
-    txdesc_host = ipc_host_txdesc_get(bl_hw->ipc_env);
-    ASSERT_ERR(txdesc_host);//TODO protect when host is NULL
-    host = &(txdesc_host->host);
-
-    memcpy((void *)host, &txhdr->host, sizeof(*host));
-
-    ipc_host_txdesc_push(bl_hw->ipc_env, p);
-#ifdef CFG_BL_STATISTIC
-    bl_hw->stats.cfm_balance++;
-#endif
-}
-#endif
 
 #define TXHDR_HODLER_LEN (8)
 #define TXHDR_HODLER_MSK (0x7)
@@ -180,11 +124,6 @@ int bl_txdatacfm(void *pthis, void *host_id)
     return 0;
 }
 
-#if 0
-uint32_t drop_ack_now = 0;
-uint32_t droped_ack;
-#endif
-
 err_t bl_output(struct bl_hw *bl_hw, struct netif *netif, struct pbuf *p, int is_sta, struct bl_custom_tx_cfm *custom_cfm)
 {
     struct bl_txhdr *txhdr;
@@ -205,15 +144,6 @@ err_t bl_output(struct bl_hw *bl_hw, struct netif *netif, struct pbuf *p, int is
         bl_os_printf("[TX] wifi is down, return now\r\n");
         return ERR_CONN;
     }
-#if 0
-    if (drop_ack_now) {
-        drop_ack_now++;
-        if (drop_ack_now & 0x02) {
-            droped_ack++;
-            return ERR_OK;
-        }
-    }
-#endif
 
     bl_hw_static = bl_hw;
     packet_len = p->tot_len;

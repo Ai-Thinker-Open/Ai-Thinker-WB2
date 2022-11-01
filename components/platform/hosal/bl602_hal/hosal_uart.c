@@ -1,31 +1,8 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
+/**
+ * Copyright (c) 2016-2021 Bouffalolab Co., Ltd.
  *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * Contact information:
+ * web site:    https://www.bouffalolab.com/
  */
 
 #include <bl602_uart.h>
@@ -72,6 +49,41 @@ static void gpio_init(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pi
 
     GLB_UART_Fun_Sel(tx_pin%8, tx_sigfun);
     GLB_UART_Fun_Sel(rx_pin%8, rx_sigfun);
+}
+
+static void gpio_init_only_tx(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pin, uint8_t rts_pin)
+{
+    GLB_GPIO_Cfg_Type cfg;
+    GLB_UART_SIG_FUN_Type tx_sigfun, rx_sigfun;
+
+    cfg.drive = 1;
+    cfg.smtCtrl = 1;
+    cfg.gpioFun = 7;
+
+    // cfg.gpioPin = rx_pin;
+    // cfg.gpioMode = GPIO_MODE_AF;
+    // cfg.pullType = GPIO_PULL_UP;
+    // GLB_GPIO_Init(&cfg);
+
+    cfg.gpioPin = tx_pin;
+    cfg.gpioMode = GPIO_MODE_AF;
+    cfg.pullType = GPIO_PULL_UP;
+    GLB_GPIO_Init(&cfg);
+
+    /* select uart gpio function */
+    if (id == 0) {
+        tx_sigfun = GLB_UART_SIG_FUN_UART0_TXD;
+        rx_sigfun = GLB_UART_SIG_FUN_UART0_RXD;
+    } else {
+        tx_sigfun = GLB_UART_SIG_FUN_UART1_TXD;
+        rx_sigfun = GLB_UART_SIG_FUN_UART1_RXD;
+    }
+
+    // clk
+    //GLB_Set_UART_CLK(1, HBN_UART_CLK_160M, 0);
+
+    GLB_UART_Fun_Sel(tx_pin%8, tx_sigfun);
+    // GLB_UART_Fun_Sel(rx_pin%8, rx_sigfun);
 }
 
 static void __uart_rx_irq(void *p_arg)
@@ -246,6 +258,7 @@ static void __uart_config_set(hosal_uart_dev_t *uart, const hosal_uart_config_t 
 
     uartCfg.baudRate = cfg->baud_rate;
     uartCfg.dataBits = (UART_DataBits_Type)cfg->data_width;
+    uartCfg.stopBits = (UART_StopBits_Type)(cfg->stop_bits + 1);
     uartCfg.parity = (UART_Parity_Type)cfg->parity;
 
     if (cfg->flow_control == HOSAL_FLOW_CONTROL_CTS) {
@@ -431,6 +444,100 @@ int hosal_uart_init(hosal_uart_dev_t *uart)
 
     /* Enable uart */
     UART_Enable(id, UART_TXRX);
+    return 0;
+}
+
+int hosal_uart_init_only_tx(hosal_uart_dev_t *uart)
+{
+    static uint8_t uart_clk_init = 0;
+    const uint8_t uart_div = 3;
+    hosal_uart_config_t *cfg = &uart->config;
+    uint8_t id;
+
+    UART_CFG_Type uartCfg =
+    {
+        160*1000*1000,                                        /* UART clock */
+        115200,                                              /* UART Baudrate */
+        UART_DATABITS_8,                                     /* UART data bits length */
+        UART_STOPBITS_1,                                     /* UART data stop bits length */
+        UART_PARITY_NONE,                                    /* UART no parity */
+        DISABLE,                                             /* Disable auto flow control */
+        DISABLE,                                             /* Disable rx input de-glitch function */
+        DISABLE,                                             /* Disable RTS output SW control mode */
+        UART_LSB_FIRST                                       /* UART each data byte is send out LSB-first */
+    };
+    UART_FifoCfg_Type fifoCfg =
+    {
+        .txFifoDmaThreshold     = 0x10,
+        .rxFifoDmaThreshold     = 0x10,
+        .txFifoDmaEnable        = DISABLE,
+        .rxFifoDmaEnable        = DISABLE,
+    };
+
+    /* enable clk */
+    if (0 == uart_clk_init) {
+        GLB_Set_UART_CLK(1, HBN_UART_CLK_160M, uart_div);
+        uart_clk_init = 1;
+    }
+
+    uart->dma_rx_chan = -1;
+    uart->dma_tx_chan = -1;
+    id = cfg->uart_id;
+    uart->port = cfg->uart_id;
+
+    /* gpio init only tx */
+    gpio_init_only_tx(id, cfg->tx_pin, cfg->rx_pin, cfg->cts_pin, cfg->rts_pin);
+
+    uartCfg.baudRate = cfg->baud_rate;
+    uartCfg.dataBits = (UART_DataBits_Type)cfg->data_width;
+    uartCfg.parity = (UART_Parity_Type)cfg->parity;
+
+    if (cfg->flow_control == HOSAL_FLOW_CONTROL_CTS) {
+    	uartCfg.ctsFlowControl = 1;
+    	uartCfg.rtsSoftwareControl = 0;
+    } else if (cfg->flow_control == HOSAL_FLOW_CONTROL_RTS) {
+    	uartCfg.ctsFlowControl = 0;
+    	uartCfg.rtsSoftwareControl = 1;
+    } else if (cfg->flow_control == HOSAL_FLOW_CONTROL_CTS_RTS) {
+    	uartCfg.ctsFlowControl = 1;
+    	uartCfg.rtsSoftwareControl = 1;
+    } else {
+    	uartCfg.ctsFlowControl = 0;
+    	uartCfg.rtsSoftwareControl = 0;
+    }
+
+    uartCfg.uartClk = (160 * 1000 * 1000) / (uart_div + 1);
+
+    /* Disable all interrupt */
+    UART_IntMask(id, UART_INT_ALL, MASK);
+
+    /* Disable uart before config */
+    UART_Disable(id, UART_TXRX);
+    
+    if (UART_GetRxBusBusyStatus(id) == SET) {
+        UART_DeInit(id);
+    }
+
+    /* UART init */
+    UART_Init(id, &uartCfg);
+
+    /* Enable tx free run mode */
+    UART_TxFreeRun(id, ENABLE);
+
+    /* FIFO Config*/
+    UART_FifoConfig(id, &fifoCfg);
+
+    if (cfg->mode == HOSAL_UART_MODE_INT) {
+    	bl_uart_int_tx_notify_register(uart->port, __uart_tx_irq, uart);
+    	bl_uart_int_rx_notify_register(uart->port, __uart_rx_irq, uart);
+    	bl_uart_int_enable(uart->port);
+    	bl_uart_int_tx_disable(uart->port);
+    } else {
+    	bl_uart_int_disable(uart->port);
+    }
+
+    /* Enable uart */
+    UART_Enable(id, UART_TX);
     return 0;
 }
 

@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <string.h>
 #include <ethernetif.h>
 #include <netif/etharp.h>
@@ -37,7 +8,6 @@
 #endif
 
 #include <bl_wifi.h>
-#include <wifi_pkt_hooks.h>
 
 #include "bl_defs.h"
 #include "bl_tx.h"
@@ -60,27 +30,27 @@
 #else
 #define NET_DEBUG(...)
 #endif 
- /**
-  ****************************************************************************************
-  *
-  * @file wifi.c
-  * Copyright (C) Bouffalo Lab 2016-2018
-  *
-  ****************************************************************************************
-  */
+/**
+ ****************************************************************************************
+ *
+ * @file wifi.c
+ * Copyright (C) Bouffalo Lab 2016-2018
+ *
+ ****************************************************************************************
+ */
 
 static BL_TaskHandle_t taskHandle_output = NULL;
 
-extern int bl_main_rtthread_start(struct bl_hw** bl_hw);
+extern int bl_main_rtthread_start(struct bl_hw **bl_hw);
 
 struct net_device
 {
-    struct bl_hw* bl_hw;
+    struct bl_hw *bl_hw;
 };
 
 static struct net_device bl606a0_sta;
 
-static void bl_tx_notify(void* cb_arg, bool tx_ok)
+static void bl_tx_notify(void *cb_arg, bool tx_ok)
 {
     //TODO static alloc taskHandle_output, no if else anymore
     if (taskHandle_output) {
@@ -93,32 +63,22 @@ static void bl_tx_notify(void* cb_arg, bool tx_ok)
 #if 1
 /* ethernet device interface */
 /* Transmit packet. */
-static err_t wifi_tx(struct netif* netif, struct pbuf* p)
+static err_t wifi_tx(struct netif *netif, struct pbuf* p)
 {
-    struct wlan_netif* wlan;
+    struct wlan_netif *wlan;
     struct bl_custom_tx_cfm custom_cfm = { bl_tx_notify, NULL };
 #if 0
-    struct net_device* bl606a0_sta = (struct net_device*)dev;
+    struct net_device * bl606a0_sta = (struct net_device *)dev;
 #endif
     struct pbuf* q;
     static uint32_t ticks;
 #define WARNING_LIMIT_TICKS_TX_SIZE  2000
 #ifdef ETH_TX_DUMP
     int dump_count = 0;
-    uint8_t* dump_ptr;
+    uint8_t * dump_ptr;
     int dump_i;
 #endif
 
-#ifdef PKT_OUTPUT_HOOK
-    if (bl_wifi_pkt_eth_output_hook) {
-        bool is_sta = netif == wifi_mgmr_sta_netif_get();
-        p = bl_wifi_pkt_eth_output_hook(is_sta, p, bl_wifi_pkt_eth_output_hook_arg);
-        if (p == NULL) {
-            // hook ate the packet
-            return ERR_IF;
-        }
-    }
-#endif
     if (p->tot_len > WIFI_MTU_SIZE) {
         if (bl_os_get_time_ms() - ticks > WARNING_LIMIT_TICKS_TX_SIZE) {
             bl_os_printf("[TX] %s, TX size too big: %u bytes\r\n", __func__, p->tot_len);
@@ -134,14 +94,14 @@ static err_t wifi_tx(struct netif* netif, struct pbuf* p)
     {
 #ifdef ETH_RX_DUMP
         dump_ptr = q->payload;
-        for (dump_i = 0; dump_i<q->len; dump_i++)
+        for(dump_i=0; dump_i<q->len; dump_i++)
         {
             NET_DEBUG("%02x ", *dump_ptr);
-            if (((dump_count+1)%8) == 0)
+            if( ((dump_count+1)%8) == 0 )
             {
                 NET_DEBUG("  ");
             }
-            if (((dump_count+1)%16) == 0)
+            if( ((dump_count+1)%16) == 0 )
             {
                 NET_DEBUG("\r\n");
             }
@@ -162,41 +122,37 @@ static err_t wifi_tx(struct netif* netif, struct pbuf* p)
 }
 #endif
 
-int bl_wifi_eth_tx(struct pbuf* p, bool is_sta, struct bl_custom_tx_cfm* custom_cfm)
+int bl_wifi_eth_tx(struct pbuf *p, bool is_sta, struct bl_custom_tx_cfm *custom_cfm)
 {
     err_t ret;
-    struct netif* iface;
+    struct netif *iface;
     if (is_sta) {
         iface = wifi_mgmr_sta_netif_get();
-    }
-    else {
+    } else {
         iface = wifi_mgmr_ap_netif_get();
     }
     ret = bl_output(bl606a0_sta.bl_hw, iface, p, is_sta, custom_cfm);
-    if (ret == ERR_OK) {
-        return 0;
-    }
-    else {
+    if (ret != ERR_OK) {
+        pbuf_free(p);
         return -1;
     }
+    return 0;
 }
 
-static void netif_status_callback(struct netif* netif)
+static void netif_status_callback(struct netif *netif)
 {
     bl_os_printf("[lwip] netif status callback\r\n"
                 "  IP: %s\r\n", ip4addr_ntoa(netif_ip4_addr(netif)));
     bl_os_printf("  MK: %s\r\n", ip4addr_ntoa(netif_ip4_netmask(netif)));
     bl_os_printf("  GW: %s\r\n", ip4addr_ntoa(netif_ip4_gw(netif)));
-
     if (ip4_addr_isany(netif_ip4_addr(netif))) {
         wifi_mgmr_api_ip_update();
-    }
-    else {
+    } else {
         wifi_mgmr_api_ip_got();
     }
 }
 
-err_t bl606a0_wifi_netif_init(struct netif* netif)
+err_t bl606a0_wifi_netif_init(struct netif *netif)
 {
     netif->hostname = wifiMgmr.hostname;
     netif->hwaddr_len = ETHARP_HWADDR_LEN;
@@ -211,7 +167,7 @@ err_t bl606a0_wifi_netif_init(struct netif* netif)
     return 0;
 }
 
-int bl606a0_wifi_init(wifi_conf_t* conf)
+int bl606a0_wifi_init(wifi_conf_t *conf)
 {
     uint8_t mac[6];
     int ret;
@@ -230,13 +186,10 @@ int bl606a0_wifi_init(wifi_conf_t* conf)
     wifiMgmr.hostname[MAX_HOSTNAME_LEN_CHECK - 1] = '\0';
     bl_os_printf("     hostname: %s\r\n", wifiMgmr.hostname);
     bl_msg_update_channel_cfg(conf->country_code);
-    strncpy(wifiMgmr.country_code, conf->country_code, sizeof(wifiMgmr.country_code));
-    wifiMgmr.country_code[2] = '\0';
     bl_os_printf("-----------------------------------------------------\r\n");
     bl_wifi_clock_enable();//Enable wifi clock
     memset(&bl606a0_sta, 0, sizeof(bl606a0_sta));
     ret = bl_main_rtthread_start(&(bl606a0_sta.bl_hw));
-    wifiMgmr.channel_nums = bl_msg_get_channel_nums();
 
     return ret;
 }

@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2016-2022 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <stdio.h>
 #include <string.h>
 
@@ -469,29 +440,25 @@ int bl_main_cfg_task_req(uint32_t ops, uint32_t task, uint32_t element, uint32_t
     return bl_send_cfg_task_req(&wifi_hw, ops, task, element, type, arg1, arg2);
 }
 
-int bl_main_scan(struct netif *netif, uint16_t *fixed_channels, uint16_t channel_num, struct mac_addr *bssid, struct mac_ssid *ssid, uint8_t scan_mode, uint32_t duration_scan)
+int bl_main_scan(struct netif *netif, uint16_t *fixed_channels, uint16_t channel_num, struct mac_ssid *ssid, uint8_t scan_mode, uint32_t duration_scan)
 {
-    struct bl_send_scanu_para scanu_para;
-
-    scanu_para.channels = fixed_channels;
-    scanu_para.channel_num = channel_num;
-    scanu_para.bssid = bssid;
-    scanu_para.ssid = ssid;
-    scanu_para.mac = netif->hwaddr;
-    scanu_para.scan_mode = scan_mode;
-    scanu_para.duration_scan = duration_scan;
-
     if (0 == channel_num) {
-        scanu_para.channels = NULL;
-        scanu_para.channel_num = 0;
-        bl_send_scanu_req(&wifi_hw, &scanu_para);
+        bl_send_scanu_req(&wifi_hw, NULL, 0, ssid, netif->hwaddr, scan_mode, duration_scan);
     } else {
         if (bl_get_fixed_channels_is_valid(fixed_channels, channel_num)) {
-            bl_send_scanu_req(&wifi_hw, &scanu_para);
+            bl_send_scanu_req(&wifi_hw, fixed_channels, channel_num, ssid, netif->hwaddr, scan_mode, duration_scan);
         } else {
             bl_os_printf("---->unvalid channel");
         }
     }
+    return 0;
+}
+
+int bl_main_connect_abort(uint8_t *status)
+{
+    struct sm_connect_abort_cfm connect_abort_cfm = {};
+    bl_send_sm_connect_abort_req(&wifi_hw, &connect_abort_cfm);
+    *status = connect_abort_cfm.status;
     return 0;
 }
 
