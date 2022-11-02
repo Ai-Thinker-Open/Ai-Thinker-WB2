@@ -19,12 +19,6 @@
 
 #include <stdint.h>
 
-  /*========================
-  * Setting the Display Size
-  *=========================*/
-
-#define MY_DISP_HOR_RES    
-#define MY_DISP_VER_RES   
   /* ===================================================
   * Set display direction
   * LV_DISPLAY_ORIENTATION_LANDSCAPE :normal

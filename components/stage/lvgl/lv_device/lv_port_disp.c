@@ -18,27 +18,22 @@
  /*********************
   *      DEFINES
   *********************/
-#ifndef MY_DISP_HOR_RES
-#warning Please define or replace the macro MY_DISP_HOR_RES with the actual screen width, default value 320 is used for now.
-#define MY_DISP_HOR_RES    128
-#endif
 
-#ifndef MY_DISP_VER_RES
-#warning Please define or replace the macro MY_DISP_HOR_RES with the actual screen height, default value 240 is used for now.
+#define MY_DISP_HOR_RES    128
+
 #define MY_DISP_VER_RES    64
 
-#endif
 #define LV_VER_RES_MAX     10
-/**********************
- *      TYPEDEFS
- **********************/
+  /**********************
+   *      TYPEDEFS
+   **********************/
 
- /**********************
-  *  STATIC PROTOTYPES
-  **********************/
-    static void disp_init(void);
+   /**********************
+    *  STATIC PROTOTYPES
+    **********************/
+static void disp_init(void);
 
-static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p);
+static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_t* color_p);
 //static void gpu_fill(lv_disp_drv_t * disp_drv, lv_color_t * dest_buf, lv_coord_t dest_width,
 //        const lv_area_t * fill_area, lv_color_t color);
 
@@ -168,7 +163,7 @@ void disp_disable_update(void)
 /*Flush the content of the internal buffer the specific area on the display
  *You can use DMA or any hardware acceleration to do this operation in the background but
  *'lv_disp_flush_ready()' has to be called when finished.*/
-static void disp_flush(lv_disp_drv_t * disp_drv, const lv_area_t * area, lv_color_t * color_p)
+static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_t* color_p)
 {
     if (disp_flush_enabled) {
         /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/

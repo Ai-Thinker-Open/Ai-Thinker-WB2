@@ -72,12 +72,13 @@
 
 // Charge Pump (pg.62)
 #define OLED_CMD_SET_CHARGE_PUMP            0x8D    // follow with 0x14
-
+#define OLED_DISP_HOR_RES 128
+#define OLED_DISP_VER_RES 64
 
 
 static hosal_i2c_dev_t oled_iic_dev;
 
-static uint8_t ssd1306_buff[MY_DISP_HOR_RES * MY_DISP_VER_RES / 8];
+static uint8_t ssd1306_buff[OLED_DISP_HOR_RES * OLED_DISP_VER_RES / 8];
 /**
  * @brief oled_drive_write
  *
@@ -148,12 +149,12 @@ int oled_refresh_screen(void)
         oled_drive_write(0xB0+y, OLED_CMD);
         oled_drive_write(0x00, OLED_CMD);
         oled_drive_write(0x10, OLED_CMD);
-        oled_drive_pixels(&ssd1306_buff[MY_DISP_HOR_RES*y], MY_DISP_HOR_RES);
+        oled_drive_pixels(&ssd1306_buff[OLED_DISP_HOR_RES*y], OLED_DISP_HOR_RES);
     }
     oled_drive_write(0xB7, OLED_CMD);
     oled_drive_write(0x00, OLED_CMD);
     oled_drive_write(0x10, OLED_CMD);
-    oled_drive_pixels(&ssd1306_buff[MY_DISP_HOR_RES*7], MY_DISP_HOR_RES);
+    oled_drive_pixels(&ssd1306_buff[OLED_DISP_HOR_RES*7], OLED_DISP_HOR_RES);
     return 0;
 }
 /**
@@ -175,9 +176,10 @@ int oled_set_fill(char data)
  */
 void oled_drive_set_pixels(uint8_t x, uint8_t y, char color_p)
 {
-    if (x>=MY_DISP_HOR_RES||y>=MY_DISP_VER_RES) return;
-    if (color_p) ssd1306_buff[x + (y / 8) * MY_DISP_HOR_RES] &= ~(1<<(y % 8));
-    else   ssd1306_buff[x + (y / 8) * MY_DISP_HOR_RES] |= 1<<(y % 8);
+
+    if (x>=OLED_DISP_HOR_RES||y>=OLED_DISP_VER_RES) return;
+    if (color_p) ssd1306_buff[x + (y / 8) * OLED_DISP_HOR_RES] &= ~(1<<(y % 8));
+    else   ssd1306_buff[x + (y / 8) * OLED_DISP_HOR_RES] |= 1<<(y % 8);
 }
 /**
  * @brief oled_i2c_driver_init

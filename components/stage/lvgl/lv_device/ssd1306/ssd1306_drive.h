@@ -17,8 +17,6 @@
 #define OLED_IIC_SCL 12
 #define OLED_IIC_SDA 3
 
-#define MY_DISP_HOR_RES 128
-#define MY_DISP_VER_RES 64
 
 hosal_i2c_dev_t* oled_i2c_driver_init(int oled_scl, int oled_sda);
 void oled_drive_set_pixels(uint8_t x, uint8_t y, char color_p);
