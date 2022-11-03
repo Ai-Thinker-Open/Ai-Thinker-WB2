@@ -70,7 +70,7 @@ HOSAL_UART_DEV_DECL(uart_stdio, 0, CUSTOM_LOG_TX_IO, CUSTOM_LOG_RX_IO, CUSTOM_LO
 // HOSAL_UART_DEV_DECL(uart_stdio, 0, 16, 7, 115200);
 // HOSAL_UART_DEV_DECL(uart_stdio, 0, 2, 4, 921600);
 // HOSAL_UART_DEV_DECL(uart_stdio, 0, 14, 12, 921600);
-HOSAL_UART_DEV_DECL(uart_stdio, 0, 4, 0xff, 921600);
+HOSAL_UART_DEV_DECL(uart_stdio, 0, 4, 0xff, 115200);
 #endif
 
 extern uint8_t _heap_start;
@@ -265,23 +265,11 @@ static void aos_loop_proc(void *pvParameters)
 static void _dump_boot_info(void)
 {
     char chip_feature[40];
-    const char *banner;
-
-    puts("Booting BL602 Chip...\r\n");
-
-    /*Display Banner*/
-    if (0 == bl_chip_banner(&banner)) {
-        puts(banner);
-    }
-    puts("\r\n");
-    /*Chip Feature list*/
-    puts("\r\n");
-    puts("------------------------------------------------------------\r\n");
+    puts("Booting Ai-WB2 Modules...\r\n");
     puts("RISC-V Core Feature:");
     bl_chip_info(chip_feature);
     puts(chip_feature);
     puts("\r\n");
-
     puts("Build Version: ");
     puts(BL_SDK_VER); // @suppress("Symbol is not resolved")
     puts("\r\n");
@@ -291,7 +279,6 @@ static void _dump_boot_info(void)
     puts("Build Time: ");
     puts(__TIME__);
     puts("\r\n");
-    puts("------------------------------------------------------------\r\n");
 
 }
 
@@ -348,8 +335,13 @@ void bfl_main()
     TaskHandle_t aos_loop_proc_task;
     
     bl_sys_early_init();
+ 
+#ifdef SYS_REBOOT_LOG_DISENABLE
     /*Init UART In the first place*/
     log_port_reset();
+#endif
+
+
     hosal_uart_init_only_tx(&uart_stdio);
     puts("Starting bl602 now....\r\n");
 
