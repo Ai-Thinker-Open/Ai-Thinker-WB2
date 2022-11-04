@@ -2,7 +2,7 @@
 
 ## Hardware Setup and Wiring
 
-| Ai-WB2 Series SoC Module Pinout | SHT30 Pinout |
+| Ai-WB2 Series SoC Module Pinout | DHT11 Pinout |
 |---|---|
 | IO4 | DATA |
 | 3V3 | VCC |

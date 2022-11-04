@@ -2,7 +2,7 @@
 
 ## Hardware Setup and Wiring
 
-| Ai-WB2 Series SoC Module Pinout | SHT30 Pinout |
+| Ai-WB2 Series SoC Module Pinout | MPU6050 Pinout |
 |---|---|
 | IO4 | SCL |
 | IO5 | SDA |

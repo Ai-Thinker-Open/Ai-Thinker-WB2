@@ -41,9 +41,11 @@
 #include "FreeRTOS.h"
 #include "task.h"
 #include <stdarg.h>
+#include <blog.h>
 
 static hosal_gpio_dev_t pin = {
-    .port = 4,
+    .config = OUTPUT_PUSH_PULL,
+    .port = 11,
 };
 
 /**
@@ -55,7 +57,7 @@ static hosal_gpio_dev_t pin = {
  */
 uint8_t dht11_interface_init(void)
 {
-    
+    hosal_gpio_init(&pin);
     return 0;
 }
 
@@ -81,7 +83,7 @@ uint8_t dht11_interface_deinit(void)
  */
 uint8_t dht11_interface_read(uint8_t *value)
 {
-    pin.config = INPUT_HIGH_IMPEDANCE;
+    pin.config = INPUT_PULL_UP;
     hosal_gpio_init(&pin);
     hosal_gpio_input_get(&pin, value);
     return 0;
@@ -146,10 +148,13 @@ void dht11_interface_disable_irq(void)
  * @param[in] fmt is the format data
  * @note      none
  */
+
+extern void vprint(const char *fmt, va_list argp);
+
 void dht11_interface_debug_print(const char *const fmt, ...)
 {
     va_list ap;
     va_start(ap, fmt);
-    vprintf(fmt, ap);
+    vprint(fmt, ap);
     va_end(ap);
 }
