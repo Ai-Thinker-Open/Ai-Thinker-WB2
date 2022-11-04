@@ -52,4 +52,4 @@ LV_LVGL_H_INCLUDE_SIMPLE:=1
 
 CONFIG_LV_DISPLAY_ORIENTATION_LANDSCAPE:=1
 
-LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop lvgl_demo
+LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop lvgl_demo lvgl lv_device lv_srcs draw  extra extra_themes extra_layouts extra_libs extra_others extra_widgets disp_device

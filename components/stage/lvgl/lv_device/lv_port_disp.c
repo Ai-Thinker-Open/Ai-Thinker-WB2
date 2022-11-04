@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include "ssd1306_drive.h"
 #include "blog.h"
+#include "ili9488.h"
 
 
  /*********************
@@ -141,7 +142,8 @@ void lv_port_disp_init(void)
 static void disp_init(void)
 {
     /*You code here*/
-    oled_i2c_driver_init(OLED_IIC_SCL, OLED_IIC_SDA);
+    // oled_i2c_driver_init(OLED_IIC_SCL, OLED_IIC_SDA);
+    ili9488_init();
 }
 
 volatile bool disp_flush_enabled = true;
@@ -165,25 +167,26 @@ void disp_disable_update(void)
  *'lv_disp_flush_ready()' has to be called when finished.*/
 static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_t* color_p)
 {
-    if (disp_flush_enabled) {
-        /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
+    // if (disp_flush_enabled) {
+    //     /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 
-        int32_t x;
-        int32_t y;
+    //     int32_t x;
+    //     int32_t y;
 
-        for (y = area->y1; y <= area->y2; y++) {
-            for (x = area->x1; x <= area->x2; x++) {
-                /*Put a pixel to the display. For example:*/
-                /*put_px(x, y, *color_p)*/
-                oled_drive_set_pixels(x, y, color_p->full);
-                color_p++;
-            }
-        }
-    }
-    /*IMPORTANT!!!
-     *Inform the graphics library that you are ready with the flushing*/
-    oled_refresh_screen();
-    lv_disp_flush_ready(disp_drv);
+    //     for (y = area->y1; y <= area->y2; y++) {
+    //         for (x = area->x1; x <= area->x2; x++) {
+    //             /*Put a pixel to the display. For example:*/
+    //             /*put_px(x, y, *color_p)*/
+    //             oled_drive_set_pixels(x, y, color_p->full);
+    //             color_p++;
+    //         }
+    //     }
+    // }
+    // /*IMPORTANT!!!
+    //  *Inform the graphics library that you are ready with the flushing*/
+    // oled_refresh_screen();
+    // lv_disp_flush_ready(disp_drv);
+    ili9488_flush(disp_drv, area, color_p);
 }
 
 /*OPTIONAL: GPU INTERFACE*/
