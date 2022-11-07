@@ -55,7 +55,7 @@ extern "C"
     /* for hard debug level */
     const static uint32_t BLOG_HARD_DECLARE_DISABLE __attribute__((used)) = 0;
 
-/* component level */
+    /* component level */
 #define _REFC_LEVEL(name) _fsymc_level_##name
 #define REFC_LEVEL(name) _REFC_LEVEL(name)
 #define _DEFC_LEVEL(name) blog_level_t REFC_LEVEL(name) __attribute__((weak))
@@ -69,7 +69,7 @@ extern "C"
     DECLARE_C_LEVEL(__COMPONENT_NAME_DEQUOTED__);
     DECLARE_C_INFO(__COMPONENT_NAME_DEQUOTED__);
 
-/* file level */
+    /* file level */
 #define _REFF_LEVEL(name) _fsymf_level_##name
 #define REFF_LEVEL(name) _REFF_LEVEL(name)
 #define _DEFF_LEVEL(name) blog_level_t REFF_LEVEL(name)
@@ -83,7 +83,7 @@ extern "C"
     DECLARE_F_LEVEL(__COMPONENT_FILE_NAME_DEQUOTED__);
     DECLARE_F_INFO(__COMPONENT_FILE_NAME_DEQUOTED__, __COMPONENT_FILE_NAMED__);
 
-/* pri level */
+    /* pri level */
 #define _REFP_LEVEL(name) _fsymp_level_##name
 #define REFP_LEVEL(name) _REFP_LEVEL(name)
 #define _DEFP_LEVEL(name) blog_level_t REFP_LEVEL(name)
@@ -165,11 +165,11 @@ extern "C"
 #define BLOG_USE_COLOR (1)
 
 #if BLOG_USE_COLOR
-#define BLOG_PREFIX_INFO "\x1b[32mINFO\x1b[0m"
-#define BLOG_PREFIX_WARN "\x1b[33mWARN\x1b[0m"
-#define BLOG_PREFIX_ERROR "\x1b[31mERROR\x1b[0m"
-#define BLOG_PREFIX_USER "\x1b[35mASSERT\x1b[0m"
-#define BLOG_PREFIX_DUMP "\x1b[35mDUMP\x1b[0m"
+#define BLOG_PREFIX_INFO "\x1b[32mINFO"
+#define BLOG_PREFIX_WARN "\x1b[33mWARN"
+#define BLOG_PREFIX_ERROR "\x1b[31mERROR"
+#define BLOG_PREFIX_USER "\x1b[35mASSERT"
+#define BLOG_PREFIX_DUMP "\x1b[35mDUMP"
 #else
 #define BLOG_PREFIX_INFO "INFO"
 #define BLOG_PREFIX_WARN "WARN"
@@ -181,22 +181,22 @@ extern "C"
 #define blog_debug(M, ...)                                         \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                            \
     {                                                              \
-        custom_cflog(BLOG_LEVEL_DEBUG, "DEBUG", M, ##__VA_ARGS__); \
+        custom_cflog(BLOG_LEVEL_DEBUG, "DEBUG", M"\x1b[0m", ##__VA_ARGS__); \
     } // NULL
 #define blog_info(M, ...)                                                  \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                    \
     {                                                                      \
-        custom_cflog(BLOG_LEVEL_INFO, BLOG_PREFIX_INFO, M, ##__VA_ARGS__); \
+        custom_cflog(BLOG_LEVEL_INFO, BLOG_PREFIX_INFO, M"\x1b[0m", ##__VA_ARGS__); \
     } // F_GREEN
 #define blog_warn(M, ...)                                                  \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                    \
     {                                                                      \
-        custom_cflog(BLOG_LEVEL_WARN, BLOG_PREFIX_WARN, M, ##__VA_ARGS__); \
+        custom_cflog(BLOG_LEVEL_WARN, BLOG_PREFIX_WARN, M"\x1b[0m", ##__VA_ARGS__); \
     } // F_YELLOW
 #define blog_error(M, ...)                                                   \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                      \
     {                                                                        \
-        custom_cflog(BLOG_LEVEL_ERROR, BLOG_PREFIX_ERROR, M, ##__VA_ARGS__); \
+        custom_cflog(BLOG_LEVEL_ERROR, BLOG_PREFIX_ERROR, M"\x1b[0m", ##__VA_ARGS__); \
     } // F_RED
 #define blog_assert(assertion)                                      \
     if (0 == (assertion))                                           \
@@ -208,68 +208,68 @@ extern "C"
 #define blog_debug_raw(M, ...)                                          \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                 \
     {                                                                   \
-        custom_cflog_raw(BLOG_LEVEL_DEBUG, "DEBUG ", M, ##__VA_ARGS__); \
+        custom_cflog_raw(BLOG_LEVEL_DEBUG, "DEBUG ", M"\x1b[0m", ##__VA_ARGS__); \
     } // NULL
 #define blog_info_raw(M, ...)                                                  \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                        \
     {                                                                          \
-        custom_cflog_raw(BLOG_LEVEL_INFO, BLOG_PREFIX_INFO, M, ##__VA_ARGS__); \
+        custom_cflog_raw(BLOG_LEVEL_INFO, BLOG_PREFIX_INFO, M"\x1b[0m", ##__VA_ARGS__); \
     } // F_GREEN
 #define blog_warn_raw(M, ...)                                                  \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                        \
     {                                                                          \
-        custom_cflog_raw(BLOG_LEVEL_WARN, BLOG_PREFIX_WARN, M, ##__VA_ARGS__); \
+        custom_cflog_raw(BLOG_LEVEL_WARN, BLOG_PREFIX_WARN, M"\x1b[0m", ##__VA_ARGS__); \
     } // F_YELLOW
 #define blog_error_raw(M, ...)                                                   \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                          \
     {                                                                            \
-        custom_cflog_raw(BLOG_LEVEL_ERROR, BLOG_PREFIX_ERROR, M, ##__VA_ARGS__); \
+        custom_cflog_raw(BLOG_LEVEL_ERROR, BLOG_PREFIX_ERROR, M"\x1b[0m", ##__VA_ARGS__); \
     } // F_RED
 
 #define blog_debug_user(name, M, ...)                                    \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                  \
     {                                                                    \
-        custom_plog(name, BLOG_LEVEL_DEBUG, "DEBUG ", M, ##__VA_ARGS__); \
+        custom_plog(name, BLOG_LEVEL_DEBUG, "DEBUG ", M"\x1b[0m", ##__VA_ARGS__); \
     }
 #define blog_info_user(name, M, ...)                                            \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                         \
     {                                                                           \
-        custom_plog(name, BLOG_LEVEL_INFO, BLOG_PREFIX_INFO, M, ##__VA_ARGS__); \
+        custom_plog(name, BLOG_LEVEL_INFO, BLOG_PREFIX_INFO, M"\x1b[0m", ##__VA_ARGS__); \
     }
 #define blog_warn_user(name, M, ...)                                            \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                         \
     {                                                                           \
-        custom_plog(name, BLOG_LEVEL_WARN, BLOG_PREFIX_WARN, M, ##__VA_ARGS__); \
+        custom_plog(name, BLOG_LEVEL_WARN, BLOG_PREFIX_WARN, M"\x1b[0m", ##__VA_ARGS__); \
     }
 #define blog_error_user(name, M, ...)                                             \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                           \
     {                                                                             \
-        custom_plog(name, BLOG_LEVEL_ERROR, BLOG_PREFIX_ERROR, M, ##__VA_ARGS__); \
+        custom_plog(name, BLOG_LEVEL_ERROR, BLOG_PREFIX_ERROR, M"\x1b[0m", ##__VA_ARGS__); \
     }
 #define blog_debug_user_raw(name, M, ...)                                    \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                      \
     {                                                                        \
-        custom_plog_raw(name, BLOG_LEVEL_DEBUG, "DEBUG ", M, ##__VA_ARGS__); \
+        custom_plog_raw(name, BLOG_LEVEL_DEBUG, "DEBUG ", M"\x1b[0m", ##__VA_ARGS__); \
     }
 #define blog_info_user_raw(name, M, ...)                                            \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                             \
     {                                                                               \
-        custom_plog_raw(name, BLOG_LEVEL_INFO, BLOG_PREFIX_INFO, M, ##__VA_ARGS__); \
+        custom_plog_raw(name, BLOG_LEVEL_INFO, BLOG_PREFIX_INFO, M"\x1b[0m", ##__VA_ARGS__); \
     }
 #define blog_warn_user_raw(name, M, ...)                                            \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                             \
     {                                                                               \
-        custom_plog_raw(name, BLOG_LEVEL_WARN, BLOG_PREFIX_WARN, M, ##__VA_ARGS__); \
+        custom_plog_raw(name, BLOG_LEVEL_WARN, BLOG_PREFIX_WARN, M"\x1b[0m", ##__VA_ARGS__); \
     }
 #define blog_error_user_raw(name, M, ...)                                             \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                               \
     {                                                                                 \
-        custom_plog_raw(name, BLOG_LEVEL_ERROR, BLOG_PREFIX_ERROR, M, ##__VA_ARGS__); \
+        custom_plog_raw(name, BLOG_LEVEL_ERROR, BLOG_PREFIX_ERROR, M"\x1b[0m", ##__VA_ARGS__); \
     }
 #define blog_assert_user(name, M, ...)                                            \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                           \
     {                                                                             \
-        custom_plog(name, BLOG_LEVEL_ASSERT, BLOG_PREFIX_USER, M, ##__VA_ARGS__); \
+        custom_plog(name, BLOG_LEVEL_ASSERT, BLOG_PREFIX_USER, M"\x1b[0m", ##__VA_ARGS__); \
     }
 
 #define blog_debug_hexdump(name, buf, size)                             \
@@ -302,7 +302,7 @@ extern "C"
 
 #else
 
-//#define BLOG_HARD_DECLARE_DISABLE 1
+    //#define BLOG_HARD_DECLARE_DISABLE 1
 #define BLOG_DECLARE(name)
 
 #define blog_debug(M, ...)
@@ -338,9 +338,9 @@ extern "C"
 
     void blog_init(void);
 
-    void blog_hexdump_out(const char *name, uint8_t width, uint8_t *buf, uint16_t size);
+    void blog_hexdump_out(const char* name, uint8_t width, uint8_t* buf, uint16_t size);
 
-    int blog_set_level_log_component(char *level, char *component_name);
+    int blog_set_level_log_component(char* level, char* component_name);
 
 #ifdef __cplusplus
 }
