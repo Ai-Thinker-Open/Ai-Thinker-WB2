@@ -50,7 +50,7 @@ static void _dump_partition(void)
     USER_UNUSED(i);
     USER_UNUSED(part);
 
-    blog_info("======= PtTable_Config @%p=======\r\n", part);
+    blog_info("======= PtTable_Config @%p=======", part);
     blog_info("magicCode 0x%08X; version 0x%04X; entryCnt %u; age %lu; crc32 0x%08X", (unsigned int)(part->ptTable.magicCode),
                                                 part->ptTable.version,
                                                 part->ptTable.entryCnt,
@@ -248,7 +248,7 @@ int hal_boot2_init(void)
 {
     boot2_partition_table.partition_active_idx = *(uint8_t*)PARTITION_BOOT2_RAM_ADDR_ACTIVE;
 
-    blog_info("[HAL] [BOOT2] Active Partition[%u] consumed %d Bytes\r\n",
+    blog_info("[HAL] [BOOT2] Active Partition[%u] consumed %d Bytes",
             boot2_partition_table.partition_active_idx,
             sizeof(PtTable_Stuff_Config)
     );
@@ -265,8 +265,8 @@ void hal_update_mfg_ptable(void)
     PtTable_Entry_Config ptEntry_fw;
     PtTable_Entry_Config ptEntry_media;
 
-    blog_info("update mfg table.\r\n");
-    blog_info("====================\r\n");
+    blog_info("update mfg table.");
+    blog_info("====================");
     if (0 == hal_boot2_get_active_entries_byname((uint8_t*)PT_OTA_TYPE_NAME, (HALPartition_Entry_Config*)(&ptEntry_fw))) {       // ota
         if (0 == hal_boot2_get_active_entries_byname((uint8_t*)PT_MEDIA_TYPE_NAME, (HALPartition_Entry_Config*)(&ptEntry_media))) { // media
             if (ptEntry_fw.Address[1] == ptEntry_media.Address[0]) {
@@ -274,12 +274,12 @@ void hal_update_mfg_ptable(void)
                 memset(ptEntry_media.name, 0, sizeof(ptEntry_media.name));
                 PtTable_Update_Entry(NULL, !boot2_partition_table.partition_active_idx, &boot2_partition_table.table, &ptEntry_media);
 
-                blog_info("===== update mfg partition =====\r\n");
+                blog_info("===== update mfg partition =====");
             }
         }
     }
 
-    blog_info("====================\r\n");
-    blog_info("update mfg table.\r\n");
+    blog_info("====================");
+    blog_info("update mfg table.");
 }
 

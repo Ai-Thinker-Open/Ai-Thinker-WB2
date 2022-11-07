@@ -88,7 +88,7 @@ static void spi_basic_init(hosal_spi_dev_t* arg)
         spicfg.clkPolarity = SPI_CLK_POLARITY_HIGH;
     }
     else {
-        blog_error("node support polar_phase \r\n");
+        blog_error("node support polar_phase ");
     }
     SPI_Init(0, &spicfg);
 
@@ -115,7 +115,7 @@ static void spi_basic_init(hosal_spi_dev_t* arg)
         fifocfg.rxFifoDmaEnable = DISABLE;
         SPI_FifoConfig(spi_id, &fifocfg);
         bl_irq_register_with_ctx(SPI_IRQn, spi_irq_process, (void*)hw_arg);
-        blog_info("spi no dma mode\r\n");
+        blog_info("spi no dma mode");
     }
 }
 
@@ -142,7 +142,7 @@ static int lli_list_init(DMA_LLI_Ctrl_Type** pptxlli, DMA_LLI_Ctrl_Type** pprxll
 
     *pptxlli = pvPortMalloc(sizeof(DMA_LLI_Ctrl_Type) * count);
     if (*pptxlli == NULL) {
-        blog_error("malloc lli failed. \r\n");
+        blog_error("malloc lli failed. ");
 
         return -1;
     }
@@ -215,7 +215,7 @@ static int hosal_spi_dma_trans(hosal_spi_dev_t* arg, uint8_t* TxData, uint8_t* R
     int ret;
 
     if (!arg) {
-        blog_error("arg err.\r\n");
+        blog_error("arg err.");
         return -1;
     }
 
@@ -223,7 +223,7 @@ static int hosal_spi_dma_trans(hosal_spi_dev_t* arg, uint8_t* TxData, uint8_t* R
         if (dma_arg->tx_dma_ch == -1) {
             dma_arg->tx_dma_ch = hosal_dma_chan_request(0);
             if (dma_arg->tx_dma_ch < 0) {
-                blog_error("SPI TX DMA CHANNEL get failed!\r\n");
+                blog_error("SPI TX DMA CHANNEL get failed!");
                 return -1;
             }
         }
@@ -235,7 +235,7 @@ static int hosal_spi_dma_trans(hosal_spi_dev_t* arg, uint8_t* TxData, uint8_t* R
         if (dma_arg->rx_dma_ch == -1) {
             dma_arg->rx_dma_ch = hosal_dma_chan_request(0);
             if (dma_arg->rx_dma_ch < 0) {
-                blog_error("SPI RX DMA CHANNEL get failed!\r\n");
+                blog_error("SPI RX DMA CHANNEL get failed!");
                 return -1;
             }
         }
@@ -265,7 +265,7 @@ static int hosal_spi_dma_trans(hosal_spi_dev_t* arg, uint8_t* TxData, uint8_t* R
 
     ret = lli_list_init(&ptxlli, &prxlli, TxData, RxData, Len);
     if (ret < 0) {
-        blog_error("init lli failed. \r\n");
+        blog_error("init lli failed. ");
 
         return -1;
     }
@@ -307,7 +307,7 @@ static int hosal_spi_dma_trans(hosal_spi_dev_t* arg, uint8_t* TxData, uint8_t* R
         }
     }
     else {
-        blog_error(" trans timeout\r\n");
+        blog_error(" trans timeout");
     }
 
     vPortFree(ptxlli);
@@ -345,7 +345,7 @@ static void hosal_spi_int_handler_tx(void* arg, uint32_t flag)
         }
     }
     else {
-        blog_error("hosal_spi_int_handler_tx no clear isr.\r\n");
+        blog_error("hosal_spi_int_handler_tx no clear isr.");
     }
     return;
 }
@@ -374,7 +374,7 @@ static void hosal_spi_int_handler_rx(void* arg, uint32_t flag)
         }
     }
     else {
-        blog_error("hosal_spi_int_handler_tx no clear isr.\r\n");
+        blog_error("hosal_spi_int_handler_tx no clear isr.");
     }
     return;
 }
@@ -452,28 +452,28 @@ static void spi_irq_process(void* p_arg)
     /* Slave mode transfer time-out interrupt,triggered when bus is idle for the given value */
     if (BL_IS_REG_BIT_SET(tmpVal, SPI_STO_INT) && !BL_IS_REG_BIT_SET(tmpVal, SPI_CR_SPI_STO_MASK)) {
         BL_WR_REG(SPIx, SPI_INT_STS, BL_SET_REG_BIT(tmpVal, SPI_CR_SPI_STO_CLR));
-        blog_info(" slave timeout\r\n");
+        blog_info(" slave timeout");
     }
     /* Slave mode tx underrun error interrupt,trigged when tx is not ready during transfer */
     if (BL_IS_REG_BIT_SET(tmpVal, SPI_TXU_INT) && !BL_IS_REG_BIT_SET(tmpVal, SPI_CR_SPI_TXU_MASK)) {
         BL_WR_REG(SPIx, SPI_INT_STS, BL_SET_REG_BIT(tmpVal, SPI_CR_SPI_TXU_CLR));
-        blog_info(" slave tx underrun error\r\n");
+        blog_info(" slave tx underrun error");
     }
     /* TX/RX fifo overflow/underflow interrupt */
     if (BL_IS_REG_BIT_SET(tmpVal, SPI_FER_INT) && !BL_IS_REG_BIT_SET(tmpVal, SPI_CR_SPI_FER_MASK)) {
-        blog_info(" tx/rx overfloe/underflow\r\n");
+        blog_info(" tx/rx overfloe/underflow");
     }
 }
 
 static int hosal_spi_trans(hosal_spi_dev_t* spi, uint8_t* tx_data, uint8_t* rx_data, uint32_t length, uint32_t timeout)
 {
     if (!spi) {
-        blog_error("arg error\r\n");
+        blog_error("arg error");
         return -1;
     }
     EventBits_t uxBits;
     spi_priv_t* spi_priv = (spi_priv_t*)spi->priv;
-    // blog_info("spi trans\r\n");
+    // blog_info("spi trans");
     uint32_t tmpVal;
     uint32_t SPIx = SPI_BASE;
     SPI_ID_Type spi_id; //TODO change SPI_ID_Type
@@ -511,10 +511,10 @@ static int hosal_spi_trans(hosal_spi_dev_t* spi, uint8_t* tx_data, uint8_t* rx_d
     uxBits = xEventGroupWaitBits(spi_priv->spi_event_group, EVT_GROUP_SPI_TR, pdTRUE, pdTRUE, timeout);
 
     if ((uxBits & EVT_GROUP_SPI_TR) == EVT_GROUP_SPI_TR) {
-        //  blog_info("recv all event group.\r\n");
+        //  blog_info("recv all event group.");
     }
     else {
-        blog_error(" transimission timeout\r\n");
+        blog_error(" transimission timeout");
     }
     return 0;
 
@@ -524,7 +524,7 @@ static void hosal_spi_gpio_init(hosal_spi_dev_t* arg)
 {
 
     if (!arg) {
-        blog_error("arg err.\r\n");
+        blog_error("arg err.");
         return;
     }
 
@@ -550,7 +550,7 @@ int hosal_spi_init(hosal_spi_dev_t* spi)
 {
     hosal_spi_dev_t* dev = spi;
     if (!spi) {
-        blog_error("arg err.\r\n");
+        blog_error("arg err.");
     }
     hosal_spi_gpio_init(dev);
     spi_basic_init(dev);
@@ -621,12 +621,12 @@ int hosal_spi_send(hosal_spi_dev_t* spi, const uint8_t* data, uint16_t size, uin
     int ret;
 
     if (NULL == spi || data == NULL) {
-        blog_error("not init.\r\n");
+        blog_error("not init.");
         return -1;
     }
 
     if (data == NULL) {
-        blog_error("wrong para \r\n");
+        blog_error("wrong para ");
     }
     if (spi->config.dma_enable) {
         ret = hosal_spi_dma_trans(spi, (uint8_t*)data, NULL, size, timeout);
@@ -642,12 +642,12 @@ int hosal_spi_recv(hosal_spi_dev_t* spi, uint8_t* data, uint16_t size, uint32_t 
     int ret;
 
     if (NULL == spi || data == NULL) {
-        blog_error("not init.\r\n");
+        blog_error("not init.");
         return -1;
     }
 
     if (data == NULL) {
-        blog_error("wrong para \r\n");
+        blog_error("wrong para ");
     }
     if (spi->config.dma_enable) {
         ret = hosal_spi_dma_trans(spi, NULL, data, size, timeout);
@@ -662,7 +662,7 @@ int hosal_spi_send_recv(hosal_spi_dev_t* spi, uint8_t* tx_data, uint8_t* rx_data
 {
     int ret;
     if (NULL == spi || tx_data == NULL || rx_data == NULL) {
-        blog_error("not init.\r\n");
+        blog_error("not init.");
         return -1;
     }
     if (spi->config.dma_enable) {
