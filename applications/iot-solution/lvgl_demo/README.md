@@ -28,7 +28,7 @@ LVGL configuration is unified in the `lv_conf.h` file. You can configure the mod
 ```
 ## Run
 
-![img](img/ssd1306.jpg#pic_center =500x)
+![img](img/ssd1306.jp)
 
 ## Troubleshooting
 
