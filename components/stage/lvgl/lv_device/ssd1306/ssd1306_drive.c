@@ -8,6 +8,7 @@
  * @copyright Copyright (c) 2022
  *
  */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -17,6 +18,7 @@
 #include "ssd1306_drive.h"
 #include "lv_port_disp.h"
 
+#if defined LV_DISPLAY_SSD1306
 
 #define OLED_IIC_FREQ_10K 10000
 #define OLED_IIC_FREQ_20K 20000
@@ -199,8 +201,6 @@ hosal_i2c_dev_t* oled_i2c_driver_init(int oled_scl, int oled_sda)
 #elif defined (LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED)
     orientation_1 = 0xA0;
     orientation_2 = OLED_CMD_SET_COM_SCAN_MODE_NORMAL;
-#else
-#error "Unsupported orientation"
 #endif
     uint8_t display_mode = 0;
 
@@ -273,3 +273,4 @@ int oled_drive_awaken(void)
     oled_drive_write(0x14, OLED_CMD);
     return oled_drive_write(OLED_CMD_DISPLAY_ON, OLED_CMD);
 }
+#endif

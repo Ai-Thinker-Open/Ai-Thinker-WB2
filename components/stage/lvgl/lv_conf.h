@@ -22,43 +22,81 @@
 /* ============================
  *  display driver
  * ===========================*/
- // #define LV_DISPLAY_SSD1306
-#define LV_DISPLAY_ST7796S
-  /* ===================================================
-  * Set display direction
-  * LV_DISPLAY_ORIENTATION_LANDSCAPE :normal
-  * LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED: inversion
-  *=====================================================*/
+#define LV_DISPLAY_SSD1306
+ // #define LV_DISPLAY_ST7796S
+   /* ===================================================
+   * Set display direction
+   * LV_DISPLAY_ORIENTATION_LANDSCAPE :normal
+   * LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED: inversion
+   *=====================================================*/
+#if defined LV_DISPLAY_SSD1306
+   /*================= SSD1306 I2C Pin config  ===================*/
+#define OLED_IIC_SCL 12
+#define OLED_IIC_SDA 3
 
 #define LV_DISPLAY_ORIENTATION_LANDSCAPE 
   // #define LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED 
 
-    /*========================================
-    *         Set color display
-    *  LV_INVERT_COLORS:Negative display
-    *=========================================*/
-    // #define LV_INVERT_COLORS  
+#define MY_DISP_HOR_RES    128
+#define MY_DISP_VER_RES    64
+#define LV_VER_RES_MAX     10
+#elif defined(LV_DISPLAY_ST7796S)
+   /*================= ST7796 SPI Pin config  ===================*/
+#define ST7796_SPI_SS 5
+#define ST7796_SPI_RST 4
+#define ST7796_SPI_DC 11
+#define ST7796_SPI_MOSI 12
+#define ST7796_SPI_CLK 3
 
-    /*====================
-         COLOR SETTINGS
-   *====================*/
+#define ST7796_SPI_BL 14
+/*===========================================================*/
+ // color invert
+#define ST7796S_INVERT_COLORS 0
 
-   /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
+#define MY_DISP_HOR_RES    480
+#define MY_DISP_VER_RES    320
+#define LV_VER_RES_MAX     10
+  // config st7796s display direction
+
+ // #define CONFIG_LV_PREDEFINED_DISPLAY_M5STACK
+  // #define CONFIG_LV_PREDEFINED_DISPLAY_WROVER4
+  // #define CONFIG_LV_PREDEFINED_DISPLAY_WT32_SC01
+#define CONFIG_LV_PREDEFINED_DISPLAY_NONE
+
+#endif
+  /*========================================
+  *         Set color display
+  *  LV_INVERT_COLORS:Negative display
+  *=========================================*/
+  // #define LV_INVERT_COLORS  
+
+  /*====================
+       COLOR SETTINGS
+ *====================*/
+#if defined LV_DISPLAY_SSD1306
+ /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
+#define LV_COLOR_DEPTH 1
+
+/*Swap the 2 bytes of RGB565 color. Useful if the display has an 8-bit interface (e.g. SPI)*/
+#define LV_COLOR_16_SWAP 0
+#elif defined(LV_DISPLAY_ST7796S)
+ /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
 #define LV_COLOR_DEPTH 16
 
 /*Swap the 2 bytes of RGB565 color. Useful if the display has an 8-bit interface (e.g. SPI)*/
 #define LV_COLOR_16_SWAP 1
+#endif
 
-/*Enable features to draw on transparent background.
- *It's required if opa, and transform_* style properties are used.
- *Can be also used if the UI is above another layer, e.g. an OSD menu or video player.*/
+ /*Enable features to draw on transparent background.
+  *It's required if opa, and transform_* style properties are used.
+  *Can be also used if the UI is above another layer, e.g. an OSD menu or video player.*/
 #define LV_COLOR_SCREEN_TRANSP 0
 
- /* Adjust color mix functions rounding. GPUs might calculate color mix (blending) differently.
-  * 0: round down, 64: round up from x.75, 128: round up from half, 192: round up from x.25, 254: round up */
+  /* Adjust color mix functions rounding. GPUs might calculate color mix (blending) differently.
+   * 0: round down, 64: round up from x.75, 128: round up from half, 192: round up from x.25, 254: round up */
 #define LV_COLOR_MIX_ROUND_OFS 0
 
-  /*Images pixels with this color will not be drawn if they are chroma keyed)*/
+   /*Images pixels with this color will not be drawn if they are chroma keyed)*/
 #define LV_COLOR_CHROMA_KEY lv_color_hex(0x00ff00)         /*pure green*/
 
 /*=========================

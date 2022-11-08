@@ -8,6 +8,8 @@
  * @copyright Copyright (c) 2022
  *
  */
+
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <hosal_spi.h>
@@ -16,9 +18,10 @@
 #include <st7796s_drive.h>
 #include <task.h>
 #include <FreeRTOS.h>
-#include "lvgl.h"
-#include "lv_conf.h"
+
 #include "lv_port_disp.h"
+
+#if defined LV_DISPLAY_ST7796S
 typedef struct {
     uint8_t cmd;
     uint8_t data[16];
@@ -181,9 +184,9 @@ static int st7796s_drive_clear(uint16_t color)
     uint16_t i = 0, m = 0;
     st7796s_set_windows(0, width-1, 0, height-1);
 
-    for (i = 0;i<width;i++)
+    for (i = 0;i<height;i++)
     {
-        for (m = 0;m<height;m++)
+        for (m = 0;m<width;m++)
         {
             st7796s_drive_set_color(color);
         }
@@ -311,7 +314,8 @@ int st7796_drive_set_pixels(uint16_t x, uint16_t y, uint16_t color)
 {
 
     st7796s_set_windows(x, x, y, y);
-    // st7796s_drive_send(lv_color, sizeof(lv_color), ST7796S_SEND_MODE_DATA);
+
     st7796s_drive_set_color(color);
     return 0;
 }
+#endif

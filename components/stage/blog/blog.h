@@ -165,6 +165,7 @@ extern "C"
 #define BLOG_USE_COLOR (1)
 
 #if BLOG_USE_COLOR
+#define BLOG_PREFIX_DEBUG "\x1b[30mDEBUG"
 #define BLOG_PREFIX_INFO "\x1b[32mINFO"
 #define BLOG_PREFIX_WARN "\x1b[33mWARN"
 #define BLOG_PREFIX_ERROR "\x1b[31mERROR"
@@ -181,7 +182,7 @@ extern "C"
 #define blog_debug(M, ...)                                         \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                            \
     {                                                              \
-        custom_cflog(BLOG_LEVEL_DEBUG, "DEBUG", M"\x1b[0m", ##__VA_ARGS__); \
+        custom_cflog(BLOG_LEVEL_DEBUG, BLOG_PREFIX_DEBUG, M"\x1b[0m", ##__VA_ARGS__); \
     } // NULL
 #define blog_info(M, ...)                                                  \
     if (0 == BLOG_HARD_DECLARE_DISABLE)                                    \

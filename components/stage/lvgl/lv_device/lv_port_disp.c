@@ -160,30 +160,35 @@ void disp_disable_update(void)
  *'lv_disp_flush_ready()' has to be called when finished.*/
 static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_t* color_p)
 {
-#if defined LV_DISPLAY_SSD1306
+
     if (disp_flush_enabled) {
         /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 
         int32_t x;
         int32_t y;
-
+#if defined LV_DISPLAY_ST7796S
+        st7796s_set_windows(area->x1, area->x2, area->y1, area->y2);
+#endif
         for (y = area->y1; y <= area->y2; y++) {
             for (x = area->x1; x <= area->x2; x++) {
                 /*Put a pixel to the display. For example:*/
                 /*put_px(x, y, *color_p)*/
-
+#if defined LV_DISPLAY_SSD1306
                 oled_drive_set_pixels(x, y, color_p->full);
+#elif defined LV_DISPLAY_ST7796S
+                st7796s_drive_set_color(color_p->full);
+#endif
                 color_p++;
             }
         }
     }
     /*IMPORTANT!!!
      *Inform the graphics library that you are ready with the flushing*/
+#if defined LV_DISPLAY_SSD1306
     oled_refresh_screen();
-#elif defined (LV_DISPLAY_ST7796S)
-    st7796s_set_windows(area->x1, area->x2+480-1, area->y1, area->y2+320-1);
-    st7796s_drive_set_color(color_p->full);
 #endif
+
+
     lv_disp_flush_ready(disp_drv);
 }
 
@@ -208,6 +213,6 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 
 #else /*Enable this file at the top*/
 
-     /*This dummy typedef exists purely to silence -Wpedantic.*/
+/*This dummy typedef exists purely to silence -Wpedantic.*/
 typedef int keep_pedantic_happy;
 #endif
