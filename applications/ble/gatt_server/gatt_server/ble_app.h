@@ -59,7 +59,7 @@ enum app_ble_role
 void apps_ble_start (void);
 void bleapps_adv_starting(void);
 void bleapps_adv_stop(void);
-void ble_bl_notify_test(void);
+void ble_bl_notify_test(char *data, int data_len);
 void ble_bl_disconnect(void);
 
 

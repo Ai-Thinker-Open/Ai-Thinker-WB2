@@ -55,12 +55,11 @@ static struct bt_gatt_attr blattrs[]= {
 static struct bt_conn *ble_bl_conn=NULL;
 static bool notify_flag=false;
 
-void ble_bl_notify_test(void)
+void ble_bl_notify_test(char *data, int data_len)
 {
-    char data[10] = {0x00,0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
-    if(ble_bl_conn!=NULL&&notify_flag==true){
-        printf("ble_notify_test.\r\n");    
-        bt_gatt_notify(ble_bl_conn, &blattrs[1],data,10);
+    if(ble_bl_conn!=NULL&&notify_flag==true){ 
+        printf("send ble data:%s\r\n",data);
+        bt_gatt_notify(ble_bl_conn, &blattrs[1],data,data_len);
     }
 }
 
@@ -80,7 +79,6 @@ void ble_bl_disconnect(void)
 {
     if(ble_bl_conn!=NULL)
     {
-        
         printf("user disconnect\r\n");
         bt_conn_disconnect(ble_bl_conn,BT_HCI_ERR_REMOTE_USER_TERM_CONN);
         aos_post_event(EV_BLE_TEST,BLE_DEV_DISCONN,NULL);
@@ -94,15 +92,13 @@ static int ble_blf_recv(struct bt_conn *conn,
     uint8_t *recv_buffer;
     recv_buffer=pvPortMalloc(sizeof(uint8_t)*len);
     memcpy(recv_buffer, buf, len);
-    printf("ble rx=%d\r\n",len);
+    printf("recv ble data len: %d\r\n",len);
     for (size_t i = 0; i < len; i++)
     {
          printf("0x%x ",recv_buffer[i]);
     }
     printf("\r\n");
     vPortFree(recv_buffer);
-
-    ble_bl_notify_test();   //send notify to client
 
     return 0;
 }
