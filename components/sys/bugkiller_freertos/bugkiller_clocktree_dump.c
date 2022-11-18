@@ -956,15 +956,15 @@ static void dump_clock_node(struct clk_tree *node)
     dump_clock_node(parent); //XXX Stack OverFlow Caution
 }
 
-void bugkiller_clocktree_dump(void)
-{
-    int i;
-    struct clk_tree *leaf;
+// void bugkiller_clocktree_dump(void)
+// {
+//     int i;
+//     struct clk_tree *leaf;
 
-    for (i = 0; i < sizeof(clock_leaves)/sizeof(clock_leaves[0]); i++) {
-        leaf = clock_leaves[i];
-        dump_clock_node(leaf);
-        printf("\r\n==================\r\n");
-    }
-}
+//     for (i = 0; i < sizeof(clock_leaves)/sizeof(clock_leaves[0]); i++) {
+//         leaf = clock_leaves[i];
+//         dump_clock_node(leaf);
+//         printf("\r\n==================\r\n");
+//     }
+// }
 

@@ -418,13 +418,17 @@ static struct vendor_data_t vendor_data;
 static struct vendor_data_t vendor_data_cli;
 #endif /*CONFIG_BT_MESH_MODEL_VENDOR_CLI*/
 
+static u16_t RxCnt = 0;
+extern s8_t rssi_extern;
+
 static void vendor_data_set(struct bt_mesh_model *model,
                               struct bt_mesh_msg_ctx *ctx,
                               struct net_buf_simple *buf)
 {
+
     NET_BUF_SIMPLE_DEFINE(msg, BT_MESH_TX_SDU_MAX);
 
-    vOutputString("data[%s]\n", bt_hex(buf->data, buf->len));
+    vOutputString("rssi:%ddbm  rx cnt:%d  recv data[%s]\n", rssi_extern, ++RxCnt, bt_hex(buf->data, buf->len));
 
     if (buf == NULL) {
         BT_ERR("%s, Invalid model user_data", __func__);
@@ -432,7 +436,6 @@ static void vendor_data_set(struct bt_mesh_model *model,
     }
     bt_mesh_model_msg_init(&msg, BLE_MESH_MODEL_VND_OP_DATA_STATUS);
 	net_buf_simple_add_mem(&msg, buf->data, buf->len);
-
     bt_mesh_model_send(model, ctx, &msg, NULL, NULL);
 }
 
@@ -441,7 +444,7 @@ static void vendor_data_status(struct bt_mesh_model *model,
                               struct bt_mesh_msg_ctx *ctx,
                               struct net_buf_simple *buf)
 {
-    vOutputString("Vendor status[%s]\n", bt_hex(buf->data, buf->len));
+    // vOutputString("Vendor status[%s]\n", bt_hex(buf->data, buf->len));
 }
 #endif /*CONFIG_BT_MESH_MODEL_VENDOR_CLI*/
 
@@ -679,6 +682,43 @@ static void lpn_cb(u16_t friend_addr, bool established)
 }
 #endif
 
+void blemeshcli_init_extern(void)
+{
+	int err;
+
+    if(blemesh_inited){
+        vOutputString("Has initialized \r\n");
+        return;
+    }
+	   // auto generate device uuid
+    gen_dev_uuid();
+#ifdef CONFIG_BT_MESH_PROVISIONER
+	/* set role type as node */
+	prov.role = 0;
+#endif
+
+    err = bt_mesh_init(&prov, &comp);
+    if(err){
+        vOutputString("Failed to init \r\n");
+        return;
+    }
+
+    blemesh_inited = true;
+    vOutputString("Init successfully \r\n");
+
+    if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
+        mesh_set();
+        mesh_commit();
+    }
+
+    if (bt_mesh_is_provisioned()) {
+		vOutputString("Mesh network restored from flash\r\n");
+	} else {
+		vOutputString("Use pb-adv or pb-gatt to enable advertising\r\n");
+	}
+
+}
+
 static void blemeshcli_init(char *pcWriteBuffer, int xWriteBufferLen, int argc, char **argv)
 {
     int err;
@@ -761,6 +801,85 @@ static void setup_cdb(void)
 	if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
 		bt_mesh_cdb_app_key_store(key);
 	}
+}
+
+void blemeshcli_pvnr_init_extern(void)
+{
+	u8_t net_key[16], dev_key[16];
+	int err;
+
+	if(blemesh_inited){
+        vOutputString("Has initialized \r\n");
+        return;
+    }
+
+#ifdef CONFIG_BT_MESH_PROVISIONER
+	/* set role type as provisioner */
+	prov.role = 1;
+#endif
+
+	err = bt_mesh_init(&prov, &comp);
+	if (err) {
+		vOutputString("Initializing mesh failed (err %d)\n");
+		return;
+	}
+	blemesh_inited = true;
+	printk("Mesh initialized\n");
+
+	if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
+		vOutputString("Loading stored settings\n");
+		mesh_set();
+		mesh_commit();
+	}
+
+	bt_rand(net_key, 16);
+
+	err = bt_mesh_cdb_create(net_key);
+	if (err == -EALREADY) {
+		vOutputString("Using stored CDB\n");
+	} else if (err) {
+		vOutputString("Failed to create CDB (err %d)\n", err);
+		return;
+	} else {
+		vOutputString("Created CDB\n");
+		setup_cdb();
+	}
+
+	bt_rand(dev_key, 16);
+
+	err = bt_mesh_provision(net_key, BT_MESH_NET_PRIMARY, 0, 0, self_addr,
+				dev_key);
+	if (err == -EALREADY) {
+		vOutputString("Using stored settings\n");
+	} else if (err) {
+		vOutputString("Provisioning failed (err %d)\n", err);
+		return;
+	} else {
+		vOutputString("Network key:%s\n", bt_hex(net_key, 16));
+		vOutputString("Dev key:%s\n", bt_hex(dev_key, 16));
+		vOutputString("Provisioning completed\n");
+
+		//Do local APP KEY Add
+		if (IS_ENABLED(CONFIG_BT_MESH_CDB)) {
+			struct bt_mesh_cdb_app_key *app_key;
+			
+			app_key = bt_mesh_cdb_app_key_get(app_idx);
+			if (!app_key) {
+				return;
+			}
+			u8_t status;
+			err = bt_mesh_cfg_app_key_add(net_idx, self_addr, net_idx,
+						app_idx, app_key->keys[0].app_key, &status);
+			if (err) {
+				vOutputString("Unable to send App Key Add (err %d)", err);
+				return;
+			}
+		}
+		//Do local model bound.
+		bt_mesh_local_model_bind(net_idx, app_idx);
+	}
+
+	return;
 }
 
 static void blemeshcli_pvnr_init(char *pcWriteBuffer, int xWriteBufferLen, int argc, char **argv)
@@ -855,6 +974,33 @@ static const char *bearer2str(bt_mesh_prov_bearer_t bearer)
 	}
 }
 
+void blemeshcli_pb_extern(void)
+{
+    int err;
+    uint8_t bearer = 0x1;
+    uint8_t enable = 0x1;
+    
+    // get_uint8_from_string(&argv[1], &bearer);
+    // get_uint8_from_string(&argv[2], &enable);
+    
+	if (enable) {
+		err = bt_mesh_prov_enable(bearer);
+		if (err) {
+			vOutputString("Failed to enable %s (err %d)\r\n", bearer2str(bearer), err);
+		} else {
+			vOutputString("%s enabled\r\n", bearer2str(bearer));
+		}
+	} else {
+		err = bt_mesh_prov_disable(bearer);
+		if (err) {
+			vOutputString("Failed to disable %s (err %d)\r\n",
+				    bearer2str(bearer), err);
+		} else {
+			vOutputString("%s disabled\r\n", bearer2str(bearer));
+		}
+	}
+}
+
 #if defined(CONFIG_BT_MESH_PROV)
 static void blemeshcli_pb(char *pcWriteBuffer, int xWriteBufferLen, int argc, char **argv)
 {
@@ -889,8 +1035,48 @@ static void blemeshcli_pb(char *pcWriteBuffer, int xWriteBufferLen, int argc, ch
 }
 #endif
 
+u8_t uuid_bk[16];
+
 #if defined(CONFIG_BT_MESH_PB_ADV)
 #if defined(CONFIG_BT_MESH_PROVISIONER)
+
+// u16_t addr_base = 0x0004;
+
+int blemeshcli_provision_adv_extern(u16_t addr_base)
+{
+	u8_t attention_duration;
+	u16_t net_idx;
+	u16_t addr;
+	size_t len;
+	int err;
+	
+	u16_t cnt = 100;
+
+	while ((cnt--) && !uuid_bk[0]) {
+		vTaskDelay(50);
+	}
+	
+	vOutputString("end uuid:[%s] uuid_bk:0X%X\n", bt_hex(uuid_bk, 16), uuid_bk[0]);
+
+	for (int i = 0; i < 16; i++) {
+		vOutputString("0X%X ",uuid_bk[i]);
+	}
+
+	net_idx = 0x0000;
+	addr	= addr_base;
+	attention_duration = 0x0000;
+
+	err = bt_mesh_provision_adv(uuid_bk, net_idx, addr, attention_duration);
+	if (err) {
+		vOutputString("Provisioning failed (err %d)\n", err);
+//		return err;
+	}
+	printf("adv err = %d\r\n", err);
+//	addr_base++;
+
+	return err;
+}
+
 static void blemeshcli_provision_adv(char *pcWriteBuffer, int xWriteBufferLen, int argc, char **argv)
 {
 	u8_t uuid[16];
@@ -903,6 +1089,12 @@ static void blemeshcli_provision_adv(char *pcWriteBuffer, int xWriteBufferLen, i
 	len = hex2bin(argv[1], strlen(argv[1]), uuid, sizeof(uuid));
 	(void)memset(uuid + len, 0, sizeof(uuid) - len);
 
+	vOutputString("argv[%s], uuid[%s], len = %d\n", argv[1], uuid, len);
+	for (int i = 0; i < len; i++)
+	{
+		vOutputString("0X%x ", uuid[i]);
+	}
+	
 	/* Get Net Idx Form arg[2] */
 	net_idx = strtoul(argv[2], NULL, 0);
 	/* Get Unicast address Form arg[3] */
@@ -914,7 +1106,7 @@ static void blemeshcli_provision_adv(char *pcWriteBuffer, int xWriteBufferLen, i
 	if (err) {
 		vOutputString("Provisioning failed (err %d)\n", err);
 	}
-
+	printf("======blemeshcli_provision_adv====== \r\n");
 	return;
 }
 #endif /* CONFIG_BT_MESH_PROVISIONER */
@@ -1710,6 +1902,43 @@ static void blemeshcli_light_hsl_cli(char *pcWriteBuffer, int xWriteBufferLen, i
 }
 #endif
 #if defined(CONFIG_BT_MESH_MODEL_VENDOR_CLI)
+
+static u16_t TxCnt = 0;
+int blemeshcli_vendor_cli_extern(u16_t addr, u8_t *tx_buff, uint8_t datalen)
+{
+    u16_t id;
+    struct bt_mesh_msg_ctx ctx = {.send_ttl = 3};
+
+    // vOutputString("enter %s\n", __func__);
+
+	BT_MESH_MODEL_BUF_DEFINE(msg, BT_MESH_MODEL_OP_3(0x0000, BL_COMP_ID), 40);
+
+	// printf("MoDEL OP 3 = 0X%04X \r\n",BT_MESH_MODEL_OP_3(0x0000, BL_COMP_ID));
+
+	ctx.app_idx = 0x0000;
+	id = 0x0008;
+	ctx.addr = addr;
+	ctx.net_idx = 0x0000;
+	uint8_t len = datalen;
+
+    bt_mesh_model_msg_init(&msg, BT_MESH_MODEL_OP_3(id, BL_COMP_ID));
+    net_buf_simple_add_mem(&msg, tx_buff, len);
+
+    vOutputString("tx cnt: %d  send data %s addr=0X%04X\r\n",++TxCnt, bt_hex(tx_buff, len), ctx.addr);
+
+    struct bt_mesh_model* model_t;
+    model_t = bt_mesh_model_find_vnd(elements, BL_COMP_ID, BT_MESH_VND_MODEL_ID_DATA_CLI);
+    if(model_t == NULL){
+        BT_ERR("Unable to found vendor model");
+    }
+
+    if (bt_mesh_model_send(model_t, &ctx, &msg, NULL, NULL)){
+		BT_ERR("Unable to send vendor cli command");
+	}
+	
+	return 0;
+}
+
 static void blemeshcli_vendor_cli(char *pcWriteBuffer, int xWriteBufferLen, int argc, char **argv)
 {
     u16_t id;
@@ -1720,7 +1949,7 @@ static void blemeshcli_vendor_cli(char *pcWriteBuffer, int xWriteBufferLen, int 
         return;
     }
 
-    vOutputString("enter %s\n", __func__);
+    // vOutputString("enter %s\n", __func__);
 
     BT_MESH_MODEL_BUF_DEFINE(msg, BT_MESH_MODEL_OP_3(0x0000, BL_COMP_ID), 40);
 
@@ -1736,7 +1965,8 @@ static void blemeshcli_vendor_cli(char *pcWriteBuffer, int xWriteBufferLen, int 
         uint8_t val[40];
         get_bytearray_from_string(&argv[6], val, len);
         net_buf_simple_add_mem(&msg, val, len);
-        vOutputString("send data %s\r\n", bt_hex(msg.data, msg.len));
+        // vOutputString("send data %s\r\n", bt_hex(msg.data, msg.len));
+		vOutputString("tx cnt: %d  send data %s addr=0X%04X\r\n",++TxCnt, bt_hex(msg.data, msg.len), ctx.addr);
     }
 
     
@@ -2428,6 +2658,7 @@ static void print_unprovisioned_beacon(u8_t uuid[16],
 				bt_mesh_prov_oob_info_t oob_info,
 				u32_t *uri_hash)
 {
+	memcpy(uuid_bk, uuid, 16);
 	vOutputString("Received unprovisioned beacon info:\n");
 	vOutputString("uuid:[%s]\n", bt_hex(uuid, 16));
 	vOutputString("oob_info:[%x]\n", (u16_t)oob_info);
@@ -2450,6 +2681,19 @@ static void print_node_added(u16_t net_idx, u8_t uuid[16], u16_t addr, u8_t num_
 	 **/
 	bt_mesh_rx_reset_node(addr);
 	
+}
+
+void blemeshcli_beacon_listen_extern(void)
+{
+	u8_t val = 0x1;
+
+	vOutputString("Beacon listen:[%x]\n", val);
+	if (val) {
+		prov.unprovisioned_beacon = print_unprovisioned_beacon;
+	} else {
+		prov.unprovisioned_beacon = NULL;
+	}
+	return;
 }
 
 static void blemeshcli_beacon_listen(char *pcWriteBuffer, int xWriteBufferLen, int argc, char *argv[])
@@ -2924,6 +3168,56 @@ static void blemeshcli_net_key_del(char *pcWriteBuffer, int xWriteBufferLen, int
 	return;
 }
 
+int blemeshcli_app_key_add_extern(u16_t addr)
+{
+	u8_t key_val[16];
+	u16_t net_idx, dst, key_net_idx, key_app_idx;
+	u8_t status;
+	int err;
+
+	net_idx = 0x0000;
+	dst = addr;
+	key_net_idx = 0x0000;
+	key_app_idx = 0x0000;
+
+	memcpy(key_val, default_key, sizeof(key_val));
+
+	if (IS_ENABLED(CONFIG_BT_MESH_CDB)) {
+		struct bt_mesh_cdb_app_key *app_key;
+		app_key = bt_mesh_cdb_app_key_get(key_app_idx);
+		if (app_key) {
+			memcpy(key_val, app_key->keys[0].app_key, 16);
+		} else {
+			app_key = bt_mesh_cdb_app_key_alloc(key_net_idx,
+							    key_app_idx);
+			if (!app_key) {
+				vOutputString("No space for app key in cdb");
+				return -1;
+			}
+
+			memcpy(app_key->keys[0].app_key, key_val, 16);
+			bt_mesh_cdb_app_key_store(app_key);
+		}
+	}
+
+	err = bt_mesh_cfg_app_key_add(net_idx, dst, key_net_idx,
+				      key_app_idx, key_val, &status);
+	if (err) {
+		vOutputString("Unable to send App Key Add (err %d)", err);
+		return -1;
+	}
+
+	if (status) {
+		vOutputString("AppKeyAdd failed with status 0x%02x",
+			    status);
+	} else {
+		vOutputString("AppKey added, NetKeyIndex 0x%04x "
+			    "AppKeyIndex 0x%04x, status 0x%x", key_net_idx, key_app_idx, status);
+	}
+
+	return status;
+}
+
 static void blemeshcli_app_key_add(char *pcWriteBuffer, int xWriteBufferLen, int argc, char *argv[])
 {
 	u8_t key_val[16];
@@ -2961,7 +3255,6 @@ static void blemeshcli_app_key_add(char *pcWriteBuffer, int xWriteBufferLen, int
 					key_app_idx);
 				return;
 			}
-
 			memcpy(key_val, app_key->keys[0].app_key, 16);
 		} else {
 			app_key = bt_mesh_cdb_app_key_alloc(key_net_idx,
@@ -2970,7 +3263,6 @@ static void blemeshcli_app_key_add(char *pcWriteBuffer, int xWriteBufferLen, int
 				vOutputString("No space for app key in cdb");
 				return;
 			}
-
 			memcpy(app_key->keys[0].app_key, key_val, 16);
 			bt_mesh_cdb_app_key_store(app_key);
 		}
@@ -3126,6 +3418,42 @@ static void blemeshcli_kr_update(char *pcWriteBuffer, int xWriteBufferLen, int a
 	}
 }
 
+int blemeshcli_mod_app_bind_extern(u16_t addr, u16_t model_id)
+{
+	u16_t elem_addr, mod_app_idx, mod_id, cid;
+	u8_t status;
+	int err;
+
+	u16_t net_idx, dst;
+	
+	net_idx = 0x0000;
+	dst = addr;
+	elem_addr = addr;
+	mod_app_idx = 0x0000;
+	mod_id = model_id;
+	cid = 0x07af;
+
+	// printf("net_idx:0X%04x, dst:0X%04x, app_idx:0X%04x, id:0X%04X cid:0X%04x\r\n",net_idx, dst, mod_app_idx, mod_id, cid);
+	err = bt_mesh_cfg_mod_app_bind_vnd(net_idx, dst,
+						elem_addr, mod_app_idx,
+						mod_id, cid, &status);
+
+	if (err) {
+		vOutputString("Unable to send Model App Bind (err %d)",
+			    err);
+		return err;
+	}
+
+	if (status) {
+		vOutputString("Model App Bind failed with status 0x%02x",
+			    status);
+	} else {
+		vOutputString("AppKey successfully bound OK %d err%d\r\n",status,err);
+	}
+
+	return status;
+}
+
 static void blemeshcli_mod_app_bind(char *pcWriteBuffer, int xWriteBufferLen, int argc,
 			    char *argv[])
 {
@@ -3147,6 +3475,7 @@ static void blemeshcli_mod_app_bind(char *pcWriteBuffer, int xWriteBufferLen, in
 
 	if (argc > 6) {
 		get_uint16_from_string(&argv[6], &cid);
+		// printf("net_idx:0X%04x, dst:0X%04x, app_idx:0X%04x, id:0X%04X cid:0X%04x\r\n",net_idx, dst, mod_app_idx, mod_id, cid);
 		err = bt_mesh_cfg_mod_app_bind_vnd(net_idx, dst,
 						   elem_addr, mod_app_idx,
 						   mod_id, cid, &status);

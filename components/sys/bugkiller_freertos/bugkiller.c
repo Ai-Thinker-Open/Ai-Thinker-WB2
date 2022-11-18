@@ -18,8 +18,8 @@ int __attribute__((section(".bugkiller_code"))) bugkiller_fun(void)
     bugkiller_softtimer_dump(NULL);
     bugkiller_streambuffer_dump(NULL);
     bugkiller_task_dump(NULL);
-    bugkiller_uart_dump();
-    bugkiller_clocktree_dump();
+    // bugkiller_uart_dump();
+    // bugkiller_clocktree_dump();
     bugkiller_fw_task_dump();
     bugkiller_fw_queue_sent_dump();
     bugkiller_fw_queue_saved_dump();

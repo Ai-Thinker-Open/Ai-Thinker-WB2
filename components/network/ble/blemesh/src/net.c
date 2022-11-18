@@ -1405,6 +1405,8 @@ int bt_mesh_net_decode(struct net_buf_simple *data, enum bt_mesh_net_if net_if,
 	return 0;
 }
 
+s8_t rssi_extern = 0;
+
 void bt_mesh_net_recv(struct net_buf_simple *data, s8_t rssi,
 		      enum bt_mesh_net_if net_if)
 {
@@ -1412,7 +1414,8 @@ void bt_mesh_net_recv(struct net_buf_simple *data, s8_t rssi,
 	struct bt_mesh_net_rx rx = { .ctx.recv_rssi = rssi };
 	struct net_buf_simple_state state;
 
-	BT_DBG("rssi %d net_if %u", rssi, net_if);
+	// printf("rssi %d net_if %u", rssi, net_if);
+	rssi_extern = rssi;
 
 	if (!bt_mesh_is_provisioned()) {
 		return;
