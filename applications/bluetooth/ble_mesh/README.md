@@ -27,12 +27,15 @@ After download the firmware, if the two devices want to start network configurat
 
 
 Press the button for 3 seconds, release the button, the corresponding log information is as shown in the figure:
+
 ![key](image/key.png)
 
 The log of Provisoner's successful distribution network is shown in the figure:
+
 ![Provisoner](image/Provisoner.png) 
 
 The log of successful Node network configuration is shown in the figure:
+
 ![node](image/Node.png) 
 
 After the network distribution is successful,
