@@ -13,7 +13,7 @@ int main(void)
     uint8_t humidity;
     for (;;) {
         dht11_basic_read(&temperature, &humidity);
-        blog_info("%.2f C degree\t%u%%\r\n", temperature, humidity);
+        blog_info("%.2f C degree\t%u%%", temperature, humidity);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
 
