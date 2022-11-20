@@ -433,7 +433,7 @@ void blog_hexdump_out(const char* name, uint8_t width, const uint8_t* buf, uint1
     for (i = 0; i < size; i += width)
     {
         /* package header */
-        fmt_result = snprintf(log_buf, BLOG_LINE_BUF_SIZE, "[%s]: %04X-%04X: \x1b[0m", name, i, i + width - 1);
+        fmt_result = snprintf(log_buf, BLOG_LINE_BUF_SIZE, "%04X-%04X: \x1b[0m", i, i + width - 1);
         /* calculate log length */
         if ((fmt_result > -1) && (fmt_result <= BLOG_LINE_BUF_SIZE))
         {
