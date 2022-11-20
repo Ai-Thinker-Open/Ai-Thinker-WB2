@@ -1,0 +1,62 @@
+# AES Example
+This routine demonstrates the routine of AEC's `ECB` and `CBC` modes.
+Each mode shows how to perform `128 bit`, `192 bit` and `256 bit` encryption
+## Example Output
+```shell
+Starting bl602 now....
+Booting Ai-WB2 Modules...
+RISC-V Core Feature:RV32-ACFIMX
+Build Version: release_bl_iot_sdk_1.6.38
+Build Date: Nov 17 2022
+Build Time: 09:57:06
+
+blog init set power on level 2, 2, 2.
+[IRQ] Clearing and Disable all the pending IRQ...
+INFO (0)[hal_boot2.c: 251] [HAL] [BOOT2] Active Partition[0] consumed 596 Bytes
+INFO (0)[hal_boot2.c:  53] ======= PtTable_Config @0x4200d16c=======
+INFO (0)[hal_boot2.c:  54] magicCode 0x54504642; version 0x0000; entryCnt 7; age 0; crc32 0x12DF9A26
+INFO (0)[hal_boot2.c:  59] idx  type device activeIndex     name   Address[0]  Address[1]  Length[0]   Length[1]   age
+INFO (0)[hal_boot2.c:  61] [00]  00     0         0            FW  0x00010000  0x000e8000  0x000d8000  0x00088000  0
+INFO (0)[hal_boot2.c:  61] [01]  02     0         0           mfg  0x00170000  0x00000000  0x00032000  0x00000000  0
+INFO (0)[hal_boot2.c:  61] [02]  03     0         0         media  0x001a2000  0x00000000  0x00047000  0x00000000  0
+INFO (0)[hal_boot2.c:  61] [03]  04     0         0           PSM  0x001e9000  0x00000000  0x00008000  0x00000000  0
+INFO (0)[hal_boot2.c:  61] [04]  05     0         0           KEY  0x001f1000  0x00000000  0x00002000  0x00000000  0
+INFO (0)[hal_boot2.c:  61] [05]  06     0         0          DATA  0x001f3000  0x00000000  0x00005000  0x00000000  0
+INFO (0)[hal_boot2.c:  61] [06]  07     0         0       factory  0x001f8000  0x00000000  0x00007000  0x00000000  0
+INFO (0)[bl_flash.c: 363] ======= FlashCfg magiccode @0x42049c18=======
+INFO (0)[bl_flash.c: 364] mid           0xC8
+INFO (0)[bl_flash.c: 365] clkDelay      0x1
+INFO (0)[bl_flash.c: 366] clkInvert     0x1
+INFO (0)[bl_flash.c: 367] sector size   4KBytes
+INFO (0)[bl_flash.c: 368] page size     256Bytes
+INFO (0)[bl_flash.c: 369] ---------------------------------------------------------------
+INFO (0)[hal_board.c:1271] [MAIN] [BOARD] [FLASH] addr from partition is 001f8000, ret is 0
+INFO (0)[hal_board.c:1279] [MAIN] [BOARD] [XIP] addr from partition is 231e7000, ret is 0
+[OS] Starting aos_loop_proc task...
+[OS] Starting OS Scheduler...
+INFO (5)[main.c:  43] AES ecb 128 encrtpt:
+INFO:(         7)[main.c:  44] AES ECB:0000-000F: 22 AB D4 A1 6C 7E E6 D8  42 7E C6 EA 2B C0 2E C8    "...l~..B~..+...
+INFO (20)[main.c:  48] AES ecb 128 decrypt:hello-Ai-WB2-Kit
+
+INFO (26)[main.c:  56] AES ecb 192 encrtpt:
+INFO:(        30)[main.c:  57] AES ECB:0000-000F: 9F D5 F6 DF CC 06 55 59  A0 59 07 0C 14 B9 55 AF    ......UY.Y....U.
+INFO (42)[main.c:  61] AES ecb 192 decrypt:hello-Ai-WB2-Kit
+
+INFO:(        49)[main.c:  69] AES ECB:0000-000F: E1 F3 2F 76 30 C0 12 5F  70 EC B6 5F 4F E4 3D 6D    ../v0.._p.._O.=m
+INFO (61)[main.c:  73] AES ecb 256 decrypt:hello-Ai-WB2-Kit
+INFO (67)[main.c: 102] AES CBC 128 encrtpt:
+INFO:(        71)[main.c: 103] AES CBC:0000-000F: 39 53 27 A9 BA 37 5F 2A  C8 C0 E8 32 C4 E5 CD 1B    9S'..7_*...2....
+INFO (83)[main.c: 106] AES CBC 128 decrypt:hello-Ai-WB2-Kit
+
+INFO (90)[main.c: 115] AES CBC 192 encrtpt:
+INFO:(        94)[main.c: 116] AES CBC:0000-000F: D7 80 0D BB 2F EA 16 19  0C 84 67 C6 A5 BA 33 E7    ..../.....g...3.
+INFO (106)[main.c: 119] AES CBC 192 decrypt:hello-Ai-WB2-Kit
+
+INFO (113)[main.c: 129] AES CBC 256 encrtpt:
+INFO:(       117)[main.c: 130] AES CBC:0000-000F: 95 DA C4 62 53 AC 37 83  54 56 AD 80 BB B0 C6 A1    ...bS.7.TV......
+INFO (129)[main.c: 134] AES CBC 256 decrypt:hello-Ai-WB2-Kit
+
+```
+## Troubleshooting
+
+For any technical queries, please open an [issue](https://github.com/Ai-Thinker-Open/Ai-Thinker-WB2/issues) on GitHub. We will get back to you soon.
