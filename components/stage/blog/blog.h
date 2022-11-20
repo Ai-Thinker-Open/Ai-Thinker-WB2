@@ -154,11 +154,11 @@ extern "C"
         if ((lowlevel >= REFC_LEVEL(__COMPONENT_NAME_DEQUOTED__)) &&                                         \
             (lowlevel >= REFF_LEVEL(__COMPONENT_FILE_NAME_DEQUOTED__)))                                      \
         {                                                                                                    \
-            __blog_printf("[%10u][%s: %s:%4d] %s:\r\n",                                                      \
+            __blog_printf("%s (%d)[%s:%4d] %s:",     logo,                                                  \
                           (xPortIsInsideInterrupt()) ? (xTaskGetTickCountFromISR()) : (xTaskGetTickCount()), \
-                          logo, __FILENAME__, __LINE__,                                                      \
+                          __FILENAME__, __LINE__,                                                      \
                           name);                                                                             \
-            blog_hexdump_out(name, 16, buf, size);                                                           \
+            blog_hexdump_out(name, size, buf, size);                                                           \
         }                                                                                                    \
     } while (0 == 1)
 
