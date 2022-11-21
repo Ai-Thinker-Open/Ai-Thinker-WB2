@@ -17,13 +17,12 @@
 #include "mbedtls/cipher.h"
 
 
-char* plain_text = "hello-Ai-WB2-Kit";
-
+char* plain_text = "hello_Ai-WB2_Kit";
 
 void mbedtls_cipher_aesCBC_test(mbedtls_cipher_type_t cipher_type)
 {
     char* cbc_iv = "0123456789abcdef";
-
+    size_t size_outbuff = 0;
     size_t olen;
     uint8_t* entropy_key = NULL;
     uint8_t* outbuff = NULL;
@@ -74,8 +73,10 @@ void mbedtls_cipher_aesCBC_test(mbedtls_cipher_type_t cipher_type)
     mbedtls_cipher_set_padding_mode(&cipher_ctx, MBEDTLS_PADDING_PKCS7);
 
     mbedtls_cipher_update(&cipher_ctx, (uint8_t*)plain_text, strlen(plain_text), outbuff, &olen);
+    size_outbuff += olen;
     mbedtls_cipher_finish(&cipher_ctx, &outbuff[olen], &olen);
-    blog_info_hexdump("aes_cbc", outbuff, 32);
+    size_outbuff += olen;
+    blog_info_hexdump("aes_cbc", outbuff, size_outbuff);
     //decrypt
     mbedtls_cipher_reset(&cipher_ctx);
     mbedtls_cipher_setkey(&cipher_ctx, entropy_key, strlen((char*)entropy_key)*8, MBEDTLS_DECRYPT);
@@ -83,14 +84,16 @@ void mbedtls_cipher_aesCBC_test(mbedtls_cipher_type_t cipher_type)
     mbedtls_cipher_set_iv(&cipher_ctx, (uint8_t*)cbc_iv, strlen(cbc_iv));
     mbedtls_cipher_set_padding_mode(&cipher_ctx, MBEDTLS_PADDING_PKCS7);
 
-    // blog_info_hexdump("not decrypt", plain_text_value, 16);
-    mbedtls_cipher_update(&cipher_ctx, outbuff, 32, plain_text_value, &olen);
-    blog_info_hexdump("decrypt value", plain_text_value, olen);
-    mbedtls_cipher_finish(&cipher_ctx, plain_text_value, &olen);
-    blog_info_hexdump("padding value", plain_text_value, 16);
+    mbedtls_cipher_update(&cipher_ctx, outbuff, size_outbuff, plain_text_value, &olen);
+    if (!olen) {
+        mbedtls_cipher_finish(&cipher_ctx, plain_text_value, &olen);
+        blog_info_hexdump("decrypt value", plain_text_value, olen);
+    }
+    else {
+        blog_info_hexdump("decrypt value", plain_text_value, olen);
+        mbedtls_cipher_finish(&cipher_ctx, plain_text_value, &olen);
+    }
     mbedtls_cipher_free(&cipher_ctx);
-
-
     vPortFree(outbuff);
     vPortFree(entropy_key);
     vPortFree(plain_text_value);

@@ -56,4 +56,4 @@ endif
 CONF_ENABLE_COREDUMP:=1
 
 #blog enable components format :=blog_testc cli vfs helper
-LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop http_client_tcp
+LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop http_client_tcp ap_static_ip

@@ -129,9 +129,9 @@ extern "C"
             (lowlevel >= REFF_LEVEL(__COMPONENT_FILE_NAME_DEQUOTED__)) &&                                    \
             (lowlevel >= REFP_LEVEL(priname)))                                                               \
         {                                                                                                    \
-            __blog_printf("[%d][%s: %s:%4d] " M "\r\n",                                                      \
+            __blog_printf("%s (%d)[%s:%4d] " M "\r\n", N,                                                     \
                           (xPortIsInsideInterrupt()) ? (xTaskGetTickCountFromISR()) : (xTaskGetTickCount()), \
-                          N, __FILENAME__, __LINE__,                                                         \
+                           __FILENAME__, __LINE__,                                                         \
                           ##__VA_ARGS__);                                                                    \
         }                                                                                                    \
     } while (0 == 1)
