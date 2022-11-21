@@ -75,10 +75,10 @@ static void wifi_ap_ip_set(char* ip_addr, char* netmask, char* gw)
         netif_set_netmask(ap_netif, &ap_mask);
         netif_set_gw(ap_netif, &ap_gw);
         netif_set_up(ap_netif);
-        blog_info("[softAP]:SSID:%s,PASSWORD:%s,IP addr:%s\r\n", AP_SSID, AP_PWD, ip4addr_ntoa(netif_ip4_addr(ap_netif)));
+        blog_info("[softAP]:SSID:%s,PASSWORD:%s,IP addr:%s", AP_SSID, AP_PWD, ip4addr_ntoa(netif_ip4_addr(ap_netif)));
     }
     else
-        blog_info("no find netif ap1 \r\n");
+        blog_info("no find netif ap1 ");
 
 }
 
@@ -98,25 +98,25 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
 {
     switch (event->code) {
         case CODE_WIFI_ON_INIT_DONE:
-            blog_info("<<<<<<<<<  init wifi done  <<<<<<<<<<\r\n");
+            blog_info("<<<<<<<<<  init wifi done  <<<<<<<<<<");
             wifi_mgmr_start_background(&ap_conf);
             break;
         case CODE_WIFI_ON_MGMR_DONE:
-            blog_info("<<<<<<<<< startting soft ap <<<<<<<<<<<\r\n");
+            blog_info("<<<<<<<<< startting soft ap <<<<<<<<<<<");
             wifi_ap_start();
             break;
         case CODE_WIFI_ON_AP_STARTED:
-            blog_info("<<<<<<<<< startt soft ap OK<<<<<<<<<<<\r\n");
+            blog_info("<<<<<<<<< startt soft ap OK<<<<<<<<<<<");
 
             break;
         case CODE_WIFI_ON_AP_STOPPED:
             break;
         case CODE_WIFI_ON_AP_STA_ADD:
-            blog_info("<<<<<<<<< station connent ap <<<<<<<<<<<\r\n");
+            blog_info("<<<<<<<<< station connent ap <<<<<<<<<<<");
 
             break;
         case CODE_WIFI_ON_AP_STA_DEL:
-            blog_info("<<<<<<<<< station disconnet ap <<<<<<<<<<<\r\n");
+            blog_info("<<<<<<<<< station disconnet ap <<<<<<<<<<<");
 
             break;
         default:
@@ -143,8 +143,8 @@ void main()
 {
     system_thread_init();
 
-    puts("[OS] Starting TCP/IP Stack...\r\n");
+    puts("[OS] Starting TCP/IP Stack...");
     tcpip_init(NULL, NULL);
-    puts("[OS] proc_main_entry task...\r\n");
+    puts("[OS] proc_main_entry task...");
     xTaskCreate(proc_main_entry, (char*)"main_entry", 1024, NULL, 15, NULL);
 }

@@ -758,12 +758,17 @@ static int update_rf_temp_field(const void* fdt, int wifi_offset, const char* na
         addr_prop = fdt_getprop(fdt, offset1, "Tchannels", &lentmp);
         if (lentmp == TCAL_PARA_CHANNELS*4) {
             memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);
-            blog_info_user(dts, "Tchannels:");
-            for (i = 0; i < TCAL_PARA_CHANNELS; i++) {
+
+            for (i = 0; i < TCAL_PARA_CHANNELS; i++)
                 tcal_param_tmp.Tchannels[i] = fdt32_to_cpu(tmp[i]);
-                blog_info_user_raw(dts, "%d,", (int)tcal_param_tmp.Tchannels[i]);
-            }
-            blog_info_user_raw(dts, "");
+            blog_info_user(dts, "Tchannels:%d,%d,%d,%d,%d",
+           (int)tcal_param_tmp.Tchannels[0],
+           (int)tcal_param_tmp.Tchannels[1],
+           (int)tcal_param_tmp.Tchannels[2],
+           (int)tcal_param_tmp.Tchannels[3],
+           (int)tcal_param_tmp.Tchannels[4]
+            );
+
         }
         else {
             blog_info_user(dts, "Tchannels NULL.");
@@ -773,12 +778,19 @@ static int update_rf_temp_field(const void* fdt, int wifi_offset, const char* na
         addr_prop = fdt_getprop(fdt, offset1, "Tchannel_os", &lentmp);
         if (lentmp == TCAL_PARA_CHANNELS*4) {
             memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);
-            blog_info_user(dts, "Tchannel_os:");
+
             for (i = 0; i < TCAL_PARA_CHANNELS; i++) {
                 tcal_param_tmp.Tchannel_os[i] = fdt32_to_cpu(tmp[i]);
-                blog_info_user_raw(dts, "%d,", (int)tcal_param_tmp.Tchannel_os[i]);
+
             }
-            blog_info_user_raw(dts, "\r\b");
+            blog_info_user(dts, "Tchannel_os:%d,%d,%d,%d,%d",
+           (int)tcal_param_tmp.Tchannel_os[0],
+           (int)tcal_param_tmp.Tchannel_os[1],
+           (int)tcal_param_tmp.Tchannel_os[2],
+           (int)tcal_param_tmp.Tchannel_os[3],
+           (int)tcal_param_tmp.Tchannel_os[4]
+            );
+
         }
         else {
             blog_info_user(dts, "Tchannel_os NULL.");
@@ -787,13 +799,20 @@ static int update_rf_temp_field(const void* fdt, int wifi_offset, const char* na
 
         addr_prop = fdt_getprop(fdt, offset1, "Tchannel_os_low", &lentmp);
         if (lentmp == TCAL_PARA_CHANNELS*4) {
-            memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);
-            blog_info_user(dts, "Tchannel_os_low:");
+
             for (i = 0; i < TCAL_PARA_CHANNELS; i++) {
                 tcal_param_tmp.Tchannel_os_low[i] = fdt32_to_cpu(tmp[i]);
-                blog_info_user_raw(dts, "%d,", (int)tcal_param_tmp.Tchannel_os_low[i]);
+
             }
-            blog_info_user_raw(dts, "");
+            memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);
+            blog_info_user(dts, "Tchannel_os_low:%d,%d,%d,%d,%d",
+            (int)tcal_param_tmp.Tchannel_os_low[0],
+            (int)tcal_param_tmp.Tchannel_os_low[1],
+            (int)tcal_param_tmp.Tchannel_os_low[2],
+            (int)tcal_param_tmp.Tchannel_os_low[3],
+            (int)tcal_param_tmp.Tchannel_os_low[4]
+            );
+
         }
         else {
             blog_info_user(dts, "Tchannel_os_low NULL.");

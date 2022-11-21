@@ -2,6 +2,7 @@
 #include <task.h>
 #include <stdio.h>
 #include <string.h>
+#include <blog.h>
 #include <aos/yloop.h>
 #include <aos/kernel.h>
 #include <lwip/tcpip.h>
@@ -17,7 +18,7 @@ void main()
 {
     puts("[OS] main entry\r\n");
     bl_sys_init();
-    xTaskCreate(wifi_execute, (char *)"wifi execute", 1024 * 3, NULL, 15, NULL);
+    xTaskCreate(wifi_execute, (char*)"wifi execute", 1024 * 3, NULL, 15, NULL);
     tcpip_init(NULL, NULL);
-    printf("all things ready");
+    blog_info("all things ready");
 }
