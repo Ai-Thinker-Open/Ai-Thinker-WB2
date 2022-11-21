@@ -24,11 +24,12 @@
 #include "qutils_getopt.h"
 #include "qutils_timer.h"
 #include <FreeRTOS.h>
+#include <blog.h>
 #include <task.h>
 #include <stdio.h>
 #include <string.h>
 #include <semphr.h>
-
+#include <blog.h>
 #include "hosal_gpio.h"
 #include "bl_sys.h"
 #include "hal_sys.h"
@@ -52,7 +53,7 @@ static Timer      sg_reportTimer;
 #define ANSI_COLOR_RESET  "\x1b[0m"
 
 static MQTTEventType sg_subscribe_event_result = MQTT_EVENT_UNDEF;
-static bool          sg_control_msg_arrived    = false;
+static bool          sg_control_msg_arrived = false;
 static char          sg_data_report_buffer[2048];
 static size_t        sg_data_report_buffersize = sizeof(sg_data_report_buffer) / sizeof(sg_data_report_buffer[0]);
 
@@ -64,9 +65,9 @@ static size_t        sg_data_report_buffersize = sizeof(sg_data_report_buffer) /
 static sDataPoint sg_DataTemplate[TOTAL_PROPERTY_COUNT];
 
 typedef enum {
-    eCOLOR_RED   = 0,
+    eCOLOR_RED = 0,
     eCOLOR_GREEN = 1,
-    eCOLOR_BLUE  = 2,
+    eCOLOR_BLUE = 2,
 } eColor;
 
 typedef struct _ProductDataDefine {
@@ -91,21 +92,21 @@ typedef struct _StructDefinePosition {
 static StructDefinePosition sg_StructDataPosition;
 
 
-static void OnReportReplyCallback(void *pClient, Method method, ReplyAck replyAck, const char *pJsonDocument,
-                                  void *pUserdata);
-static int deal_up_stream_user_logic(DeviceProperty *pReportDataList[], int *pCount);
+static void OnReportReplyCallback(void* pClient, Method method, ReplyAck replyAck, const char* pJsonDocument,
+                                  void* pUserdata);
+static int deal_up_stream_user_logic(DeviceProperty* pReportDataList[], int* pCount);
 static hosal_gpio_dev_t led;
 static hosal_gpio_dev_t key;
 static hosal_gpio_dev_t retore;
 
-void *client = NULL;
+void* client = NULL;
 TaskHandle_t report_task_handle = NULL;
 
 #define KEY_PIN     (8)
 #define LED_PIN     (14)
 #define restore_key (4)
 
- void led_gpio_init(uint8_t pin)
+void led_gpio_init(uint8_t pin)
 {
     led.port = pin;
     led.config = OUTPUT_PUSH_PULL;
@@ -118,11 +119,11 @@ void led_ctrl(bool status)
     hosal_gpio_output_set(&led, (uint8_t)status);
 }
 
-void key_irq(void *arg)
+void key_irq(void* arg)
 {
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
 
-    printf("[key irq]\r\n");
+    blog_info("[key irq]");
 
     if (sg_ProductData.m_light_switch)
     {
@@ -135,11 +136,11 @@ void key_irq(void *arg)
 
     led_ctrl((bool)sg_ProductData.m_light_switch);
 
-    vTaskNotifyGiveFromISR( report_task_handle, &xHigherPriorityTaskWoken );
-    portYIELD_FROM_ISR( xHigherPriorityTaskWoken );
+    vTaskNotifyGiveFromISR(report_task_handle, &xHigherPriorityTaskWoken);
+    portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
 }
 
- void key_init(uint8_t pin)
+void key_init(uint8_t pin)
 {
     key.port = pin;
     key.config = INPUT_PULL_DOWN;
@@ -147,19 +148,19 @@ void key_irq(void *arg)
     hosal_gpio_irq_set(&key, HOSAL_IRQ_TRIG_POS_PULSE, key_irq, NULL);
 }
 
-static void restore_task(void *params)
+static void restore_task(void* params)
 {
-    int cnt=0;
-    uint8_t lev=0;
-    while(1)
+    int cnt = 0;
+    uint8_t lev = 0;
+    while (1)
     {
-	    hosal_gpio_input_get(&retore,&lev);
-        if(lev==0)
+        hosal_gpio_input_get(&retore, &lev);
+        if (lev==0)
         {
             cnt++;
-            if(cnt>=100)
+            if (cnt>=100)
             {
-                printf("restore!!!!\r\n");
+                blog_info("restore!!!!");
                 ef_del_env("ssid");
                 ef_del_env("pwd");
                 vTaskDelay(50 / portTICK_PERIOD_MS);
@@ -168,7 +169,7 @@ static void restore_task(void *params)
         }
         else
         {
-            cnt=0;
+            cnt = 0;
         }
         vTaskDelay(50 / portTICK_PERIOD_MS);
     }
@@ -178,22 +179,22 @@ void restore_key_init(uint8_t pin)
 {
     retore.port = pin;
     retore.config = INPUT_PULL_UP;
-    hosal_gpio_init(&retore);  
-    xTaskCreate(restore_task, "restore_task", 2048, NULL, 16, NULL);  
+    hosal_gpio_init(&retore);
+    xTaskCreate(restore_task, "restore_task", 2048, NULL, 16, NULL);
 }
 
-static void report_task(void *params)
+static void report_task(void* params)
 {
-    DeviceProperty *pReportDataList[TOTAL_PROPERTY_COUNT];
+    DeviceProperty* pReportDataList[TOTAL_PROPERTY_COUNT];
     int             ReportCont;
 
     for (;;)
     {
-        ulTaskNotifyTake( pdTRUE, 0xffffffff );
-        printf("rev handle\r\n");
+        ulTaskNotifyTake(pdTRUE, 0xffffffff);
+        blog_info("rev handle");
         if (client == NULL)
             continue;
-        printf("client != null\r\n");
+        blog_info("client != null");
         /*report msg to server*/
         /*report the lastest properties's status*/
         if (QCLOUD_RET_SUCCESS == deal_up_stream_user_logic(pReportDataList, &ReportCont)) {
@@ -203,12 +204,14 @@ static void report_task(void *params)
                 rc = IOT_Template_Report(client, sg_data_report_buffer, sg_data_report_buffersize,
                                          OnReportReplyCallback, NULL, QCLOUD_IOT_MQTT_COMMAND_TIMEOUT);
                 if (rc == QCLOUD_RET_SUCCESS) {
-                    Log_i("data template reporte success");
-                } else {
-                    Log_e("data template reporte failed, err: %d", rc);
+                    blog_info("data template reporte success");
                 }
-            } else {
-                Log_e("construct reporte data failed, err: %d", rc);
+                else {
+                    blog_error("data template reporte failed, err: %d", rc);
+                }
+            }
+            else {
+                blog_error("construct reporte data failed, err: %d", rc);
             }
         }
     }
@@ -216,52 +219,52 @@ static void report_task(void *params)
 
 static void _init_struct_position(void)
 {
-    sg_StructDataPosition.m_longitude               = 1;
+    sg_StructDataPosition.m_longitude = 1;
     sg_StructTemplatePosition[0].data_property.data = &sg_StructDataPosition.m_longitude;
-    sg_StructTemplatePosition[0].data_property.key  = "longitude";
+    sg_StructTemplatePosition[0].data_property.key = "longitude";
     sg_StructTemplatePosition[0].data_property.type = TYPE_TEMPLATE_INT;
-    sg_StructTemplatePosition[0].state              = eCHANGED;
+    sg_StructTemplatePosition[0].state = eCHANGED;
 
-    sg_StructDataPosition.m_latitude                = 1;
+    sg_StructDataPosition.m_latitude = 1;
     sg_StructTemplatePosition[1].data_property.data = &sg_StructDataPosition.m_latitude;
-    sg_StructTemplatePosition[1].data_property.key  = "latitude";
+    sg_StructTemplatePosition[1].data_property.key = "latitude";
     sg_StructTemplatePosition[1].data_property.type = TYPE_TEMPLATE_INT;
-    sg_StructTemplatePosition[1].state              = eCHANGED;
+    sg_StructTemplatePosition[1].state = eCHANGED;
 };
 
 static void _init_data_template(void)
 {
-    memset((void *)&sg_ProductData, 0, sizeof(ProductDataDefine));
+    memset((void*)&sg_ProductData, 0, sizeof(ProductDataDefine));
 
-    sg_ProductData.m_light_switch         = 0;
-    sg_DataTemplate[0].data_property.key  = "power_switch";
+    sg_ProductData.m_light_switch = 0;
+    sg_DataTemplate[0].data_property.key = "power_switch";
     sg_DataTemplate[0].data_property.data = &sg_ProductData.m_light_switch;
     sg_DataTemplate[0].data_property.type = TYPE_TEMPLATE_BOOL;
 
-    sg_ProductData.m_color                = eCOLOR_RED;
-    sg_DataTemplate[1].data_property.key  = "color";
+    sg_ProductData.m_color = eCOLOR_RED;
+    sg_DataTemplate[1].data_property.key = "color";
     sg_DataTemplate[1].data_property.data = &sg_ProductData.m_color;
     sg_DataTemplate[1].data_property.type = TYPE_TEMPLATE_ENUM;
 
-    sg_ProductData.m_brightness           = 0;
-    sg_DataTemplate[2].data_property.key  = "brightness";
+    sg_ProductData.m_brightness = 0;
+    sg_DataTemplate[2].data_property.key = "brightness";
     sg_DataTemplate[2].data_property.data = &sg_ProductData.m_brightness;
     sg_DataTemplate[2].data_property.type = TYPE_TEMPLATE_INT;
 
     strncpy(sg_ProductData.m_name, sg_devInfo.device_name, MAX_STR_NAME_LEN);
     sg_ProductData.m_name[strlen(sg_devInfo.device_name)] = '\0';
-    sg_DataTemplate[3].data_property.key                  = "name";
-    sg_DataTemplate[3].data_property.data                 = sg_ProductData.m_name;
-    sg_DataTemplate[3].data_property.data_buff_len        = MAX_STR_NAME_LEN;
-    sg_DataTemplate[3].data_property.type                 = TYPE_TEMPLATE_STRING;
+    sg_DataTemplate[3].data_property.key = "name";
+    sg_DataTemplate[3].data_property.data = sg_ProductData.m_name;
+    sg_DataTemplate[3].data_property.data_buff_len = MAX_STR_NAME_LEN;
+    sg_DataTemplate[3].data_property.type = TYPE_TEMPLATE_STRING;
 
     _init_struct_position();
-    sg_ProductData.m_position                      = (void *)&sg_StructTemplatePosition;
-    sg_DataTemplate[4].data_property.data          = sg_ProductData.m_position;
+    sg_ProductData.m_position = (void*)&sg_StructTemplatePosition;
+    sg_DataTemplate[4].data_property.data = sg_ProductData.m_position;
     sg_DataTemplate[4].data_property.struct_obj_num = TOTAL_PROPERTY_STRUCT_POSITION_COUNT;
-    sg_DataTemplate[4].data_property.key           = "position";
-    sg_DataTemplate[4].data_property.type          = TYPE_TEMPLATE_JOBJECT;
-    sg_DataTemplate[4].state                       = eCHANGED;
+    sg_DataTemplate[4].data_property.key = "position";
+    sg_DataTemplate[4].data_property.type = TYPE_TEMPLATE_JOBJECT;
+    sg_DataTemplate[4].state = eCHANGED;
 };
 /*-----------------data config end  -------------------*/
 
@@ -297,62 +300,62 @@ static DeviceProperty           g_propertyEvent_hardware_fault[] = {
 static sEvent g_events[] = {
 
     {
-        .event_name   = "status_report",
-        .type         = "info",
-        .timestamp    = 0,
+        .event_name = "status_report",
+        .type = "info",
+        .timestamp = 0,
         .eventDataNum = sizeof(g_propertyEvent_status_report) / sizeof(g_propertyEvent_status_report[0]),
-        .pEventData   = g_propertyEvent_status_report,
+        .pEventData = g_propertyEvent_status_report,
     },
     {
-        .event_name   = "low_voltage",
-        .type         = "alert",
-        .timestamp    = 0,
+        .event_name = "low_voltage",
+        .type = "alert",
+        .timestamp = 0,
         .eventDataNum = sizeof(g_propertyEvent_low_voltage) / sizeof(g_propertyEvent_low_voltage[0]),
-        .pEventData   = g_propertyEvent_low_voltage,
+        .pEventData = g_propertyEvent_low_voltage,
     },
     {
-        .event_name   = "hardware_fault",
-        .type         = "fault",
-        .timestamp    = 0,
+        .event_name = "hardware_fault",
+        .type = "fault",
+        .timestamp = 0,
         .eventDataNum = sizeof(g_propertyEvent_hardware_fault) / sizeof(g_propertyEvent_hardware_fault[0]),
-        .pEventData   = g_propertyEvent_hardware_fault,
+        .pEventData = g_propertyEvent_hardware_fault,
     },
 };
 
 /*-----------------event config end -------------------*/
 
-static void update_events_timestamp(sEvent *pEvents, int count)
+static void update_events_timestamp(sEvent* pEvents, int count)
 {
     int i;
 
     for (i = 0; i < count; i++) {
         if (NULL == (&pEvents[i])) {
-            Log_e("null event pointer");
+            blog_error("null event pointer");
             return;
         }
 #ifdef EVENT_TIMESTAMP_USED
         pEvents[i].timestamp = HAL_Timer_current_sec();  // should be UTC and
-                                                         // accurate
+        // accurate
 #else
         pEvents[i].timestamp = 0;
 #endif
     }
 }
 
-static void event_post_cb(void *pClient, MQTTMessage *msg)
+static void event_post_cb(void* pClient, MQTTMessage* msg)
 {
-    Log_d("recv event reply, clear event");
+    blog_debug("recv event reply, clear event");
     //    IOT_Event_clearFlag(pClient, FLAG_EVENT0);
 }
 
 // event check and post
-static void eventPostCheck(void *client)
+static void eventPostCheck(void* client)
 {
     int      i;
     int      rc;
     uint32_t eflag;
     uint8_t  EventCont;
-    sEvent * pEventList[EVENT_COUNTS];
+    sEvent* pEventList[EVENT_COUNTS];
 
     eflag = IOT_Event_getFlag(client);
     if ((EVENT_COUNTS > 0) && (eflag > 0)) {
@@ -368,7 +371,7 @@ static void eventPostCheck(void *client)
         rc = IOT_Post_Event(client, sg_data_report_buffer, sg_data_report_buffersize, EventCont, pEventList,
                             event_post_cb);
         if (rc < 0) {
-            Log_e("event post failed: %d", rc);
+            blog_error("event post failed: %d", rc);
         }
     }
 }
@@ -381,10 +384,10 @@ static void eventPostCheck(void *client)
 
 #define TOTAL_ACTION_COUNTS (1)
 
-static TYPE_DEF_TEMPLATE_INT sg_blink_in_period    = 5;
+static TYPE_DEF_TEMPLATE_INT sg_blink_in_period = 5;
 static DeviceProperty        g_actionInput_blink[] = {
-    {.key = "period", .data = &sg_blink_in_period, .type = TYPE_TEMPLATE_INT}};
-static TYPE_DEF_TEMPLATE_BOOL sg_blink_out_result    = 0;
+    {.key = "period", .data = &sg_blink_in_period, .type = TYPE_TEMPLATE_INT} };
+static TYPE_DEF_TEMPLATE_BOOL sg_blink_out_result = 0;
 static DeviceProperty         g_actionOutput_blink[] = {
 
     {.key = "result", .data = &sg_blink_out_result, .type = TYPE_TEMPLATE_BOOL},
@@ -393,52 +396,53 @@ static DeviceProperty         g_actionOutput_blink[] = {
 static DeviceAction g_actions[] = {
 
     {
-        .pActionId  = "blink",
-        .timestamp  = 0,
-        .input_num  = sizeof(g_actionInput_blink) / sizeof(g_actionInput_blink[0]),
+        .pActionId = "blink",
+        .timestamp = 0,
+        .input_num = sizeof(g_actionInput_blink) / sizeof(g_actionInput_blink[0]),
         .output_num = sizeof(g_actionOutput_blink) / sizeof(g_actionOutput_blink[0]),
-        .pInput     = g_actionInput_blink,
-        .pOutput    = g_actionOutput_blink,
+        .pInput = g_actionInput_blink,
+        .pOutput = g_actionOutput_blink,
     },
 };
 /*-----------------action config end    -------------------*/
-static void OnActionCallback(void *pClient, const char *pClientToken, DeviceAction *pAction)
+static void OnActionCallback(void* pClient, const char* pClientToken, DeviceAction* pAction)
 {
     int        i;
     sReplyPara replyPara;
 
     // control light blink
-    int             period       = 0;
-    DeviceProperty *pActionInput = pAction->pInput;
+    int             period = 0;
+    DeviceProperty* pActionInput = pAction->pInput;
     for (i = 0; i < pAction->input_num; i++) {
         if (!strcmp(pActionInput[i].key, "period")) {
-            period = *((int *)pActionInput[i].data);
-        } else {
-            Log_e("no such input[%s]!", pActionInput[i].key);
+            period = *((int*)pActionInput[i].data);
+        }
+        else {
+            blog_error("no such input[%s]!", pActionInput[i].key);
         }
     }
 
     // do blink
-    HAL_Printf("%s[lighting blink][****]" ANSI_COLOR_RESET, ANSI_COLOR_RED);
+    HAL_blog_info("%s[lighting blink][****]" ANSI_COLOR_RESET, ANSI_COLOR_RED);
     HAL_SleepMs(period * 1000);
-    HAL_Printf("\r%s[lighting blink][****]" ANSI_COLOR_RESET, ANSI_COLOR_GREEN);
+    HAL_blog_info("\r%s[lighting blink][****]" ANSI_COLOR_RESET, ANSI_COLOR_GREEN);
     HAL_SleepMs(period * 1000);
-    HAL_Printf("\r%s[lighting blink][****]\n" ANSI_COLOR_RESET, ANSI_COLOR_RED);
+    HAL_blog_info("\r%s[lighting blink][****]\n" ANSI_COLOR_RESET, ANSI_COLOR_RED);
 
     // construct output
-    memset((char *)&replyPara, 0, sizeof(sReplyPara));
-    replyPara.code       = eDEAL_SUCCESS;
+    memset((char*)&replyPara, 0, sizeof(sReplyPara));
+    replyPara.code = eDEAL_SUCCESS;
     replyPara.timeout_ms = QCLOUD_IOT_MQTT_COMMAND_TIMEOUT;
     strcpy(replyPara.status_msg,
            "action execute success!");  // add the message about the action resault
 
-    DeviceProperty *pActionOutnput   = pAction->pOutput;
-    *(int *)(pActionOutnput[0].data) = 0;  // set result
+    DeviceProperty* pActionOutnput = pAction->pOutput;
+    *(int*)(pActionOutnput[0].data) = 0;  // set result
 
     IOT_Action_Reply(pClient, pClientToken, sg_data_report_buffer, sg_data_report_buffersize, pAction, &replyPara);
 }
 
-static int _register_data_template_action(void *pTemplate_client)
+static int _register_data_template_action(void* pTemplate_client)
 {
     int i, rc;
 
@@ -446,10 +450,11 @@ static int _register_data_template_action(void *pTemplate_client)
         rc = IOT_Template_Register_Action(pTemplate_client, &g_actions[i], OnActionCallback);
         if (rc != QCLOUD_RET_SUCCESS) {
             rc = IOT_Template_Destroy(pTemplate_client);
-            Log_e("register device data template action failed, err: %d", rc);
+            blog_error("register device data template action failed, err: %d", rc);
             return rc;
-        } else {
-            Log_i("data template action=%s registered.", g_actions[i].pActionId);
+        }
+        else {
+            blog_info("data template action=%s registered.", g_actions[i].pActionId);
         }
     }
 
@@ -457,51 +462,51 @@ static int _register_data_template_action(void *pTemplate_client)
 }
 #endif
 
-static void event_handler(void *pclient, void *handle_context, MQTTEventMsg *msg)
+static void event_handler(void* pclient, void* handle_context, MQTTEventMsg* msg)
 {
     uintptr_t packet_id = (uintptr_t)msg->msg;
 
     switch (msg->event_type) {
         case MQTT_EVENT_UNDEF:
-            Log_i("undefined event occur.");
+            blog_info("undefined event occur.");
             break;
 
         case MQTT_EVENT_DISCONNECT:
-            Log_i("MQTT disconnect.");
+            blog_info("MQTT disconnect.");
             break;
 
         case MQTT_EVENT_RECONNECT:
-            Log_i("MQTT reconnect.");
+            blog_info("MQTT reconnect.");
             break;
 
         case MQTT_EVENT_SUBCRIBE_SUCCESS:
             sg_subscribe_event_result = msg->event_type;
-            Log_i("subscribe success, packet-id=%u", (unsigned int)packet_id);
+            blog_info("subscribe success, packet-id=%u", (unsigned int)packet_id);
             break;
 
         case MQTT_EVENT_SUBCRIBE_TIMEOUT:
             sg_subscribe_event_result = msg->event_type;
-            Log_i("subscribe wait ack timeout, packet-id=%u", (unsigned int)packet_id);
+            blog_info("subscribe wait ack timeout, packet-id=%u", (unsigned int)packet_id);
             break;
 
         case MQTT_EVENT_SUBCRIBE_NACK:
             sg_subscribe_event_result = msg->event_type;
-            Log_i("subscribe nack, packet-id=%u", (unsigned int)packet_id);
+            blog_info("subscribe nack, packet-id=%u", (unsigned int)packet_id);
             break;
 
         case MQTT_EVENT_PUBLISH_SUCCESS:
-            Log_i("publish success, packet-id=%u", (unsigned int)packet_id);
+            blog_info("publish success, packet-id=%u", (unsigned int)packet_id);
             break;
 
         case MQTT_EVENT_PUBLISH_TIMEOUT:
-            Log_i("publish timeout, packet-id=%u", (unsigned int)packet_id);
+            blog_info("publish timeout, packet-id=%u", (unsigned int)packet_id);
             break;
 
         case MQTT_EVENT_PUBLISH_NACK:
-            Log_i("publish nack, packet-id=%u", (unsigned int)packet_id);
+            blog_info("publish nack, packet-id=%u", (unsigned int)packet_id);
             break;
         default:
-            Log_i("Should NOT arrive here.");
+            blog_info("Should NOT arrive here.");
             break;
     }
 }
@@ -511,82 +516,82 @@ static void _usr_init(void)
 {
     // led_gpio_init(LED_PIN);
     // key_init(KEY_PIN);
-    xTaskCreate( report_task, "rptask", 2048, NULL, 16, &report_task_handle);
+    xTaskCreate(report_task, "rptask", 2048, NULL, 16, &report_task_handle);
 
-    Log_d("add your init code here");
+    blog_debug("add your init code here");
 }
 
 // Setup MQTT construct parameters
-static int _setup_connect_init_params(TemplateInitParams *initParams)
+static int _setup_connect_init_params(TemplateInitParams* initParams)
 {
     int ret;
 
-    ret = HAL_GetDevInfo((void *)&sg_devInfo);
+    ret = HAL_GetDevInfo((void*)&sg_devInfo);
     if (QCLOUD_RET_SUCCESS != ret) {
         return ret;
     }
 
-    initParams->region      = sg_devInfo.region;
+    initParams->region = sg_devInfo.region;
     initParams->device_name = sg_devInfo.device_name;
-    initParams->product_id  = sg_devInfo.product_id;
+    initParams->product_id = sg_devInfo.product_id;
 
 #ifdef AUTH_MODE_CERT
     /* TLS with certs*/
     char  certs_dir[PATH_MAX + 1] = "certs";
     char  current_path[PATH_MAX + 1];
-    char *cwd = getcwd(current_path, sizeof(current_path));
+    char* cwd = getcwd(current_path, sizeof(current_path));
     if (cwd == NULL) {
-        Log_e("getcwd return NULL");
+        blog_error("getcwd return NULL");
         return QCLOUD_ERR_FAILURE;
     }
     sprintf(sg_cert_file, "%s/%s/%s", current_path, certs_dir, sg_devInfo.dev_cert_file_name);
     sprintf(sg_key_file, "%s/%s/%s", current_path, certs_dir, sg_devInfo.dev_key_file_name);
 
     initParams->cert_file = sg_cert_file;
-    initParams->key_file  = sg_key_file;
+    initParams->key_file = sg_key_file;
 #else
     initParams->device_secret = sg_devInfo.device_secret;
 #endif
 
-    initParams->command_timeout        = QCLOUD_IOT_MQTT_COMMAND_TIMEOUT;
+    initParams->command_timeout = QCLOUD_IOT_MQTT_COMMAND_TIMEOUT;
     initParams->keep_alive_interval_ms = QCLOUD_IOT_MQTT_KEEP_ALIVE_INTERNAL;
-    initParams->auto_connect_enable    = 1;
-    initParams->event_handle.h_fp      = event_handler;
-    initParams->usr_control_handle     = NULL;
+    initParams->auto_connect_enable = 1;
+    initParams->event_handle.h_fp = event_handler;
+    initParams->usr_control_handle = NULL;
 
     return QCLOUD_RET_SUCCESS;
 }
 
 #ifdef LOG_UPLOAD
 // init log upload module
-static int _init_log_upload(TemplateInitParams *init_params)
+static int _init_log_upload(TemplateInitParams* init_params)
 {
-    LogUploadInitParams log_init_params;
-    memset(&log_init_params, 0, sizeof(LogUploadInitParams));
+    LogUploadInitParams blog_infonit_params;
+    memset(&blog_infonit_params, 0, sizeof(LogUploadInitParams));
 
-    log_init_params.region      = init_params->region;
-    log_init_params.product_id  = init_params->product_id;
-    log_init_params.device_name = init_params->device_name;
+    blog_infonit_params.region = init_params->region;
+    blog_infonit_params.product_id = init_params->product_id;
+    blog_infonit_params.device_name = init_params->device_name;
 #ifdef AUTH_MODE_CERT
-    log_init_params.sign_key = init_params->cert_file;
+    blog_infonit_params.sign_key = init_params->cert_file;
 #else
-    log_init_params.sign_key = init_params->device_secret;
+    blog_infonit_params.sign_key = init_params->device_secret;
 #endif
 
 #if defined(__linux__) || defined(WIN32)
-    log_init_params.read_func     = HAL_Log_Read;
-    log_init_params.save_func     = HAL_Log_Save;
-    log_init_params.del_func      = HAL_Log_Del;
-    log_init_params.get_size_func = HAL_Log_Get_Size;
+    blog_infonit_params.read_func = HAL_Log_Read;
+    blog_infonit_params.save_func = HAL_Log_Save;
+    blog_infonit_params.del_func = HAL_blog_debugel;
+    blog_infonit_params.get_size_func = HAL_Log_Get_Size;
 #endif
 
-    return IOT_Log_Init_Uploader(&log_init_params);
+    return IOT_blog_infonit_Uploader(&blog_infonit_params);
 }
 #endif
 
 /*control msg from server will trigger this callback*/
-static void OnControlMsgCallback(void *pClient, const char *pJsonValueBuffer, uint32_t valueLength,
-                                 DeviceProperty *pProperty)
+static void OnControlMsgCallback(void* pClient, const char* pJsonValueBuffer, uint32_t valueLength,
+                                 DeviceProperty* pProperty)
 {
     int i = 0;
 
@@ -595,23 +600,23 @@ static void OnControlMsgCallback(void *pClient, const char *pJsonValueBuffer, ui
          * _handle_delta()*/
         if (strcmp(sg_DataTemplate[i].data_property.key, pProperty->key) == 0) {
             sg_DataTemplate[i].state = eCHANGED;
-            Log_i("Property=%s changed", pProperty->key);
+            blog_info("Property=%s changed", pProperty->key);
             sg_control_msg_arrived = true;
             return;
         }
     }
 
-    Log_e("Property=%s changed no match", pProperty->key);
+    blog_error("Property=%s changed no match", pProperty->key);
 }
 
-static void OnReportReplyCallback(void *pClient, Method method, ReplyAck replyAck, const char *pJsonDocument,
-                                  void *pUserdata)
+static void OnReportReplyCallback(void* pClient, Method method, ReplyAck replyAck, const char* pJsonDocument,
+                                  void* pUserdata)
 {
-    Log_i("recv report_reply(ack=%d): %s", replyAck, pJsonDocument);
+    blog_info("recv report_reply(ack=%d): %s", replyAck, pJsonDocument);
 }
 
 // register data template properties
-static int _register_data_template_property(void *pTemplate_client)
+static int _register_data_template_property(void* pTemplate_client)
 {
     int i, rc;
 
@@ -619,10 +624,11 @@ static int _register_data_template_property(void *pTemplate_client)
         rc = IOT_Template_Register_Property(pTemplate_client, &sg_DataTemplate[i].data_property, OnControlMsgCallback);
         if (rc != QCLOUD_RET_SUCCESS) {
             rc = IOT_Template_Destroy(pTemplate_client);
-            Log_e("register device data template property failed, err: %d", rc);
+            blog_error("register device data template property failed, err: %d", rc);
             return rc;
-        } else {
-            Log_i("data template property=%s registered.", sg_DataTemplate[i].data_property.key);
+        }
+        else {
+            blog_info("data template property=%s registered.", sg_DataTemplate[i].data_property.key);
         }
     }
 
@@ -630,7 +636,7 @@ static int _register_data_template_property(void *pTemplate_client)
 }
 
 /*get property state, changed or not*/
-static eDataState get_property_state(void *pProperyData)
+static eDataState get_property_state(void* pProperyData)
 {
     int i;
 
@@ -640,12 +646,12 @@ static eDataState get_property_state(void *pProperyData)
         }
     }
 
-    Log_e("no property matched");
+    blog_error("no property matched");
     return eNOCHANGE;
 }
 
 /*set property state, changed or no change*/
-static void set_property_state(void *pProperyData, eDataState state)
+static void set_property_state(void* pProperyData, eDataState state)
 {
     int i;
 
@@ -658,30 +664,30 @@ static void set_property_state(void *pProperyData, eDataState state)
 }
 
 /* demo for light logic deal */
-static void deal_down_stream_user_logic(void *client, ProductDataDefine *light)
+static void deal_down_stream_user_logic(void* client, ProductDataDefine* light)
 {
     int         i;
-    const char *ansi_color         = NULL;
-    const char *ansi_color_name    = NULL;
-    char        brightness_bar[]   = "||||||||||||||||||||";
+    const char* ansi_color = NULL;
+    const char* ansi_color_name = NULL;
+    char        brightness_bar[] = "||||||||||||||||||||";
     int         brightness_bar_len = strlen(brightness_bar);
 
     /* light color */
     switch (light->m_color) {
         case eCOLOR_RED:
-            ansi_color      = ANSI_COLOR_RED;
+            ansi_color = ANSI_COLOR_RED;
             ansi_color_name = " RED ";
             break;
         case eCOLOR_GREEN:
-            ansi_color      = ANSI_COLOR_GREEN;
+            ansi_color = ANSI_COLOR_GREEN;
             ansi_color_name = "GREEN";
             break;
         case eCOLOR_BLUE:
-            ansi_color      = ANSI_COLOR_BLUE;
+            ansi_color = ANSI_COLOR_BLUE;
             ansi_color_name = " BLUE";
             break;
         default:
-            ansi_color      = ANSI_COLOR_YELLOW;
+            ansi_color = ANSI_COLOR_YELLOW;
             ansi_color_name = "UNKNOWN";
             break;
     }
@@ -696,12 +702,13 @@ static void deal_down_stream_user_logic(void *client, ProductDataDefine *light)
     if (light->m_light_switch) {
         /* light is on , show with the properties*/
         led_ctrl(true);
-        HAL_Printf("%s[  lighting  ]|[color:%s]|[brightness:%s]|[%s]\n" ANSI_COLOR_RESET, ansi_color, ansi_color_name,
+        blog_info("%s[  lighting  ]|[color:%s]|[brightness:%s]|[%s]\n" ANSI_COLOR_RESET, ansi_color, ansi_color_name,
                    brightness_bar, light->m_name);
-    } else {
+    }
+    else {
         /* light is off */
         led_ctrl(false);
-        HAL_Printf(ANSI_COLOR_YELLOW "[  light is off ]|[color:%s]|[brightness:%s]|[%s]\n" ANSI_COLOR_RESET,
+        blog_info(ANSI_COLOR_YELLOW "[  light is off ]|[color:%s]|[brightness:%s]|[%s]\n" ANSI_COLOR_RESET,
                    ansi_color_name, brightness_bar, light->m_name);
     }
 
@@ -709,30 +716,31 @@ static void deal_down_stream_user_logic(void *client, ProductDataDefine *light)
     if (eCHANGED == get_property_state(&light->m_light_switch)) {
 #ifdef EVENT_POST_ENABLED
         if (light->m_light_switch) {
-            *(TYPE_DEF_TEMPLATE_BOOL *)g_events[0].pEventData[0].data = 1;
-            memset((TYPE_DEF_TEMPLATE_STRING *)g_events[0].pEventData[1].data, 0, MAX_EVENT_STR_MESSAGE_LEN);
-            strcpy((TYPE_DEF_TEMPLATE_STRING *)g_events[0].pEventData[1].data, "light on");
-        } else {
-            *(TYPE_DEF_TEMPLATE_BOOL *)g_events[0].pEventData[0].data = 0;
-            memset((TYPE_DEF_TEMPLATE_STRING *)g_events[0].pEventData[1].data, 0, MAX_EVENT_STR_MESSAGE_LEN);
-            strcpy((TYPE_DEF_TEMPLATE_STRING *)g_events[0].pEventData[1].data, "light off");
+            *(TYPE_DEF_TEMPLATE_BOOL*)g_events[0].pEventData[0].data = 1;
+            memset((TYPE_DEF_TEMPLATE_STRING*)g_events[0].pEventData[1].data, 0, MAX_EVENT_STR_MESSAGE_LEN);
+            strcpy((TYPE_DEF_TEMPLATE_STRING*)g_events[0].pEventData[1].data, "light on");
+        }
+        else {
+            *(TYPE_DEF_TEMPLATE_BOOL*)g_events[0].pEventData[0].data = 0;
+            memset((TYPE_DEF_TEMPLATE_STRING*)g_events[0].pEventData[1].data, 0, MAX_EVENT_STR_MESSAGE_LEN);
+            strcpy((TYPE_DEF_TEMPLATE_STRING*)g_events[0].pEventData[1].data, "light off");
         }
 
         // switch state changed set EVENT0 flag, the events will be posted by
         // eventPostCheck
         IOT_Event_setFlag(client, FLAG_EVENT0);
 #else
-        Log_d("light switch state changed");
+        blog_debug("light switch state changed");
 #endif
     }
 
     if (eCHANGED == get_property_state(light->m_position)) {
-        Log_d("light longitude: %d, latitude: %d", sg_StructDataPosition.m_longitude, sg_StructDataPosition.m_latitude);
+        blog_debug("light longitude: %d, latitude: %d", sg_StructDataPosition.m_longitude, sg_StructDataPosition.m_latitude);
     }
 }
 
 /*example for cycle report, you can delete this for your needs*/
-static void cycle_report(Timer *reportTimer)
+static void cycle_report(Timer* reportTimer)
 {
     int i;
 
@@ -756,13 +764,13 @@ static void _refresh_local_property(void)
 }
 
 /*find propery need report*/
-static int find_wait_report_property(DeviceProperty *pReportDataList[])
+static int find_wait_report_property(DeviceProperty* pReportDataList[])
 {
     int i, j;
 
     for (i = 0, j = 0; i < TOTAL_PROPERTY_COUNT; i++) {
         if (eCHANGED == sg_DataTemplate[i].state) {
-            pReportDataList[j++]     = &(sg_DataTemplate[i].data_property);
+            pReportDataList[j++] = &(sg_DataTemplate[i].data_property);
             sg_DataTemplate[i].state = eNOCHANGE;
         }
     }
@@ -771,7 +779,7 @@ static int find_wait_report_property(DeviceProperty *pReportDataList[])
 }
 
 /* demo for up-stream code */
-static int deal_up_stream_user_logic(DeviceProperty *pReportDataList[], int *pCount)
+static int deal_up_stream_user_logic(DeviceProperty* pReportDataList[], int* pCount)
 {
     // refresh local property
     _refresh_local_property();
@@ -783,7 +791,7 @@ static int deal_up_stream_user_logic(DeviceProperty *pReportDataList[], int *pCo
 }
 
 /*You should get the real info for your device, here just for example*/
-static int _get_sys_info(void *handle, char *pJsonDoc, size_t sizeOfBuffer)
+static int _get_sys_info(void* handle, char* pJsonDoc, size_t sizeOfBuffer)
 {
     /*platform info has at least one of module_hardinfo/module_softinfo/fw_ver
      * property*/
@@ -800,29 +808,28 @@ static int _get_sys_info(void *handle, char *pJsonDoc, size_t sizeOfBuffer)
 
     /*self define info*/
     DeviceProperty self_info[] = {
-        {.key = "append_info", .type = TYPE_TEMPLATE_STRING, .data = "your self define info"}, 
+        {.key = "append_info", .type = TYPE_TEMPLATE_STRING, .data = "your self define info"},
         {.key = NULL, .data = NULL}  // end
     };
 
     return IOT_Template_JSON_ConstructSysInfo(handle, pJsonDoc, sizeOfBuffer, plat_info, self_info);
 }
 
-void bl_qcloud_main(void *params)
+void bl_qcloud_main(void* params)
 {
-    DeviceProperty *pReportDataList[TOTAL_PROPERTY_COUNT];
+    DeviceProperty* pReportDataList[TOTAL_PROPERTY_COUNT];
     sReplyPara      replyPara;
     int             ReportCont;
     int             rc;
-	// void *client=NULL;
+    // void *client=NULL;
     // init log level
-    IOT_Log_Set_Level(eLOG_DEBUG);
     // parse arguments for device info file
 
     // init connection
-    TemplateInitParams init_params = {"china", NULL, NULL, NULL, 2000, 1000, 1, 1, { 0 }};
-    rc                             = _setup_connect_init_params(&init_params);
+    TemplateInitParams init_params = { "china", NULL, NULL, NULL, 2000, 1000, 1, 1, { 0 } };
+    rc = _setup_connect_init_params(&init_params);
     if (rc != QCLOUD_RET_SUCCESS) {
-        Log_e("init params err,rc=%d", rc);
+        blog_error("init params err,rc=%d", rc);
         goto exit_1;
     }
 
@@ -830,21 +837,22 @@ void bl_qcloud_main(void *params)
     // _init_log_upload should be done after _setup_connect_init_params and before IOT_Template_Construct
     rc = _init_log_upload(&init_params);
     if (rc != QCLOUD_RET_SUCCESS) {
-        Log_e("init log upload error, rc = %d", rc);
+        blog_error("init log upload error, rc = %d", rc);
     }
 #endif
 
     client = IOT_Template_Construct(&init_params, NULL);
     if (client != NULL) {
-        Log_i("Cloud Device Construct Success");
-    } else {
-        Log_e("Cloud Device Construct Failed");
+        blog_info("Cloud Device Construct Success");
+    }
+    else {
+        blog_error("Cloud Device Construct Failed");
         goto exit_1;
     }
 
 #ifdef MULTITHREAD_ENABLED
     if (QCLOUD_RET_SUCCESS != IOT_Template_Start_Yield_Thread(client)) {
-        Log_e("start template yield thread fail");
+        blog_error("start template yield thread fail");
         goto exit;
     }
 #endif
@@ -858,19 +866,21 @@ void bl_qcloud_main(void *params)
     // register data template propertys here
     rc = _register_data_template_property(client);
     if (rc == QCLOUD_RET_SUCCESS) {
-        Log_i("Register data template propertys Success");
-    } else {
-        Log_e("Register data template propertys Failed: %d", rc);
+        blog_info("Register data template propertys Success");
+    }
+    else {
+        blog_error("Register data template propertys Failed: %d", rc);
         goto exit;
     }
 
-// register data template actions here
+    // register data template actions here
 #ifdef ACTION_ENABLED
     rc = _register_data_template_action(client);
     if (rc == QCLOUD_RET_SUCCESS) {
-        Log_i("Register data template actions Success");
-    } else {
-        Log_e("Register data template actions Failed: %d", rc);
+        blog_info("Register data template actions Success");
+    }
+    else {
+        blog_error("Register data template actions Failed: %d", rc);
         goto exit;
     }
 #endif
@@ -881,18 +891,20 @@ void bl_qcloud_main(void *params)
         rc = IOT_Template_Report_SysInfo_Sync(client, sg_data_report_buffer, sg_data_report_buffersize,
                                               QCLOUD_IOT_MQTT_COMMAND_TIMEOUT);
         if (rc != QCLOUD_RET_SUCCESS) {
-            Log_e("Report system info fail, err: %d", rc);
+            blog_error("Report system info fail, err: %d", rc);
         }
-    } else {
-        Log_e("Get system info fail, err: %d", rc);
+    }
+    else {
+        blog_error("Get system info fail, err: %d", rc);
     }
 
     // get the property changed during offline
     rc = IOT_Template_GetStatus_sync(client, QCLOUD_IOT_MQTT_COMMAND_TIMEOUT);
     if (rc != QCLOUD_RET_SUCCESS) {
-        Log_e("Get data status fail, err: %d", rc);
-    } else {
-        Log_d("Get data status success");
+        blog_error("Get data status fail, err: %d", rc);
+    }
+    else {
+        blog_debug("Get data status success");
     }
 
     // init a timer for cycle report, you could delete it or not for your needs
@@ -904,8 +916,9 @@ void bl_qcloud_main(void *params)
         if (rc == QCLOUD_ERR_MQTT_ATTEMPTING_RECONNECT) {
             HAL_SleepMs(1000);
             continue;
-        } else if (rc != QCLOUD_RET_SUCCESS) {
-            Log_e("Exit loop caused of errCode: %d", rc);
+        }
+        else if (rc != QCLOUD_RET_SUCCESS) {
+            blog_error("Exit loop caused of errCode: %d", rc);
         }
 
         /* handle control msg from server */
@@ -913,21 +926,22 @@ void bl_qcloud_main(void *params)
             deal_down_stream_user_logic(client, &sg_ProductData);
             /* control msg should reply, otherwise server treat device didn't receive
              * and retain the msg which would be get by get status*/
-            memset((char *)&replyPara, 0, sizeof(sReplyPara));
-            replyPara.code          = eDEAL_SUCCESS;
-            replyPara.timeout_ms    = QCLOUD_IOT_MQTT_COMMAND_TIMEOUT;
+            memset((char*)&replyPara, 0, sizeof(sReplyPara));
+            replyPara.code = eDEAL_SUCCESS;
+            replyPara.timeout_ms = QCLOUD_IOT_MQTT_COMMAND_TIMEOUT;
             replyPara.status_msg[0] = '\0';  // add extra info to replyPara.status_msg when error occured
 
             rc = IOT_Template_ControlReply(client, sg_data_report_buffer, sg_data_report_buffersize, &replyPara);
             if (rc == QCLOUD_RET_SUCCESS) {
-                Log_d("Contol msg reply success");
+                blog_debug("Contol msg reply success");
                 sg_control_msg_arrived = false;
-            } else {
-                Log_e("Contol msg reply failed, err: %d", rc);
+            }
+            else {
+                blog_error("Contol msg reply failed, err: %d", rc);
             }
         }
 
-    #if 0
+#if 0
         /*report msg to server*/
         /*report the lastest properties's status*/
         if (QCLOUD_RET_SUCCESS == deal_up_stream_user_logic(pReportDataList, &ReportCont)) {
@@ -937,15 +951,17 @@ void bl_qcloud_main(void *params)
                 rc = IOT_Template_Report(client, sg_data_report_buffer, sg_data_report_buffersize,
                                          OnReportReplyCallback, NULL, QCLOUD_IOT_MQTT_COMMAND_TIMEOUT);
                 if (rc == QCLOUD_RET_SUCCESS) {
-                    Log_i("data template reporte success");
-                } else {
-                    Log_e("data template reporte failed, err: %d", rc);
+                    blog_info("data template reporte success");
                 }
-            } else {
-                Log_e("construct reporte data failed, err: %d", rc);
+                else {
+                    blog_error("data template reporte failed, err: %d", rc);
+                }
+            }
+            else {
+                blog_error("construct reporte data failed, err: %d", rc);
             }
         }
-    #endif
+#endif
 
 #ifdef EVENT_POST_ENABLED
         eventPostCheck(client);
@@ -967,4 +983,4 @@ exit:
 #endif
     q_cloud_demo_task = NULL;
     vTaskDelete(NULL);
-}
+    }

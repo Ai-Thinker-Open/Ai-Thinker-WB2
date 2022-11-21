@@ -51,4 +51,4 @@ CONF_ENABLE_COREDUMP:=1
 CONFIG_MBEDTLS_BIGNUM_USE_HW:=1
 
 #blog enable components format :=blog_testc cli vfs helper
-LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop
+LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop aws_iot_core

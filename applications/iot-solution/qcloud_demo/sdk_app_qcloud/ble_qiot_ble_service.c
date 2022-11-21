@@ -18,6 +18,7 @@
 #include "conn.h"
 #include "gatt.h"
 #include "hci_core.h"
+#include <blog.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "cli.h"
@@ -41,29 +42,29 @@
 #define SAMPLE_DEVICE_NAME "BL602"
 
 
-static unsigned char raw_adv_data[20] = {0xE7,0xFE};
+static unsigned char raw_adv_data[20] = { 0xE7,0xFE };
 
 static const struct bt_data ad[] =
 {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
     BT_DATA_BYTES(BT_DATA_UUID16_ALL,0xF0,0xFF),
     BT_DATA(BT_DATA_MANUFACTURER_DATA, raw_adv_data,19),
-    
+
 };
 
-ble_qiot_ret_status_t ble_advertising_start(adv_info_s *adv)
+ble_qiot_ret_status_t ble_advertising_start(adv_info_s* adv)
 {
 #if 0
-    uint8_t usr_adv_data[31] = {0};
-    uint8_t len              = 0;
-    uint8_t index            = 0;
+    uint8_t usr_adv_data[31] = { 0 };
+    uint8_t len = 0;
+    uint8_t index = 0;
 
     memcpy(usr_adv_data, &adv->manufacturer_info.company_identifier, sizeof(uint16_t));
     len = sizeof(uint16_t);
     memcpy(usr_adv_data + len, adv->manufacturer_info.adv_data, adv->manufacturer_info.adv_data_len);
     len += adv->manufacturer_info.adv_data_len;
 
-    index                 = 7;
+    index = 7;
     raw_adv_data[index++] = len + 1;
     raw_adv_data[index++] = 0xFF;
     memcpy(raw_adv_data + index, usr_adv_data, len);
@@ -75,12 +76,12 @@ ble_qiot_ret_status_t ble_advertising_start(adv_info_s *adv)
     index += strlen(SAMPLE_DEVICE_NAME);
 
 
-    printf("start advertising");
+    blog_info("start advertising");
     int err = bt_le_adv_start(BT_LE_ADV_CONN_NAME, raw_adv_data, index, NULL, 0);
     if (err) {
-        printf("Advertising failed to start (err %d)\n", err);
+        blog_info("Advertising failed to start (err %d)\n", err);
 
-		return err;
+        return err;
 
     }
 
@@ -88,22 +89,21 @@ ble_qiot_ret_status_t ble_advertising_start(adv_info_s *adv)
 #endif
     int err;
 
-    printf("\r\n");
-    for (int n = 0; n < adv->manufacturer_info.adv_data_len; n++)
-    {
-        printf(" _%x  ", adv->manufacturer_info.adv_data[n]);
-    }
-    printf("\r\n");
+    // for (int n = 0; n < adv->manufacturer_info.adv_data_len; n++)
+    // {
+    //     blog_info(" _%x  ", adv->manufacturer_info.adv_data[n]);
+    // }
+    blog_info_hexdump("dav data", adv->manufacturer_info.adv_data, adv->manufacturer_info.adv_data_len);
 
     raw_adv_data[0] = 0xE7;
     raw_adv_data[1] = 0xFE;
     memcpy(&raw_adv_data[2], adv->manufacturer_info.adv_data, adv->manufacturer_info.adv_data_len);
-    printf("Bluetooth Advertising start\n");
+    blog_info("Bluetooth Advertising start\n");
 
     err = bt_le_adv_start(BT_LE_ADV_CONN_NAME, ad, ARRAY_SIZE(ad), NULL, 0);
     if (err)
     {
-        printf("Advertising failed to start (err %d)\n", err);
+        blog_error("Advertising failed to start (err %d)\n", err);
     }
 
     return 0;
@@ -121,11 +121,11 @@ ble_qiot_ret_status_t ble_advertising_stop(void)
 
 #define BT_UUID_QQ_DATA_OUT BT_UUID_DECLARE_128(BT_UUID_128_ENCODE(0x0000ffe3, 0x65d0, 0x4e20, 0xb56a, 0xe493541ba4e2))
 
-static void ble_bl_ccc_cfg_changed(const struct bt_gatt_attr *attr, u16_t vblfue);
-static int ble_blf_recv(struct bt_conn *conn,
-              const struct bt_gatt_attr *attr, const void *buf,
+static void ble_bl_ccc_cfg_changed(const struct bt_gatt_attr* attr, u16_t vblfue);
+static int ble_blf_recv(struct bt_conn* conn,
+              const struct bt_gatt_attr* attr, const void* buf,
               u16_t len, u16_t offset, u8_t flags);
-static struct bt_conn *ble_bl_conn=NULL;
+static struct bt_conn* ble_bl_conn = NULL;
 
 static struct bt_gatt_attr blattrs[] = {
     BT_GATT_PRIMARY_SERVICE(BT_UUID_QQ),
@@ -147,23 +147,23 @@ static struct bt_gatt_attr blattrs[] = {
                             NULL)
 };
 
-static void ble_bl_ccc_cfg_changed(const struct bt_gatt_attr *attr, u16_t vblfue)
+static void ble_bl_ccc_cfg_changed(const struct bt_gatt_attr* attr, u16_t vblfue)
 {
     if (vblfue == BT_GATT_CCC_NOTIFY)
     {
-        printf("enable notify.\n");
+        blog_info("enable notify.");
     }
     else
     {
-        printf("disable notify.\n");
+        blog_error("disable notify.");
     }
 }
 
-static int ble_blf_recv(struct bt_conn *conn,
-              const struct bt_gatt_attr *attr, const void *buf,
+static int ble_blf_recv(struct bt_conn* conn,
+              const struct bt_gatt_attr* attr, const void* buf,
               u16_t len, u16_t offset, u8_t flags)
 {
-    uint8_t *tem_buff = malloc(len + 1);
+    uint8_t* tem_buff = malloc(len + 1);
     if (tem_buff == NULL)
     {
         return -1;
@@ -172,59 +172,58 @@ static int ble_blf_recv(struct bt_conn *conn,
     memset(tem_buff, 0, len + 1);
     memcpy(tem_buff, buf, len);
 
-    printf("\r\n[BLE RECV] len=%d\r\n", len);
-    printf("DATA: ");
-    for (size_t i = 0; i < len; i++)
-    {
-        printf("%02X ", tem_buff[i]);
-    }
-    printf("\r\n\r\n");
+    blog_info("[BLE RECV] len=%d", len);
+    // for (size_t i = 0; i < len; i++)
+    // {
+    //     blog_info("%02X ", tem_buff[i]);
+    // }
+    blog_info_hexdump("DATA", tem_buff, len);
 
-   	ble_device_info_write_cb((const uint8_t *)tem_buff, len);
+    ble_device_info_write_cb((const uint8_t*)tem_buff, len);
 
     free(tem_buff);
 
     return 0;
 }
 
-ble_qiot_ret_status_t ble_send_notify(uint8_t *buf, uint8_t len)
+ble_qiot_ret_status_t ble_send_notify(uint8_t* buf, uint8_t len)
 {
     if (ble_bl_conn != NULL)
     {
-        printf("ble_send_notify len=%d\n", len);
+        blog_info("ble_send_notify len=%d", len);
         // bt_gatt_notify(ble_bl_conn, &blattrs[1],buf,len);
         // char data[10] = {0x00,0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09};
 
         bt_gatt_notify(ble_bl_conn, &blattrs[1], buf, len);
     }
-    
+
     return BLE_QIOT_RS_OK;
 }
 
 struct bt_gatt_service ble_bl_server = BT_GATT_SERVICE(blattrs);
 
-void ble_services_add(const qiot_service_init_s *p_service)
+void ble_services_add(const qiot_service_init_s* p_service)
 {
     bt_gatt_service_register(&ble_bl_server);
 }
 
-static void connected(struct bt_conn *conn, u8_t err)
+static void connected(struct bt_conn* conn, u8_t err)
 {
     if (err)
     {
-        printf("Connection failed (err 0x%02x)\n", err);
+        blog_error("Connection failed (err 0x%02x)", err);
     }
     else
     {
-        printf("Connected\n");
+        blog_info("Connected\n");
         ble_bl_conn = conn;
         ble_gap_connect_cb();
     }
 }
 
-static void disconnected(struct bt_conn *conn, u8_t reason)
+static void disconnected(struct bt_conn* conn, u8_t reason)
 {
-    printf("disConnected\r\n");
+    blog_info("disConnected");
     if (ble_bl_conn == conn)
     {
         ble_bl_conn = NULL;
@@ -232,27 +231,27 @@ static void disconnected(struct bt_conn *conn, u8_t reason)
     ble_gap_disconnect_cb();
 }
 static struct bt_conn_cb conn_callbacks = {
-	.connected =connected ,
-	.disconnected = disconnected,
+    .connected = connected ,
+    .disconnected = disconnected,
 };
 
 void ble_qiot_service_init(void)
 {
-	ble_controller_init(configMAX_PRIORITIES - 1);
-	// Initiblfize BLE Host stack
-	hci_driver_init();
-	bt_enable(NULL);
-	bt_conn_cb_register(&conn_callbacks);
+    ble_controller_init(configMAX_PRIORITIES - 1);
+    // Initiblfize BLE Host stack
+    hci_driver_init();
+    bt_enable(NULL);
+    bt_conn_cb_register(&conn_callbacks);
     // init llsync sdk
     ble_qiot_explorer_init();       // 注册蓝牙服务，获取三元组信息
-	ble_qiot_advertising_start();   // 组包，广播
+    ble_qiot_advertising_start();   // 组包，广播
 }
 
-int ble_get_mac(char *mac)
+int ble_get_mac(char* mac)
 {
     bt_addr_le_t local_pub_addr;
     bt_get_local_public_address(&local_pub_addr);
-    memcpy(mac,local_pub_addr.a.val, 6);
+    memcpy(mac, local_pub_addr.a.val, 6);
 
     return 0;
 }
@@ -273,10 +272,10 @@ void ble_deinit(void)
     err = bt_disable();
     if (err)
     {
-        printf("Fail to disable bt, there is existed scan/adv/conn event \r\n");
+        blog_error("Fail to disable bt, there is existed scan/adv/conn event ");
     }
     else
     {
-        printf("Disable bt successfully\r\n");
+        blog_info("Disable bt successfully");
     }
 }

@@ -37,7 +37,7 @@ static void testdisconnectCallbackHandler(AWS_IoT_Client* pClient, void* data) {
 			blog_info("Manual Reconnect Successful");
 		}
 		else {
-			blog_errr("Manual Reconnect Failed - %d", rc);
+			blog_error("Manual Reconnect Failed - %d", rc);
 		}
 	}
 }

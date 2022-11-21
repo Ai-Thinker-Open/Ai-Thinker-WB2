@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <FreeRTOS.h>
+#include <blog.h>
 #include <task.h>
 #include "qcloud_iot_export.h"
 #include "qcloud_iot_import.h"
@@ -51,33 +52,33 @@ static char sg_key_file[PATH_MAX + 1 + 1024];   // full path of device key file
 
 static TaskHandle_t q_cloud_netconfig_task = NULL;
 TaskHandle_t q_cloud_demo_task = NULL;
-hw_timer_t  *qcloud_demo_handle= NULL;
+hw_timer_t* qcloud_demo_handle = NULL;
 
 // user's log print callback
-static bool log_handler(const char *message)
+static bool log_handler(const char* message)
 {
     // return true if print success
     return false;
 }
 
-static void _wifi_config_result_cb(eWiFiConfigResult event, void *usr_data)
+static void _wifi_config_result_cb(eWiFiConfigResult event, void* usr_data)
 {
-    Log_d("entry...");
+    blog_debug("entry...");
     qiot_wifi_config_stop();
     switch (event) {
         case RESULT_WIFI_CONFIG_SUCCESS:
-            Log_i("WiFi is ready, to do Qcloud IoT demo");
-            Log_d("timestamp now:%d", HAL_Timer_current_sec());
+            blog_info("WiFi is ready, to do Qcloud IoT demo");
+            blog_debug("timestamp now:%d", HAL_Timer_current_sec());
             wifi_config_result_success = true;
-            Log_i("send q_cloud_netconfig_task exit\r\n");
+            blog_info("send q_cloud_netconfig_task exit");
             xTaskNotify(q_cloud_netconfig_task, 1, eSetValueWithOverwrite);
             break;
 
         case RESULT_WIFI_CONFIG_TIMEOUT:
-            Log_e("wifi config timeout!");
+            blog_error("wifi config timeout!");
             wifi_config_result_success = false;
         case RESULT_WIFI_CONFIG_FAILED:
-            Log_e("wifi config failed!");
+            blog_error("wifi config failed!");
             qiot_wifi_config_send_log();
             wifi_config_result_success = false;
             break;
@@ -93,21 +94,21 @@ static bool qcloud_wifi_config_proc(void)
     Timer timer;
     static int cnt;
 #if WIFI_PROV_SOFT_AP_ENABLE
-    WiFiConfigParams apConf = {"tcloud-softap", "12345678", 6};
-    rc                         = qiot_wifi_config_start(WIFI_CONFIG_TYPE_SOFT_AP, &apConf, _wifi_config_result_cb);
+    WiFiConfigParams apConf = { "tcloud-softap", "12345678", 6 };
+    rc = qiot_wifi_config_start(WIFI_CONFIG_TYPE_SOFT_AP, &apConf, _wifi_config_result_cb);
     countdown(&timer, 500);
     while ((rc == QCLOUD_RET_SUCCESS) && (false == wifi_config_result_success) && !expired(&timer)) {
-        Log_d("wait wifi config result...");
+        blog_debug("wait wifi config result...");
         HAL_SleepMs(1000);
         cnt++;
-        if(cnt%2)
+        if (cnt%2)
         {
             led_ctrl(1);
         }
         else
         {
             led_ctrl(0);
-        }         
+        }
     }
     qiot_wifi_config_stop();
     if (true == wifi_config_result_success) {
@@ -119,7 +120,7 @@ static bool qcloud_wifi_config_proc(void)
     rc = qiot_wifi_config_start(WIFI_CONFIG_TYPE_SMART_CONFIG, NULL, _wifi_config_result_cb);
     countdown(&timer, 500);
     while ((rc == QCLOUD_RET_SUCCESS) && (false == wifi_config_result_success) && !expired(&timer)) {
-        Log_d("wait wifi config result...");
+        blog_debug("wait wifi config result...");
         HAL_SleepMs(1000);
     }
     qiot_wifi_config_stop();
@@ -132,7 +133,7 @@ static bool qcloud_wifi_config_proc(void)
     rc = qiot_wifi_config_start(WIFI_CONFIG_TYPE_AIRKISS, NULL, _wifi_config_result_cb);
     countdown(&timer, 500);
     while ((rc == QCLOUD_RET_SUCCESS) && (false == wifi_config_result_success) && !expired(&timer)) {
-        Log_d("wait wifi config result...");
+        blog_debug("wait wifi config result...");
         HAL_SleepMs(1000);
     }
     qiot_wifi_config_stop();
@@ -145,7 +146,7 @@ static bool qcloud_wifi_config_proc(void)
     rc = qiot_wifi_config_start(WIFI_CONFIG_TYPE_SIMPLE_CONFIG, NULL, _wifi_config_result_cb);
     countdown(&timer, 500);
     while ((rc == QCLOUD_RET_SUCCESS) && (false == wifi_config_result_success) && !expired(&timer)) {
-        Log_d("wait wifi config result...");
+        blog_debug("wait wifi config result...");
         HAL_SleepMs(1000);
     }
     qiot_wifi_config_stop();
@@ -158,17 +159,17 @@ static bool qcloud_wifi_config_proc(void)
     rc = qiot_wifi_config_start(WIFI_CONFIG_TYPE_BT_COMBO, NULL, _wifi_config_result_cb);
     countdown(&timer, 500);
     while ((rc == QCLOUD_RET_SUCCESS) && (false == wifi_config_result_success) && !expired(&timer)) {
-        Log_d("wait wifi config result...");
+        blog_debug("wait wifi config result...");
         HAL_SleepMs(1000);
         cnt++;
-        if(cnt%2)
+        if (cnt%2)
         {
             led_ctrl(1);
         }
         else
         {
             led_ctrl(0);
-        }        
+        }
     }
     qiot_wifi_config_stop();
     if (true == wifi_config_result_success) {
@@ -180,18 +181,18 @@ static bool qcloud_wifi_config_proc(void)
 
 void Start_Qcloud_Demo(void)
 {
-    extern void bl_qcloud_main(void *params);
+    extern void bl_qcloud_main(void* params);
 
-    if(qcloud_demo_handle!=NULL)
+    if (qcloud_demo_handle!=NULL)
     {
         hal_hwtimer_delete(qcloud_demo_handle);
     }
-    qcloud_demo_handle=NULL;
-    q_cloud_demo_task=NULL; 
+    qcloud_demo_handle = NULL;
+    q_cloud_demo_task = NULL;
     xTaskCreate(bl_qcloud_main, (char*)"tencent cloud", 2048, NULL, 16, &q_cloud_demo_task);
 }
 
-static void q_cloud_netconfig(void *params)
+static void q_cloud_netconfig(void* params)
 {
     uint32_t ulNotifiedValue = 0;
     uint8_t flagexit = 0;
@@ -202,12 +203,11 @@ static void q_cloud_netconfig(void *params)
     extern int sta_passwd_len;
 
     // init log level
-    IOT_Log_Set_Level(eLOG_DEBUG);
     IOT_Log_Set_MessageHandler(log_handler);
 
     if (false == qcloud_wifi_config_proc())
     {
-        Log_d("wifi config failed");
+        blog_debug("wifi config failed");
     }
     while (1)
     {
@@ -217,24 +217,24 @@ static void q_cloud_netconfig(void *params)
         ulNotifiedValue = 0;
         if (flagexit)
         {
-            Log_i("wifi config ok");
-            ef_set_env_blob("ssid",sta_ssid,std_ssid_len);
-            ef_set_env_blob("pwd",sta_passwd,sta_passwd_len);
+            blog_info("wifi config ok");
+            ef_set_env_blob("ssid", sta_ssid, std_ssid_len);
+            ef_set_env_blob("pwd", sta_passwd, sta_passwd_len);
             goto _exit;
         }
     }
 
 _exit:
-	printf("exit q_cloud_netconfig\r\n");
+    blog_info("exit q_cloud_netconfig");
     qcloud_demo_handle = hal_hwtimer_create(100, Start_Qcloud_Demo, 1);
-	q_cloud_netconfig_task = NULL;
+    q_cloud_netconfig_task = NULL;
     vTaskDelete(NULL);
 }
 
-void Q_Cloud_Config_Net_Start(void)  
+void Q_Cloud_Config_Net_Start(void)
 {
-	if (q_cloud_netconfig_task != NULL)
-		return;
-	printf("create q_cloud_netconfig task\r\n");
-	xTaskCreate(q_cloud_netconfig, "loctrltask", 3 * 1024, NULL, 18, &q_cloud_netconfig_task);   
+    if (q_cloud_netconfig_task != NULL)
+        return;
+    blog_info("create q_cloud_netconfig task");
+    xTaskCreate(q_cloud_netconfig, "loctrltask", 3 * 1024, NULL, 18, &q_cloud_netconfig_task);
 }

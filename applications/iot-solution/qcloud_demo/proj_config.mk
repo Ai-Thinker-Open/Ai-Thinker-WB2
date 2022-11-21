@@ -65,7 +65,7 @@ CONFIG_MBEDTLS_SHA1_USE_HW:=1
 CONFIG_MBEDTLS_SHA256_USE_HW:=1
 
 #blog enable components format :=blog_testc cli vfs helper
-LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop
+LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop sdk_app_qcloud qcloud_iot_c_sdk qcloud_llsync
 
 #死机后打印堆栈
 CONFIG_ENABLE_FP:=1

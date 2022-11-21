@@ -7,6 +7,7 @@
 #include <lwip/tcpip.h>
 #include <bl_sys.h>
 #include <hal_wifi.h>
+#include <blog.h>
 #include <hal_sys.h>
 #include <easyflash.h>
 #include <wifi_mgmr_ext.h>
@@ -30,10 +31,10 @@ static wifi_conf_t conf =
 
 extern  char sta_ssid[33];
 extern char sta_passwd[65];
-extern hw_timer_t  *qcloud_demo_handle;
+extern hw_timer_t* qcloud_demo_handle;
 extern void Start_Qcloud_Demo(void);
 
-static void wifi_sta_connect(char *ssid, char *password)
+static void wifi_sta_connect(char* ssid, char* password)
 {
     wifi_interface_t wifi_interface;
 
@@ -44,41 +45,43 @@ static void wifi_sta_connect(char *ssid, char *password)
 static bool wifi_info_read()
 {
     size_t len;
-    ef_get_env_blob("ssid",sta_ssid , sizeof(sta_ssid), &len);    
-    if (strlen(sta_ssid) ==0){
-        printf("[NV] get sta_ssid fail:%d \r\n", len);
+    ef_get_env_blob("ssid", sta_ssid, sizeof(sta_ssid), &len);
+    if (strlen(sta_ssid) ==0) {
+        blog_error("[NV] get sta_ssid fail:%d ", len);
         return false;
-    }else{
-        printf("sta_ssid:%s\r\n",sta_ssid);
+    }
+    else {
+        blog_info("sta_ssid:%s", sta_ssid);
     }
 
-    ef_get_env_blob("pwd",sta_passwd , sizeof(sta_passwd), &len);    
-    if (strlen(sta_passwd) ==0){
-        printf("[NV] get sta_passwd fail:%d \r\n", len);
-    }else{
-        printf("sta_passwd:%s\r\n",sta_passwd);
-    }    
+    ef_get_env_blob("pwd", sta_passwd, sizeof(sta_passwd), &len);
+    if (strlen(sta_passwd) ==0) {
+        blog_error("[NV] get sta_passwd fail:%d ", len);
+    }
+    else {
+        blog_info("sta_passwd:%s", sta_passwd);
+    }
     return true;
 }
 
-static void event_cb_wifi_event(input_event_t *event, void *private_data)
+static void event_cb_wifi_event(input_event_t* event, void* private_data)
 {
     extern bool q_cloud_IsConnected;
-    static bool wifi_info_isSet=false;
+    static bool wifi_info_isSet = false;
     switch (event->code) {
         case CODE_WIFI_ON_INIT_DONE:
         {
-            printf("[APP] [EVT] INIT DONE %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] INIT DONE %lld", aos_now_ms());
             wifi_mgmr_start_background(&conf);
         }
         break;
         case CODE_WIFI_ON_MGMR_DONE:
         {
-            printf("[APP] [EVT] MGMR DONE %lld\r\n", aos_now_ms());
-            if(wifi_info_read())
+            blog_info("[APP] [EVT] MGMR DONE %lld", aos_now_ms());
+            if (wifi_info_read())
             {
-                wifi_info_isSet=true;
-                wifi_sta_connect(sta_ssid,sta_passwd);
+                wifi_info_isSet = true;
+                wifi_sta_connect(sta_ssid, sta_passwd);
             }
             else
             {
@@ -86,26 +89,26 @@ static void event_cb_wifi_event(input_event_t *event, void *private_data)
                 Q_Cloud_Config_Net_Start();
             }
         }
-        break; 
+        break;
         case CODE_WIFI_ON_MGMR_DENOISE:
         {
-            printf("[APP] [EVT] Microwave Denoise is ON %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] Microwave Denoise is ON %lld", aos_now_ms());
         }
         break;
         case CODE_WIFI_ON_SCAN_DONE:
         {
-            printf("[APP] [EVT] SCAN Done %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] SCAN Done %lld", aos_now_ms());
             wifi_mgmr_cli_scanlist();
         }
         break;
         case CODE_WIFI_ON_SCAN_DONE_ONJOIN:
         {
-            printf("[APP] [EVT] SCAN On Join %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] SCAN On Join %lld", aos_now_ms());
         }
         break;
         case CODE_WIFI_ON_DISCONNECT:
         {
-            printf("[APP] [EVT] disconnect %lld, Reason: %s\r\n",
+            blog_info("[APP] [EVT] disconnect %lld, Reason: %s",
                    aos_now_ms(),
                    wifi_mgmr_status_code_str(event->value));
             q_cloud_IsConnected = 0;
@@ -113,29 +116,29 @@ static void event_cb_wifi_event(input_event_t *event, void *private_data)
         break;
         case CODE_WIFI_ON_CONNECTING:
         {
-            printf("[APP] [EVT] Connecting %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] Connecting %lld", aos_now_ms());
         }
         break;
         case CODE_WIFI_CMD_RECONNECT:
         {
-            printf("[APP] [EVT] Reconnect %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] Reconnect %lld", aos_now_ms());
         }
         break;
         case CODE_WIFI_ON_CONNECTED:
         {
-            printf("[APP] [EVT] connected %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] connected %lld", aos_now_ms());
         }
         break;
         case CODE_WIFI_ON_PRE_GOT_IP:
         {
-            printf("[APP] [EVT] connected %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] connected %lld", aos_now_ms());
         }
         break;
         case CODE_WIFI_ON_GOT_IP:
         {
-            printf("[APP] [EVT] GOT IP %lld\r\n", aos_now_ms());
-            printf("[SYS] Memory left is %d Bytes\r\n", xPortGetFreeHeapSize());
-            if(wifi_info_isSet)
+            blog_info("[APP] [EVT] GOT IP %lld", aos_now_ms());
+            blog_info("[SYS] Memory left is %d Bytes", xPortGetFreeHeapSize());
+            if (wifi_info_isSet)
             {
                 qcloud_demo_handle = hal_hwtimer_create(100, Start_Qcloud_Demo, 1);
             }
@@ -147,35 +150,35 @@ static void event_cb_wifi_event(input_event_t *event, void *private_data)
         break;
         case CODE_WIFI_ON_EMERGENCY_MAC:
         {
-            printf("[APP] [EVT] EMERGENCY MAC %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] EMERGENCY MAC %lld", aos_now_ms());
             hal_reboot(); // one way of handling emergency is reboot. Maybe we should also consider solutions
         }
         break;
         case CODE_WIFI_ON_PROV_CONNECT:
         {
-            printf("[APP] [EVT] [PROV] [CONNECT] %lld\r\n", aos_now_ms());
-            printf("connecting to %s:%s...\r\n", sta_ssid, sta_passwd);
-            wifi_sta_connect(sta_ssid,sta_passwd);
+            blog_info("[APP] [EVT] [PROV] [CONNECT] %lld", aos_now_ms());
+            blog_info("connecting to %s:%s...", sta_ssid, sta_passwd);
+            wifi_sta_connect(sta_ssid, sta_passwd);
         }
         break;
         case CODE_WIFI_ON_PROV_DISCONNECT:
         {
-            printf("[APP] [EVT] [PROV] [DISCONNECT] %lld\r\n", aos_now_ms());
+            blog_info("[APP] [EVT] [PROV] [DISCONNECT] %lld", aos_now_ms());
         }
         break;
         case CODE_WIFI_ON_AP_STA_ADD:
         {
-            printf("[APP] [EVT] [AP] [ADD] %lld, sta idx is %lu\r\n", aos_now_ms(), (uint32_t)event->value);
+            blog_info("[APP] [EVT] [AP] [ADD] %lld, sta idx is %lu", aos_now_ms(), (uint32_t)event->value);
         }
         break;
         case CODE_WIFI_ON_AP_STA_DEL:
         {
-            printf("[APP] [EVT] [AP] [DEL] %lld, sta idx is %lu\r\n", aos_now_ms(), (uint32_t)event->value);
+            blog_info("[APP] [EVT] [AP] [DEL] %lld, sta idx is %lu", aos_now_ms(), (uint32_t)event->value);
         }
         break;
         default:
         {
-            printf("[APP] [EVT] Unknown code %u, %lld\r\n", event->code, aos_now_ms());
+            blog_info("[APP] [EVT] Unknown code %u, %lld", event->code, aos_now_ms());
             /*nothing*/
         }
         break;
@@ -185,28 +188,28 @@ static void event_cb_wifi_event(input_event_t *event, void *private_data)
 /**
  * @brief 直接串口打印系统任务管理器
  */
-void show_task_state_task(void *param)
+void show_task_state_task(void* param)
 {
-    char *pcWriteBuffer = malloc(1024);
+    char* pcWriteBuffer = malloc(1024);
 
     for (;;)
     {
-        printf("\r\n=============================================\r\n");
-        printf("name \t\tstatus \tprio \tfree \tpid\r\n");
-        vTaskList((char *)pcWriteBuffer);
-        printf("%s", pcWriteBuffer);
-        printf("\n=============================================\r\n");
+        blog_info("=============================================");
+        blog_info("name \t\tstatus \tprio \tfree \tpid");
+        vTaskList((char*)pcWriteBuffer);
+        blog_info("%s", pcWriteBuffer);
+        blog_info("\n=============================================");
 
-        printf("\r\n=====================================\r\n");
-        printf("FreeHeapSize is %d bytes\r\n", xPortGetFreeHeapSize());
-        printf("MinimumEverFreeHeapSize is %d bytes\r\n", xPortGetMinimumEverFreeHeapSize());
-        printf("=====================================\r\n");
+        blog_info("=====================================");
+        blog_info("FreeHeapSize is %d bytes", xPortGetFreeHeapSize());
+        blog_info("MinimumEverFreeHeapSize is %d bytes", xPortGetMinimumEverFreeHeapSize());
+        blog_info("=====================================");
 
         vTaskDelay(pdMS_TO_TICKS(2000));
     }
 }
 
-static void proc_main_entry(void *pvParameters)
+static void proc_main_entry(void* pvParameters)
 {
     easyflash_init();
     aos_register_event_filter(EV_WIFI, event_cb_wifi_event, NULL);
@@ -224,12 +227,12 @@ int main(void)
     key_init(KEY_PIN);
     restore_key_init(restore_key);
     bl_sys_init();
-    xTaskCreate(proc_main_entry, (char *)"main_entry", 1024, NULL, 15, NULL);
+    xTaskCreate(proc_main_entry, (char*)"main_entry", 1024, NULL, 15, NULL);
 
     // xTaskCreate(show_task_state_task, (char *)"status_show", 512, NULL, 8, NULL);
 
     tcpip_init(NULL, NULL);
-    printf("qcloud demo running\r\n");
+    blog_info("qcloud demo running");
 
     return 0;
 }
