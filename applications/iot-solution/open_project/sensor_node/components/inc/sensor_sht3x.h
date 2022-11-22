@@ -28,6 +28,8 @@ typedef enum {
     SHT31_MPS_10_HIGH,
     SHT31_MPS_10_MDN,
     SHT31_MPS_10_LOW,
+    SHT31_CLOCK_STR_ENABLE,
+    SHT31_CLOCK_STR_DISABLE
 }sht31_mps_t;
 
 typedef struct {

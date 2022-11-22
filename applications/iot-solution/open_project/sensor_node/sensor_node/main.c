@@ -7,15 +7,19 @@
 #include <bl_gpio.h>
 #include <blog.h>
 #include "sensor_sht3x.h"
+#include "easy_connect_wifi.h"
+
 
 int main(void)
 {
     sht31_value_t* sensor_data;
+    wifi_easy_connect();
     sensor_sht30_init();
     while (1) {
-        sensor_data = sensor_sht31_get_value();
-        blog_info("sht31 temp:%.2f humi:%d", sensor_data->temp_value, sensor_data->humi_value);
         vTaskDelay(1000/portTICK_PERIOD_MS);
+        sensor_data = sensor_sht31_get_value();
+        blog_info("sht31 temp:%.2f °C humi:%d %%", sensor_data->temp_value, sensor_data->humi_value);
+
     }
     sensor_sht31_deint();
     return 0;

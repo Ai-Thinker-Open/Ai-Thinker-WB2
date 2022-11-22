@@ -37,6 +37,8 @@ struct sht3x_data
     uint8_t srh_low;
     uint8_t srh_crc8;
 };
+
+static sht31_mps_t sht31_mps_buf = SHT31_MPS_0_5_HIGH;
 #pragma pack()
 
 static hosal_i2c_dev_t i2c0 = {
@@ -90,6 +92,8 @@ static int sensor_sht31_soft_reset(void)
 int sensor_sht31_set_mps(sht31_mps_t mps)
 {
     uint8_t cmd[2] = { 0 };
+    sht31_mps_buf = mps;
+
     switch (mps) {
         case SHT31_MPS_0_5_HIGH:
             cmd[0] = 0x20;
@@ -152,8 +156,20 @@ int sensor_sht31_set_mps(sht31_mps_t mps)
             cmd[0] = 0x27;
             cmd[1] = 0x2A;
             break;
+        default:
+            return 0;
+            break;
     }
     return hosal_i2c_master_send(&i2c0, SHT31_DEFAULT_ADDR, cmd, 2, 1000);;
+}
+/**
+ * @brief sensor_sth31_get_mps
+ *
+ * @return sht31_mps_t
+ */
+sht31_mps_t sensor_sth31_get_mps(void)
+{
+    return sht31_mps_buf;
 }
 /**
  * @brief  sensor_sht30_init
@@ -162,13 +178,20 @@ int sensor_sht31_set_mps(sht31_mps_t mps)
  */
 int sensor_sht30_init(void)
 {
+    uint8_t cmd[2] = { 0xe0,0x00 };
     sht31_value.humi_string = pvPortMalloc(8);
     sht31_value.temp_string = pvPortMalloc(8);
     sht31_value.humi_value = 0;
     sht31_value.temp_value = 0;
     hosal_i2c_init(&i2c0);
+
+    sensor_sht31_set_mps(SHT31_MPS_2_HIGH);
     sensor_sht31_soft_reset();
-    return  sensor_sht31_set_mps(SHT31_MPS_4_MDN);
+    vTaskDelay(500/portTICK_PERIOD_MS);
+    if (sensor_sth31_get_mps()!=SHT31_CLOCK_STR_ENABLE||sensor_sth31_get_mps()!=SHT31_CLOCK_STR_DISABLE)
+        return   hosal_i2c_master_send(&i2c0, SHT31_DEFAULT_ADDR, cmd, 2, 1000);
+    else return 0;
+
 }
 /**
  * @brief sensor_sht31_deint
@@ -188,10 +211,18 @@ int sensor_sht31_deint(void)
  */
 sht31_value_t* sensor_sht31_get_value(void)
 {
-    uint8_t cmd[2] = { 0xe0,0x00 };
+    uint8_t cmd[2] = { 0 };
     struct sht3x_data sht31_data;
-    hosal_i2c_master_send(&i2c0, SHT31_DEFAULT_ADDR, cmd, 2, 1000);
-    hosal_i2c_master_recv(&i2c0, SHT31_DEFAULT_ADDR, &sht31_data, sizeof sht31_data, 100);
+    if (sensor_sth31_get_mps()==SHT31_CLOCK_STR_ENABLE) {
+        cmd[0] = 0x2C;cmd[1] = 0x06;
+        hosal_i2c_master_send(&i2c0, SHT31_DEFAULT_ADDR, cmd, 2, 1000);
+    }
+    else if (sensor_sth31_get_mps()!=SHT31_CLOCK_STR_DISABLE) {
+        cmd[0] = 0x24;cmd[1] = 0x00;
+        hosal_i2c_master_send(&i2c0, SHT31_DEFAULT_ADDR, cmd, 2, 1000);
+    }
+
+    hosal_i2c_master_recv(&i2c0, SHT31_DEFAULT_ADDR, (uint8_t*)&sht31_data, sizeof sht31_data, 100);
 
     if (crc8(&sht31_data.st_high, 2) == sht31_data.st_crc8) {
         uint16_t st = sht31_data.st_high;
