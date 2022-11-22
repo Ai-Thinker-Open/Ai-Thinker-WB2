@@ -33,12 +33,13 @@ typedef enum {
 typedef struct {
     double temp_value;
     unsigned char humi_value;
-    unsigned char* temp_string;
-    unsigned char* humi_string;
+    char* temp_string;
+    char* humi_string;
 }sht31_value_t;
 
 
 int sensor_sht30_init(void);
 int sensor_sht31_deint(void);
 int sensor_sht31_set_mps(sht31_mps_t mps);
+sht31_value_t* sensor_sht31_get_value(void);
 #endif

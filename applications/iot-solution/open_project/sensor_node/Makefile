@@ -19,7 +19,7 @@ $(info ****** Trying SDK PATH [$(BL60X_SDK_PATH)])
 endif
 
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopset looprt
-COMPONENTS_VFS     := romfs components main
+COMPONENTS_VFS     := romfs components 
 
 INCLUDE_COMPONENTS += freertos_riscv_ram
 INCLUDE_COMPONENTS += bl602 bl602_std

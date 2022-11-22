@@ -14,6 +14,7 @@
 #include <blog.h>
 #include <hosal_i2c.h>
 #include "sensor_sht3x.h"
+
 #define SHT31_DEFAULT_ADDR 0x0044
 #define SHT31_MEAS_HIGHREP 0x2400
 
@@ -41,7 +42,7 @@ struct sht3x_data
 static hosal_i2c_dev_t i2c0 = {
         .config = {
             .address_width = HOSAL_I2C_ADDRESS_WIDTH_7BIT,
-            .freq = SHT31_I2C_FREQ_300K,
+            .freq = SHT31_I2C_FREQ_400K,
             .mode = HOSAL_I2C_MODE_MASTER,
             .scl = SHT31_I2C_SCL,
             .sda = SHT31_I2C_SDA,
@@ -180,4 +181,41 @@ int sensor_sht31_deint(void)
     vPortFree(sht31_value.temp_string);
     return  hosal_i2c_finalize(&i2c0);
 }
+/**
+ * @brief sensor_sht31_get_value
+ *
+ * @return sht31_value_t*
+ */
+sht31_value_t* sensor_sht31_get_value(void)
+{
+    uint8_t cmd[2] = { 0xe0,0x00 };
+    struct sht3x_data sht31_data;
+    hosal_i2c_master_send(&i2c0, SHT31_DEFAULT_ADDR, cmd, 2, 1000);
+    hosal_i2c_master_recv(&i2c0, SHT31_DEFAULT_ADDR, &sht31_data, sizeof sht31_data, 100);
 
+    if (crc8(&sht31_data.st_high, 2) == sht31_data.st_crc8) {
+        uint16_t st = sht31_data.st_high;
+        st <<= 8;
+        st |= sht31_data.st_low;
+        sht31_value.temp_value = (double)(175.0*(st/65535.0))-45.0;
+
+        sprintf(sht31_value.temp_string, "%.2fC", sht31_value.temp_value);
+    }
+    else {
+        sprintf(sht31_value.temp_string, "%s", "N/A C");
+    }
+
+    if (crc8(&sht31_data.srh_high, 2) == sht31_data.srh_crc8) {
+        uint16_t srh = sht31_data.srh_high;
+        srh <<= 8;
+        srh |= sht31_data.srh_low;
+        sht31_value.humi_value = 100*((double)srh/65535);
+
+        sprintf(sht31_value.humi_string, "%d", sht31_value.humi_value);
+    }
+    else {
+        sprintf(sht31_value.humi_string, "N/A %%");
+    }
+
+    return &sht31_value;
+}
