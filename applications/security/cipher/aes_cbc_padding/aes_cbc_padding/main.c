@@ -16,7 +16,6 @@
 #include "bl_sys.h"
 #include "mbedtls/cipher.h"
 
-
 char* plain_text = "hello_Ai-WB2_Kit";
 
 void mbedtls_cipher_aesCBC_test(mbedtls_cipher_type_t cipher_type)
@@ -85,6 +84,7 @@ void mbedtls_cipher_aesCBC_test(mbedtls_cipher_type_t cipher_type)
     mbedtls_cipher_set_padding_mode(&cipher_ctx, MBEDTLS_PADDING_PKCS7);
 
     mbedtls_cipher_update(&cipher_ctx, outbuff, size_outbuff, plain_text_value, &olen);
+
     if (!olen) {
         mbedtls_cipher_finish(&cipher_ctx, plain_text_value, &olen);
         blog_info_hexdump("decrypt value", plain_text_value, olen);
