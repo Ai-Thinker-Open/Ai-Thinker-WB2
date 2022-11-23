@@ -22,8 +22,7 @@
 
 #include "easy_connect_wifi.h"
 
-
-static bool wifi_connect_status = false;
+EventGroupHandle_t wifi_event_handle;
 
 static wifi_conf_t conf =
 {
@@ -68,7 +67,7 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
         case CODE_WIFI_ON_DISCONNECT:
         {
             blog_error("[APP] [EVT] disconnect %lld", aos_now_ms());
-            wifi_connect_status = false;
+            xEventGroupSetBits(wifi_event_handle, WIFI_DISCONNECT_BIT);
         }
         break;
         case CODE_WIFI_ON_CONNECTING:
@@ -88,15 +87,16 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
         break;
         case CODE_WIFI_ON_PRE_GOT_IP:
         {
+
             blog_info("[APP] [EVT] connected %lld", aos_now_ms());
-            wifi_connect_status = true;
+            xEventGroupSetBits(wifi_event_handle, WIFI_CONNECT_BIT);
         }
         break;
         case CODE_WIFI_ON_GOT_IP:
         {
             blog_info("[APP] [EVT] GOT IP %lld", aos_now_ms());
             blog_info("[SYS] Memory left is %d Bytes", xPortGetFreeHeapSize());
-            wifi_connect_status = true;
+            xEventGroupSetBits(wifi_event_handle, WIFI_CONNECT_BIT);
         }
         break;
         case CODE_WIFI_ON_PROV_SSID:
@@ -158,9 +158,10 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
 void wifi_easy_connect(void)
 {
     tcpip_init(NULL, NULL);
+    wifi_event_handle = xEventGroupCreate();
     aos_register_event_filter(EV_WIFI, event_cb_wifi_event, NULL);
     hal_wifi_start_firmware_task();
 
     aos_post_event(EV_WIFI, CODE_WIFI_ON_INIT_DONE, 0);
-    while (!wifi_connect_status)vTaskDelay(50/portTICK_PERIOD_MS);
+    xEventGroupWaitBits(wifi_event_handle, WIFI_CONNECT_BIT, pdTRUE, pdFALSE, portMAX_DELAY);
 }
