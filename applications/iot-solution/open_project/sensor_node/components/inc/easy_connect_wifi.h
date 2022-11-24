@@ -18,6 +18,7 @@
 #define WIFI_CONNECT_BIT    (1<<0)
 #define WIFI_DISCONNECT_BIT (1<<4)
 
+
 void wifi_easy_connect(void);
 
 extern EventGroupHandle_t wifi_event_handle;

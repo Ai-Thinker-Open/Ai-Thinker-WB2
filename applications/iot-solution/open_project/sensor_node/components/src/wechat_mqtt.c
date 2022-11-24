@@ -16,11 +16,15 @@
 #include <bl_wifi.h>
 #include <easy_connect_wifi.h>
 #include "wechat_mqtt.h"
- /**
-  * @brief qmtt_get_wifi_sta_mac
-  *
-  * @return char*
-  */
+
+QueueHandle_t wechat_recv_queue;
+
+bool mqtt_connect_status = false;
+/**
+ * @brief qmtt_get_wifi_sta_mac
+ *
+ * @return char*
+ */
 char* mqtt_get_wifi_sta_mac(void)
 {
     uint8_t wifi_mac_arryr[6] = { 0 };
@@ -53,17 +57,20 @@ static void TaskXMqttRecieve(void* p)
                 case xMQTT_TYPE_RECIEVE_MSG:
                     blog_info("xQueueReceive topic: %s:%s", rMsg.topic, rMsg.payload);
 
+                    // xQueueSend(wechat_recv_queue, rMsg.payload, 1000/portTICK_PERIOD_MS);
                     break;
                     //mqtt client connection succeeded
                 case xMQTT_TYPE_CONNECTED:
                     sprintf((char*)rMsg.topic, "%s/devSub", mqtt_get_wifi_sta_mac());
                     rMsg.qos = 1;
+                    mqtt_connect_status = true;
                     mqtt_client_subscribe(&rMsg);
                     blog_info("xMQTT : xMQTT_TYPE_CONNECTED subscribe topic:%s", rMsg.topic);
                     break;
                     //The mqtt client was disconnected successfully
                 case xMQTT_TYPE_DISCONNECTED:
                     blog_error("xMQTT : xMQTT_TYPE_DISCONNECTED");
+                    mqtt_connect_status = false;
                     break;
                     //Connecting to MQTT server
                 case xMQTT_TYPE_CONNECTTING:
@@ -77,6 +84,9 @@ static void TaskXMqttRecieve(void* p)
                 case xMQTT_TYPE_SEND_PING:
                     blog_info("xMQTT : xMQTT_TYPE_SEND_PING");
                     break;
+                case xMQTT_TYPE_PUB_SUCCESS:
+                    blog_info("xMQTT : xMQTT_TYPE_PUB_SUCCESS");
+                    break;
                 default:
                     break;
             }
@@ -89,8 +99,8 @@ void wechat_mqtt_init(void* arg)
     static EventBits_t vBits;
     mqtt_client_config_t xMqttConfig =
     {
-        .MQTTVersion = 4,
-        .borkerHost = "wx.ai-thinker.com",
+        .MQTTVersion = 3,
+        .borkerHost = "broker-cn.emqx.io",
         .borkerPort = 1883,
         .mqttCommandTimeout = 6000,
         .username = "sensor_node",
@@ -99,8 +109,12 @@ void wechat_mqtt_init(void* arg)
         .keepAliveInterval = 60,
         .cleansession = true,
     };
+
+
+    if (wechat_recv_queue==NULL) blog_error("wechat queue create fail");
     mqtt_client_init(&xMqttConfig);
     mqtt_client_register_type(TaskXMqttRecieve);
+
     xMqttConnectWifiNotify(WIFI_CONNECTED);
     mqtt_client_start();
     while (1) {

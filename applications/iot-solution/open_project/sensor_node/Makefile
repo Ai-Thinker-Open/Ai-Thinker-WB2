@@ -14,7 +14,7 @@ BL60X_SDK_PATH ?= $(BL60X_SDK_PATH_GUESS)/../../../..
 endif
 COMPONENTS_NETWORK := sntp dns_server mqtt_client mqtt
 COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
-COMPONENTS_VFS     := romfs components
+COMPONENTS_VFS     := romfs components cjson 
 INCLUDE_COMPONENTS += freertos_riscv_ram bl602 bl602_std newlibc wifi blcrypto_suite wifi_manager wpa_supplicant bl_os_adapter wifi_hosal hosal lwip lwip_dhcpd mbedtls_lts vfs yloop utils cli aws-iot httpc netutils blog blog_testc
 
 INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
