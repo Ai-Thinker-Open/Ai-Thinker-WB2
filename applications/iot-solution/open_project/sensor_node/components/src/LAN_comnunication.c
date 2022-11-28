@@ -24,10 +24,33 @@
 #include "easy_connect_wifi.h"
 #include "data_handle.h"
 #include "LAN_communication.h"
-xQueueHandle LAN_tcp_queue;
+#include "wechat_mqtt.h"
+QueueHandle_t LAN_tcp_queue;
+
+bool tcp_connect_status = false;
 
 char tcp_ip_addr[16] = { 0 };
 int tcp_port = 0;
+/**
+ * @brief
+ *
+ * @param arg
+ */
+static void tcp_client_send(void* arg)
+{
+    int socket_fd = *(int*)arg;
+    BaseType_t ret;
+    while (1) {
+        char* tcp_buff = pvPortMalloc(256);
+        memset(tcp_buff, 0, 256);
+        ret = xQueueReceive(LAN_tcp_queue, tcp_buff, portMAX_DELAY);
+        if (ret==pdTRUE) {
+            blog_info("QueueReceiv recv:%s", tcp_buff);
+            write(socket_fd, tcp_buff, strlen(tcp_buff));
+        }
+        vPortFree(tcp_buff);
+    }
+}
 /**
  * @brief node_tcp_client_task
  *
@@ -52,15 +75,20 @@ static void node_tcp_client_task(void* arg)
 
     while (connect(socket_fd, (struct sockaddr*)&dest, sizeof(dest))!=0) {
         blog_error("tcp client connect servet:%s:%d fail", inet_ntoa(dest.sin_addr.s_addr), ntohs(dest.sin_port));
+        shutdown(socket_fd, SHUT_RDWR);
         vTaskDelay(1000/portTICK_PERIOD_MS);
+        socket_fd = socket(AF_INET, SOCK_STREAM, 0);
     }
     blog_info("tcp connect success:%s:%d", inet_ntoa(dest.sin_addr.s_addr), ntohs(dest.sin_port));
+    tcp_connect_status = true;
+    xTaskCreate(tcp_client_send, "tcp client task", 1024, &socket_fd, 13, NULL);
     while (1) {
         char* tcp_buff = pvPortMalloc(256);
-        ret = xQueueReceive(LAN_tcp_queue, tcp_buff, portMAX_DELAY);
-        if (ret==pdTRUE) {
-            blog_info("QueueReceiv recv:%s", tcp_buff);
-            write(socket_fd, tcp_buff, strlen(tcp_buff));
+        memset(tcp_buff, 0, 256);
+        ret = read(socket_fd, tcp_buff, 256);
+        if (ret>0) {
+            blog_info("tcp recv:%s", tcp_buff);
+            xQueueSend(wechat_recv_queue, tcp_lbuff, 1000/portTICK_PERIOD_MS);
         }
         vPortFree(tcp_buff);
     }

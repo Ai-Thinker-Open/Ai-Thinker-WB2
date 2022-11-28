@@ -11,8 +11,8 @@
 #ifndef LAN_COMMUNICATION_H
 #define LAN_COMMUNICATION_H
 #include <queue.h>
-extern xQueueHandle LAN_tcp_queue;
-
+extern QueueHandle_t LAN_tcp_queue;
+extern bool tcp_connect_status;
 int LAN_communication_init(void* arg);
 
 

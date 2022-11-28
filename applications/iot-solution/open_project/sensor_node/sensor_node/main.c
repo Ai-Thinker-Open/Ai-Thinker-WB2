@@ -21,6 +21,7 @@
 #include "wechat_mqtt.h"
 #include "data_handle.h"
 #include "LAN_communication.h"
+
 #define LED_CRT_PIN 14
 
 static int udp_broadcast_port = 7878;
@@ -100,6 +101,8 @@ int main(void)
             mqtt_client_publish(&sMsg);
             blog_info("Heap Size:%d Byte", xPortGetFreeHeapSize());
             blog_info("pub topic:%s  payload:%s", sMsg.topic, sMsg.payload);
+            if (tcp_connect_status)
+                xQueueSend(LAN_tcp_queue, pub_data, portMAX_DELAY);
             vPortFree(pub_data);
         }
 
