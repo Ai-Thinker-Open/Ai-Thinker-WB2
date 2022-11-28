@@ -21,7 +21,7 @@
 #include <hal_wifi.h>
 
 #include "easy_connect_wifi.h"
-
+#include "wechat_mqtt.h"
 EventGroupHandle_t wifi_event_handle;
 
 static wifi_conf_t conf =
@@ -68,6 +68,7 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
         {
             blog_error("[APP] [EVT] disconnect %lld", aos_now_ms());
             xEventGroupSetBits(wifi_event_handle, WIFI_DISCONNECT_BIT);
+            mqtt_connect_status = false;
         }
         break;
         case CODE_WIFI_ON_CONNECTING:
@@ -90,6 +91,7 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
 
             blog_info("[APP] [EVT] connected %lld", aos_now_ms());
             xEventGroupSetBits(wifi_event_handle, WIFI_CONNECT_BIT);
+            mqtt_connect_status = true;
         }
         break;
         case CODE_WIFI_ON_GOT_IP:

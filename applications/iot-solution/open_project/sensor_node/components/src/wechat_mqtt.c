@@ -46,6 +46,7 @@ static void TaskXMqttRecieve(void* p)
 {
 
     mqtt_msg_t rMsg;
+
     blog_info("mqtt_client_receive start");
     while (1)
     {
@@ -57,7 +58,7 @@ static void TaskXMqttRecieve(void* p)
                 case xMQTT_TYPE_RECIEVE_MSG:
                     blog_info("xQueueReceive topic: %s:%s", rMsg.topic, rMsg.payload);
 
-                    // xQueueSend(wechat_recv_queue, rMsg.payload, 1000/portTICK_PERIOD_MS);
+                    xQueueSend(wechat_recv_queue, rMsg.payload, 1000/portTICK_PERIOD_MS);
                     break;
                     //mqtt client connection succeeded
                 case xMQTT_TYPE_CONNECTED:
@@ -100,7 +101,7 @@ void wechat_mqtt_init(void* arg)
     mqtt_client_config_t xMqttConfig =
     {
         .MQTTVersion = 3,
-        .borkerHost = "broker-cn.emqx.io",
+        .borkerHost = "wx.ai-thinker.com",
         .borkerPort = 1883,
         .mqttCommandTimeout = 6000,
         .username = "sensor_node",

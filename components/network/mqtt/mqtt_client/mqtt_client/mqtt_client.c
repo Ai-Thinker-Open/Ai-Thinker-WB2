@@ -148,6 +148,7 @@ void TaskMainMqtt(void* pvParameters)
                     {
                         len = MQTTSerialize_publish(mqtt.Pack, MQTT_PACK_SIZE, wMqttMsg.dup, wMqttMsg.qos, wMqttMsg.retained, packetid, topicName, wMqttMsg.payload, wMqttMsg.payloadlen);
                         tcp_send(connect_socket, mqtt.Pack, len, 500);
+                        continue;
                     }
                     vTaskDelay(1000 / portTICK_RATE_MS);
                 }
@@ -207,7 +208,7 @@ void TaskMainMqtt(void* pvParameters)
 
             case CONNECT:
 
-                rMqttMsg.type = xMQTT_TYPE_DISCONNECTED;
+                rMqttMsg.type = xMQTT_TYPE_CONNECTED;
                 xQueueSend(mqttRcvMsgQueue, &rMqttMsg, 0);
                 memset(mqtt.Pack, 0, MQTT_PACK_SIZE);
                 len = MQTTSerialize_connect(mqtt.Pack, MQTT_PACK_SIZE, &pack);
@@ -236,6 +237,7 @@ void TaskMainMqtt(void* pvParameters)
             case PUBLISH:
 
                 memset(&rMqttMsg, 0x0, sizeof(rMqttMsg));
+
                 MQTTDeserialize_publish((unsigned char*)(&dup), (int*)(&qos), (unsigned char*)(&retained),
                                         (unsigned short*)(&packetid), (MQTTString*)(&topicName),
                                         &(mqtt.Data), &(mqtt.DataLen),
@@ -245,6 +247,7 @@ void TaskMainMqtt(void* pvParameters)
                 uint16_t topicLen = topicName.lenstring.len;
                 strncpy((char*)rMqttMsg.topic, topicName.lenstring.data, topicLen);
                 rMqttMsg.topic[topicLen] = '\0';
+
                 strncpy((char*)rMqttMsg.payload, (char*)mqtt.Data, payloadlen);
                 rMqttMsg.payload[payloadlen] = '\0';
                 rMqttMsg.qos = qos;
@@ -268,6 +271,7 @@ void TaskMainMqtt(void* pvParameters)
                 break;
 
             case PUBACK:
+                rMqttMsg.type = xMQTT_TYPE_PUB_SUCCESS;
                 msgtypes = 0;
                 break;
 
@@ -303,6 +307,7 @@ void TaskMainMqtt(void* pvParameters)
                 msgtypes = 0;
                 blog_debug("subscribe success");
                 rMqttMsg.type = xMQTT_TYPE_SUB_SUCCESS;
+
                 xQueueSend(mqttRcvMsgQueue, &rMqttMsg, 0);
                 break;
 
@@ -327,6 +332,7 @@ void TaskMainMqtt(void* pvParameters)
             msgtypes = (enum msgTypes)MQTTPacket_read(mqtt.Pack, MQTT_PACK_SIZE, transport_getdata);
         }
         vTaskDelay(100 / portTICK_RATE_MS);
+
     }
     mqtt_disconnect();
 }

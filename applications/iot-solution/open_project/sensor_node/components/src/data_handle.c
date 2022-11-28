@@ -57,3 +57,36 @@ int get_led_status_from_json(char* json_data)
     cJSON_Delete(root);
     return led_status;
 }
+/**
+ * @brief Get the udp broadcast data object
+ *
+ * @param cjson_data
+ * @param ip_buff
+ * @param port
+ * @return int
+ */
+int get_udp_broadcast_data(const char* cjson_data, char* ip_buff, int* port)
+{
+
+    cJSON* root = cJSON_Parse(cjson_data);
+    if (root==NULL) {
+        blog_error("cjson data is NULL");
+        return -1;
+    }
+    cJSON* JSON_ip = cJSON_GetObjectItem(root, "ip");
+    if (JSON_ip==NULL) {
+        blog_error("No \"ip\" object in cjson data");
+        return -1;
+    }
+    cJSON* JSON_port = cJSON_GetObjectItem(root, "port");
+    if (JSON_port==NULL) {
+        blog_error("No \"port\" object in cjson data");
+        return -1;
+    }
+    strcpy(ip_buff, JSON_ip->valuestring);
+
+    *port = JSON_port->valueint;
+
+    cJSON_Delete(root);
+    return 0;
+}
