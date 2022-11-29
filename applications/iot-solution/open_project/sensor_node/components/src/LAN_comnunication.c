@@ -50,7 +50,6 @@ static void tcp_reconnect_task(void* arg)
     dest.sin_port = htons(tcp_port);
     dest.sin_addr.s_addr = inet_addr(tcp_ip_addr);
     while (1) {
-
         if (connect(socket_fd, (struct sockaddr*)&dest, sizeof(dest))!=0) {
             blog_error("tcp client connect servet:%s:%d fail", inet_ntoa(dest.sin_addr.s_addr), ntohs(dest.sin_port));
             closesocket(socket_fd);
