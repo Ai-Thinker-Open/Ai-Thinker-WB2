@@ -67,10 +67,10 @@
 #ifdef CUSTOM_LOG_IO
 HOSAL_UART_DEV_DECL(uart_stdio, 0, CUSTOM_LOG_TX_IO, CUSTOM_LOG_RX_IO, CUSTOM_LOG_RX_BAUD);
 #else
-// HOSAL_UART_DEV_DECL(uart_stdio, 0, 16, 7, 115200);
+HOSAL_UART_DEV_DECL(uart_stdio, 0, 16, 7, 115200);
 // HOSAL_UART_DEV_DECL(uart_stdio, 0, 2, 4, 921600);
 // HOSAL_UART_DEV_DECL(uart_stdio, 0, 14, 12, 921600);
-HOSAL_UART_DEV_DECL(uart_stdio, 0, 4, 0xff, 115200);
+// HOSAL_UART_DEV_DECL(uart_stdio, 0, 4, 0xff, 115200);
 #endif
 
 extern uint8_t _heap_start;
