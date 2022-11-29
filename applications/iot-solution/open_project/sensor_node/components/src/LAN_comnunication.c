@@ -31,6 +31,44 @@ bool tcp_connect_status = false;
 
 char tcp_ip_addr[16] = { 0 };
 int tcp_port = 0;
+int socket_fd;
+/**
+ * @brief tcp_reconnect_task
+ *
+ * @param arg
+ */
+static void tcp_reconnect_task(void* arg)
+{
+    if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0))<0) {
+        blog_error("socket creat fail\r\n");
+        return;
+    }
+    static struct sockaddr_in dest;
+    memset(&dest, 0, sizeof(dest));
+    // inet_aton
+    dest.sin_family = AF_INET;
+    dest.sin_port = htons(tcp_port);
+    dest.sin_addr.s_addr = inet_addr(tcp_ip_addr);
+    while (1) {
+
+        if (connect(socket_fd, (struct sockaddr*)&dest, sizeof(dest))!=0) {
+            blog_error("tcp client connect servet:%s:%d fail", inet_ntoa(dest.sin_addr.s_addr), ntohs(dest.sin_port));
+            closesocket(socket_fd);
+            vTaskDelay(1000/portTICK_PERIOD_MS);
+            socket_fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+            if (socket_fd<0) blog_error("socket creat fail ret:%d", socket_fd);
+            tcp_connect_status = false;
+        }
+        else {
+            blog_info("tcp connect success:%s:%d", inet_ntoa(dest.sin_addr.s_addr), ntohs(dest.sin_port));
+            tcp_connect_status = true;
+
+            xEventGroupSetBits(wifi_event_handle, TCP_CLIENT_CONNECT);
+            xEventGroupWaitBits(wifi_event_handle, TCP_CLINENT_DISCONNECT, pdTRUE, pdFALSE, portMAX_DELAY);
+        }
+
+    }
+}
 /**
  * @brief
  *
@@ -38,7 +76,6 @@ int tcp_port = 0;
  */
 static void tcp_client_send(void* arg)
 {
-    int socket_fd = *(int*)arg;
     BaseType_t ret;
     while (1) {
         char* tcp_buff = pvPortMalloc(256);
@@ -46,7 +83,11 @@ static void tcp_client_send(void* arg)
         ret = xQueueReceive(LAN_tcp_queue, tcp_buff, portMAX_DELAY);
         if (ret==pdTRUE) {
             blog_info("QueueReceiv recv:%s", tcp_buff);
-            write(socket_fd, tcp_buff, strlen(tcp_buff));
+            if (write(socket_fd, tcp_buff, strlen(tcp_buff))<0) {
+                blog_error("tcp client no connect");
+                xEventGroupSetBits(wifi_event_handle, TCP_CLINENT_DISCONNECT);
+                xEventGroupWaitBits(wifi_event_handle, TCP_CLIENT_CONNECT, pdTRUE, pdFALSE, portMAX_DELAY);
+            }
         }
         vPortFree(tcp_buff);
     }
@@ -58,37 +99,23 @@ static void tcp_client_send(void* arg)
  */
 static void node_tcp_client_task(void* arg)
 {
-    int socket_fd = 0;
     LAN_tcp_queue = xQueueCreate(2, 256);
     BaseType_t ret;
-    static struct sockaddr_in dest;
 
-    if ((socket_fd = socket(AF_INET, SOCK_STREAM, 0))<0) {
-        blog_error("socket creat fail\r\n");
-        return;
-    }
-    memset(&dest, 0, sizeof(dest));
-    // inet_aton
-    dest.sin_family = AF_INET;
-    dest.sin_port = htons(tcp_port);
-    dest.sin_addr.s_addr = inet_addr(tcp_ip_addr);
 
-    while (connect(socket_fd, (struct sockaddr*)&dest, sizeof(dest))!=0) {
-        blog_error("tcp client connect servet:%s:%d fail", inet_ntoa(dest.sin_addr.s_addr), ntohs(dest.sin_port));
-        shutdown(socket_fd, SHUT_RDWR);
-        vTaskDelay(1000/portTICK_PERIOD_MS);
-        socket_fd = socket(AF_INET, SOCK_STREAM, 0);
-    }
-    blog_info("tcp connect success:%s:%d", inet_ntoa(dest.sin_addr.s_addr), ntohs(dest.sin_port));
-    tcp_connect_status = true;
-    xTaskCreate(tcp_client_send, "tcp client task", 1024, &socket_fd, 13, NULL);
+    xTaskCreate(tcp_reconnect_task, "tcp client reconnect", 1024, &socket_fd, 13, NULL);
+
+    xEventGroupWaitBits(wifi_event_handle, TCP_CLIENT_CONNECT, pdTRUE, pdFALSE, portMAX_DELAY);
+    xTaskCreate(tcp_client_send, "tcp client task", 1024, &socket_fd, 14, NULL);
     while (1) {
         char* tcp_buff = pvPortMalloc(256);
         memset(tcp_buff, 0, 256);
-        ret = read(socket_fd, tcp_buff, 256);
-        if (ret>0) {
-            blog_info("tcp recv:%s", tcp_buff);
-            xQueueSend(wechat_recv_queue, tcp_lbuff, 1000/portTICK_PERIOD_MS);
+        if (tcp_connect_status) {
+            ret = read(socket_fd, tcp_buff, 256);
+            if (ret>0) {
+                blog_info("tcp recv:%s", tcp_buff);
+                xQueueSend(wechat_recv_queue, tcp_buff, 1000/portTICK_PERIOD_MS);
+            }
         }
         vPortFree(tcp_buff);
     }
@@ -123,12 +150,12 @@ int LAN_communication_init(void* arg)
     while (1) {
         recv_len = recvfrom(udp_recv, buff, 512, 0, (struct sockaddr*)&from_addr, (socklen_t*)&socklen);
         if (recv_len) {
-            blog_info("udp recv:%.*s", recv_len, buff);
+            // blog_info("udp recv:%.*s", recv_len, buff);
             if (get_udp_broadcast_data(buff, tcp_ip_addr, &tcp_port)==0) {
                 memset(buff, 0, 512);
                 buff = inet_ntoa(from_addr.sin_addr.s_addr);
                 if (!strcmp(buff, tcp_ip_addr)) {
-                    blog_info("udp recv ip addr:%s,port:%d", tcp_ip_addr, tcp_port);
+                    // blog_info("udp recv ip addr:%s,port:%d", tcp_ip_addr, tcp_port);
                     shutdown(udp_recv, SHUT_RDWR);
                     break;
                 }

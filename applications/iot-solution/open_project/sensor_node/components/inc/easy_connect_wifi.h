@@ -17,6 +17,8 @@
 
 #define WIFI_CONNECT_BIT    (1<<0)
 #define WIFI_DISCONNECT_BIT (1<<4)
+#define TCP_CLIENT_CONNECT  (1<<3)
+#define TCP_CLINENT_DISCONNECT (1<<5)
 
 
 void wifi_easy_connect(void);
