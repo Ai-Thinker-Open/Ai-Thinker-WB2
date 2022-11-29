@@ -102,7 +102,6 @@ static void node_tcp_client_task(void* arg)
     LAN_tcp_queue = xQueueCreate(2, 256);
     BaseType_t ret;
 
-
     xTaskCreate(tcp_reconnect_task, "tcp client reconnect", 1024, &socket_fd, 13, NULL);
 
     xEventGroupWaitBits(wifi_event_handle, TCP_CLIENT_CONNECT, pdTRUE, pdFALSE, portMAX_DELAY);
@@ -112,7 +111,7 @@ static void node_tcp_client_task(void* arg)
         memset(tcp_buff, 0, 256);
         if (tcp_connect_status) {
             ret = read(socket_fd, tcp_buff, 256);
-            if (ret>0) {
+            if (ret>0&&(*tcp_buff!='\0')) {
                 blog_info("tcp recv:%s", tcp_buff);
                 xQueueSend(wechat_recv_queue, tcp_buff, 1000/portTICK_PERIOD_MS);
             }
@@ -150,15 +149,12 @@ int LAN_communication_init(void* arg)
     while (1) {
         recv_len = recvfrom(udp_recv, buff, 512, 0, (struct sockaddr*)&from_addr, (socklen_t*)&socklen);
         if (recv_len) {
-            // blog_info("udp recv:%.*s", recv_len, buff);
+            blog_info("udp recv:%.*s", recv_len, buff);
             if (get_udp_broadcast_data(buff, tcp_ip_addr, &tcp_port)==0) {
-                memset(buff, 0, 512);
                 buff = inet_ntoa(from_addr.sin_addr.s_addr);
-                if (!strcmp(buff, tcp_ip_addr)) {
-                    // blog_info("udp recv ip addr:%s,port:%d", tcp_ip_addr, tcp_port);
-                    shutdown(udp_recv, SHUT_RDWR);
-                    break;
-                }
+                blog_info("udp recv ip addr:%s,port:%d", tcp_ip_addr, tcp_port);
+                shutdown(udp_recv, SHUT_RDWR);
+                break;
             }
             memset(buff, 0, strlen(buff));
         }
