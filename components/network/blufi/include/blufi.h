@@ -3,6 +3,8 @@
 #include <stdint.h>
 #include "axk_ble.h"
 
+#define NODE_NAME "SENSOR_NODE_%s"
+
 #define BLE_ADV_DATA_MAX_LEN 31
 
 #define BLUFI_ERR_SUCCESS 0
@@ -32,7 +34,7 @@ typedef enum
     WIFIMODE_STA_AP = 3,
 } wifi_mode_t;
 
-typedef void (*blufi_wifi_conn_event_cb_t)(int event, void *param);
+typedef void (*blufi_wifi_conn_event_cb_t)(int event, void* param);
 
 
 typedef struct

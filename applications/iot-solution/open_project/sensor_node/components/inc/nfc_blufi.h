@@ -20,5 +20,6 @@
 #include "ble_interface.h"
 
 
+#define NODE_NAME "SENSOR_NODE"
 void nfc_blufi_start(void* arg);
 #endif

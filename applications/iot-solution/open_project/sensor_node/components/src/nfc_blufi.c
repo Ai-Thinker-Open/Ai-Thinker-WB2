@@ -101,10 +101,10 @@ static void example_event_callback(_blufi_cb_event_t event, _blufi_cb_param_t* p
             blog_info("BLUFI ble disconnect");
             ble_is_connected = false;
             //    blufi_security_deinit();
-            axk_blufi_adv_start();
-            // axk_blufi_profile_deinit();
-            // axk_hal_blufi_deinit();
-            // axk_blufi_adv_stop();
+            // axk_blufi_adv_start();
+            axk_blufi_profile_deinit();
+            axk_hal_blufi_deinit();
+            axk_blufi_adv_stop();
 
             break;
         case AXK_BLUFI_EVENT_SET_WIFI_OPMODE:
@@ -242,8 +242,9 @@ void nfc_blufi_start(void* arg)
     int ret = -1;
     wifi_interface_init(blufi_wifi_event);
     axk_hal_blufi_init();
-
+    set_blufi_name(NODE_NAME);
     ret = _blufi_host_and_cb_init(&example_callbacks);
+
     if (ret)
     {
         blog_error("%s initialise failed: %d", __func__, ret);

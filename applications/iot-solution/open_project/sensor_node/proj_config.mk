@@ -61,4 +61,4 @@ endif
 CONFIG_MBEDTLS_BIGNUM_USE_HW:=0
 
 #blog enable components format :=blog_testc cli vfs helper
-LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop sensor_node components blufie
+LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop sensor_node components blufi
