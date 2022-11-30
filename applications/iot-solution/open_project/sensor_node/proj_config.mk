@@ -23,7 +23,7 @@ CONFIG_ENABLE_PSM_RAM:=1
 
 CONFIG_ENABLE_VFS_ROMFS:=1
 CONFIG_ADC_ENABLE_TSEN:=1
-CONFIG_EASYFLASH_ENABLE:=0
+CONFIG_EASYFLASH_ENABLE:=1
 CONFIG_BL602_USE_ROM_DRIVER:=1
 CONFIG_FREERTOS_TICKLESS_MODE:=0
 
@@ -61,4 +61,4 @@ endif
 CONFIG_MBEDTLS_BIGNUM_USE_HW:=0
 
 #blog enable components format :=blog_testc cli vfs helper
-LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop sensor_node components blufi
+LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop sensor_node components blufie

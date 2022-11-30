@@ -68,8 +68,10 @@ int main(void)
 
     static EventBits_t vBits;
     wifi_easy_connect();
+
     sensor_sht30_init();
     bl_gpio_enable_output(LED_CRT_PIN, true, false);
+
     xTaskCreate(wechat_mqtt_init, "wechat_mqtt_task", 1024*2, NULL, 10, NULL);
     xTaskCreate(get_wechat_data_task, "get_wechat_data", 1024*2, NULL, 11, NULL);
     xTaskCreate(LAN_communication_init, "LAN_communicatison", 1024, (void*)&udp_broadcast_port, 12, NULL);

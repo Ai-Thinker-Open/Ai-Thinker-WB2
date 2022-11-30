@@ -11,5 +11,14 @@
 #ifndef NFC_BLUFI_H
 #define NFC_BLUFI_H
 
+#include "wifi_interface.h"
+#include "blufi.h"
+#include "blufi_api.h"
+#include "blufi_hal.h"
+#include "blufi_init.h"
+#include "axk_blufi.h"
+#include "ble_interface.h"
 
+
+void nfc_blufi_start(void* arg);
 #endif

@@ -19,9 +19,11 @@
 #include <lwip/tcpip.h>
 #include <wifi_mgmr_ext.h>
 #include <hal_wifi.h>
-
+#include <bl_sys.h>
 #include "easy_connect_wifi.h"
 #include "wechat_mqtt.h"
+#include "nfc_blufi.h"
+
 EventGroupHandle_t wifi_event_handle;
 
 static wifi_conf_t conf =
@@ -159,11 +161,11 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
 
 void wifi_easy_connect(void)
 {
+    static TaskHandle_t proc_main_task;
+    bl_sys_init();
     tcpip_init(NULL, NULL);
     wifi_event_handle = xEventGroupCreate();
-    aos_register_event_filter(EV_WIFI, event_cb_wifi_event, NULL);
-    hal_wifi_start_firmware_task();
 
-    aos_post_event(EV_WIFI, CODE_WIFI_ON_INIT_DONE, 0);
+    xTaskCreate(nfc_blufi_start, (char*)"main_entry", 1024, NULL, 9, &proc_main_task);
     xEventGroupWaitBits(wifi_event_handle, WIFI_CONNECT_BIT, pdTRUE, pdFALSE, portMAX_DELAY);
 }

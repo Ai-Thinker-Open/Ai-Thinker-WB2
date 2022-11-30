@@ -35,11 +35,14 @@ else
 COMPONENTS_BLE     := $(COMPONENTS_BLECONTROLLER) blestack
 endif
 
+# INCLUDE_COMPONENTS += blufi
+INCLUDE_COMPONENTS += wifi
+
 EXTRA_COMPONENT_DIRS += $(PROJECT_PATH)/wifi
 
 COMPONENTS_NETWORK := sntp dns_server mqtt_client mqtt
-COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
-COMPONENTS_VFS     := romfs components cjson blufi 
+COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset 
+COMPONENTS_VFS     := romfs components cjson blufie easyflash4
 INCLUDE_COMPONENTS += freertos_riscv_ram bl602 bl602_std newlibc wifi blcrypto_suite wifi_manager wpa_supplicant bl_os_adapter wifi_hosal hosal lwip lwip_dhcpd mbedtls_lts vfs yloop utils cli  httpc netutils blog blog_testc
 
 INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
