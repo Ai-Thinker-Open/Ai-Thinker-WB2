@@ -56,6 +56,19 @@ static void blufi_wifi_event(int event, void* param)
             if (ble_is_connected == true)
             {
                 axk_blufi_send_wifi_conn_report(g_blufi_config.wifi.cwmode, _BLUFI_STA_CONN_SUCCESS, 0, &info);
+                easy_connect_wifi_config_t wifi_config = { 0 };
+                strncpy(wifi_config.ssid, g_blufi_config.wifi.sta.cwjap_param.ssid, strlen(g_blufi_config.wifi.sta.cwjap_param.ssid));
+                strncpy(wifi_config.password, g_blufi_config.wifi.sta.cwjap_param.pwd, strlen(g_blufi_config.wifi.sta.cwjap_param.pwd));
+                if (wifi_info_store(&wifi_config)) {
+                    blog_info("Save STA SSID %s", wifi_config.ssid);
+                    blog_info("Save STA PASSWORD %s", wifi_config.password);
+                    blog_info("Restarting in 1 seconds");
+                    vTaskDelay(1000 / portTICK_PERIOD_MS);
+                    bl_sys_reset_por();
+                }
+                else {
+                    blog_error("Save STA INFO error");
+                };
             }
             else
             {

@@ -198,7 +198,7 @@ static void event_cb_wifi_event(input_event_t* event, void* private_data)
 
 bool wifi_reset_check()
 {
-    bl_gpio_enable_input(WIFI_RESET_BUTTON_PIN, 0, 0);
+    bl_gpio_enable_input(WIFI_RESET_BUTTON_PIN, 0, 1);
     if (bl_gpio_input_get_value(WIFI_RESET_BUTTON_PIN))
     {
         vTaskDelay(pdMS_TO_TICKS(50));
