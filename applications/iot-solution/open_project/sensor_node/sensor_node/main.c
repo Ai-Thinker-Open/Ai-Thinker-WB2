@@ -74,7 +74,7 @@ int main(void)
 
     xTaskCreate(wechat_mqtt_init, "wechat_mqtt_task", 1024*2, NULL, 10, NULL);
     xTaskCreate(get_wechat_data_task, "get_wechat_data", 1024*2, NULL, 11, NULL);
-    xTaskCreate(LAN_communication_init, "LAN_communicatison", 1024, (void*)&udp_broadcast_port, 12, NULL);
+    xTaskCreate((void*)LAN_communication_init, "LAN_communicatison", 1024, (void*)&udp_broadcast_port, 12, NULL);
     //Data receiving, transmitting and control
     char* wifi_mac = mqtt_get_wifi_sta_mac();
     static  mqtt_msg_t sMsg = {
