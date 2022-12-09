@@ -16,7 +16,7 @@
 #include <cJSON.h>
 #include "radar_data_parse.h"
 
-#define DEVICETYPE 1
+#define DEVICETYPE 2
 
  /**
   * @brief cjson_update_data

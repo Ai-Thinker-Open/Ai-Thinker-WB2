@@ -23,17 +23,19 @@
 #include "easy_connect_wifi.h"
 #include "wechat_mqtt.h"
 #include "nfc_blufi.h"
+#include "easyflash_common.h"
+#include <bl_gpio.h>
 
-static easy_connect_wifi_config_t g_wifi_config = {0};
+static easy_connect_wifi_config_t g_wifi_config = { 0 };
 
 EventGroupHandle_t wifi_event_handle;
 
-bool wifi_info_store(easy_connect_wifi_config_t *config)
+bool wifi_info_store(easy_connect_wifi_config_t* config)
 {
     return (ef_set_str(EF_SSID, config->ssid) && ef_set_str(EF_PWD, config->password));
 }
 
-bool wifi_info_restore(easy_connect_wifi_config_t *config)
+bool wifi_info_restore(easy_connect_wifi_config_t* config)
 {
     if (ef_get_str(EF_SSID, config->ssid, sizeof(config->ssid)))
     {
@@ -63,11 +65,11 @@ bool wifi_info_erase()
 EventGroupHandle_t wifi_event_handle;
 
 static wifi_conf_t conf =
-    {
-        .country_code = "CN",
+{
+    .country_code = "CN",
 };
 
-static void wifi_sta_connect(char *ssid, char *password)
+static void wifi_sta_connect(char* ssid, char* password)
 {
     wifi_interface_t wifi_interface;
 
@@ -75,128 +77,128 @@ static void wifi_sta_connect(char *ssid, char *password)
     wifi_mgmr_sta_connect(wifi_interface, ssid, password, NULL, NULL, 0, 0);
 }
 
-static void event_cb_wifi_event(input_event_t *event, void *private_data)
+static void event_cb_wifi_event(input_event_t* event, void* private_data)
 {
-    static char *ssid;
-    static char *password;
+    static char* ssid;
+    static char* password;
 
     switch (event->code)
     {
-    case CODE_WIFI_ON_INIT_DONE:
-    {
-        blog_info("[APP] [EVT] INIT DONE %lld", aos_now_ms());
-        wifi_mgmr_start_background(&conf);
-    }
-    break;
-    case CODE_WIFI_ON_MGMR_DONE:
-    {
-        blog_info("[APP] [EVT] MGMR DONE %lld", aos_now_ms());
-        //_connect_wifi();
-        wifi_sta_connect(g_wifi_config.ssid, g_wifi_config.password);
-    }
-    break;
-    case CODE_WIFI_ON_SCAN_DONE:
-    {
-        blog_info("[APP] [EVT] SCAN Done %lld", aos_now_ms());
-        // wifi_mgmr_cli_scanlist();
-    }
-    break;
-    case CODE_WIFI_ON_DISCONNECT:
-    {
-        blog_error("[APP] [EVT] disconnect %lld", aos_now_ms());
-        xEventGroupSetBits(wifi_event_handle, WIFI_DISCONNECT_BIT);
-        mqtt_connect_status = false;
-    }
-    break;
-    case CODE_WIFI_ON_CONNECTING:
-    {
-        blog_info("[APP] [EVT] Connecting %lld", aos_now_ms());
-    }
-    break;
-    case CODE_WIFI_CMD_RECONNECT:
-    {
-        blog_info("[APP] [EVT] Reconnect %lld", aos_now_ms());
-    }
-    break;
-    case CODE_WIFI_ON_CONNECTED:
-    {
-        blog_info("[APP] [EVT] connected %lld", aos_now_ms());
-    }
-    break;
-    case CODE_WIFI_ON_PRE_GOT_IP:
-    {
+        case CODE_WIFI_ON_INIT_DONE:
+        {
+            blog_info("[APP] [EVT] INIT DONE %lld", aos_now_ms());
+            wifi_mgmr_start_background(&conf);
+        }
+        break;
+        case CODE_WIFI_ON_MGMR_DONE:
+        {
+            blog_info("[APP] [EVT] MGMR DONE %lld", aos_now_ms());
+            //_connect_wifi();
+            wifi_sta_connect(g_wifi_config.ssid, g_wifi_config.password);
+        }
+        break;
+        case CODE_WIFI_ON_SCAN_DONE:
+        {
+            blog_info("[APP] [EVT] SCAN Done %lld", aos_now_ms());
+            // wifi_mgmr_cli_scanlist();
+        }
+        break;
+        case CODE_WIFI_ON_DISCONNECT:
+        {
+            blog_error("[APP] [EVT] disconnect %lld", aos_now_ms());
+            xEventGroupSetBits(wifi_event_handle, WIFI_DISCONNECT_BIT);
+            mqtt_connect_status = false;
+        }
+        break;
+        case CODE_WIFI_ON_CONNECTING:
+        {
+            blog_info("[APP] [EVT] Connecting %lld", aos_now_ms());
+        }
+        break;
+        case CODE_WIFI_CMD_RECONNECT:
+        {
+            blog_info("[APP] [EVT] Reconnect %lld", aos_now_ms());
+        }
+        break;
+        case CODE_WIFI_ON_CONNECTED:
+        {
+            blog_info("[APP] [EVT] connected %lld", aos_now_ms());
+        }
+        break;
+        case CODE_WIFI_ON_PRE_GOT_IP:
+        {
 
-        blog_info("[APP] [EVT] connected %lld", aos_now_ms());
-        xEventGroupSetBits(wifi_event_handle, WIFI_CONNECT_BIT);
-        mqtt_connect_status = true;
-    }
-    break;
-    case CODE_WIFI_ON_GOT_IP:
-    {
-        blog_info("[APP] [EVT] GOT IP %lld", aos_now_ms());
-        blog_info("[SYS] Memory left is %d Bytes", xPortGetFreeHeapSize());
-        xEventGroupSetBits(wifi_event_handle, WIFI_CONNECT_BIT);
-    }
-    break;
-    case CODE_WIFI_ON_PROV_SSID:
-    {
-        blog_info("[APP] [EVT] [PROV] [SSID] %lld: %s",
-                  aos_now_ms(),
-                  event->value ? (const char *)event->value : "UNKNOWN");
-        if (ssid)
-        {
-            vPortFree(ssid);
-            ssid = NULL;
+            blog_info("[APP] [EVT] connected %lld", aos_now_ms());
+            xEventGroupSetBits(wifi_event_handle, WIFI_CONNECT_BIT);
+            mqtt_connect_status = true;
         }
-        ssid = (char *)event->value;
-    }
-    break;
-    case CODE_WIFI_ON_PROV_BSSID:
-    {
-        blog_info("[APP] [EVT] [PROV] [BSSID] %lld: %s",
-                  aos_now_ms(),
-                  event->value ? (const char *)event->value : "UNKNOWN");
-        if (event->value)
+        break;
+        case CODE_WIFI_ON_GOT_IP:
         {
-            vPortFree((void *)event->value);
+            blog_info("[APP] [EVT] GOT IP %lld", aos_now_ms());
+            blog_info("[SYS] Memory left is %d Bytes", xPortGetFreeHeapSize());
+            xEventGroupSetBits(wifi_event_handle, WIFI_CONNECT_BIT);
         }
-    }
-    break;
-    case CODE_WIFI_ON_PROV_PASSWD:
-    {
-        blog_info("[APP] [EVT] [PROV] [PASSWD] %lld: %s", aos_now_ms(),
-                  event->value ? (const char *)event->value : "UNKNOWN");
-        if (password)
+        break;
+        case CODE_WIFI_ON_PROV_SSID:
         {
-            vPortFree(password);
-            password = NULL;
+            blog_info("[APP] [EVT] [PROV] [SSID] %lld: %s",
+                      aos_now_ms(),
+                      event->value ? (const char*)event->value : "UNKNOWN");
+            if (ssid)
+            {
+                vPortFree(ssid);
+                ssid = NULL;
+            }
+            ssid = (char*)event->value;
         }
-        password = (char *)event->value;
-    }
-    break;
-    case CODE_WIFI_ON_PROV_CONNECT:
-    {
-        blog_info("[APP] [EVT] [PROV] [CONNECT] %lld", aos_now_ms());
-        blog_info("connecting to %s:%s...", ssid, password);
-        wifi_sta_connect(ssid, password);
-    }
-    break;
-    case CODE_WIFI_ON_PROV_DISCONNECT:
-    {
-        blog_info("[APP] [EVT] [PROV] [DISCONNECT] %lld", aos_now_ms());
-    }
-    break;
-    default:
-    {
-        blog_info("[APP] [EVT] Unknown code %u, %lld", event->code, aos_now_ms());
-        /*nothing*/
-    }
+        break;
+        case CODE_WIFI_ON_PROV_BSSID:
+        {
+            blog_info("[APP] [EVT] [PROV] [BSSID] %lld: %s",
+                      aos_now_ms(),
+                      event->value ? (const char*)event->value : "UNKNOWN");
+            if (event->value)
+            {
+                vPortFree((void*)event->value);
+            }
+        }
+        break;
+        case CODE_WIFI_ON_PROV_PASSWD:
+        {
+            blog_info("[APP] [EVT] [PROV] [PASSWD] %lld: %s", aos_now_ms(),
+                      event->value ? (const char*)event->value : "UNKNOWN");
+            if (password)
+            {
+                vPortFree(password);
+                password = NULL;
+            }
+            password = (char*)event->value;
+        }
+        break;
+        case CODE_WIFI_ON_PROV_CONNECT:
+        {
+            blog_info("[APP] [EVT] [PROV] [CONNECT] %lld", aos_now_ms());
+            blog_info("connecting to %s:%s...", ssid, password);
+            wifi_sta_connect(ssid, password);
+        }
+        break;
+        case CODE_WIFI_ON_PROV_DISCONNECT:
+        {
+            blog_info("[APP] [EVT] [PROV] [DISCONNECT] %lld", aos_now_ms());
+        }
+        break;
+        default:
+        {
+            blog_info("[APP] [EVT] Unknown code %u, %lld", event->code, aos_now_ms());
+            /*nothing*/
+        }
     }
 }
 
 bool wifi_reset_check()
 {
-    bl_gpio_enable_input(WIFI_RESET_BUTTON_PIN, 0, 0);
+    bl_gpio_enable_input(WIFI_RESET_BUTTON_PIN, 0, 1);
     if (bl_gpio_input_get_value(WIFI_RESET_BUTTON_PIN))
     {
         vTaskDelay(pdMS_TO_TICKS(50));
@@ -232,7 +234,7 @@ void wifi_easy_connect(void)
     }
     else
     {
-        xTaskCreate(nfc_blufi_start, (char *)"main_entry", 1024, NULL, 9, &proc_main_task);
+        xTaskCreate(nfc_blufi_start, (char*)"main_entry", 1024, NULL, 9, &proc_main_task);
     }
     xEventGroupWaitBits(wifi_event_handle, WIFI_CONNECT_BIT, pdTRUE, pdFALSE, portMAX_DELAY);
 }

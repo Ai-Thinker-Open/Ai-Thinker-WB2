@@ -19,11 +19,8 @@
 #include "axk_blufi.h"
 #include "ble_interface.h"
 
-#include "easy_connect_wifi.h"
-
 
 #define NODE_NAME "RADAR_NODE"
 
 void nfc_blufi_start(void* arg);
-
 #endif

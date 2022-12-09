@@ -1,4 +1,4 @@
-# Example: Ai-WB2 Series SoC Module Reads SHT30 Temperature and Humidity Sensor via I²C Bus
+# Example: Ai-WB2 Series SoC Module Reads Rd-01 Sensor via UART
 
 ## Hardware Setup and Wiring
 
