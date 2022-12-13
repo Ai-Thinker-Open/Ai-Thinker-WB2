@@ -81,6 +81,9 @@
 //#include <ble_cli_cmds.h>
 #include <hosal_uart.h>
 #include "my_ble.h"
+
+static struct bt_gatt_exchange_params exchange_params;
+
 #define OS_CMP(s1, s2) (strcmp(s1, s2)==0)
 extern unsigned char bleuart_connect_status;
 extern void my_bleuart_send(char *buf, u16_t len);
@@ -104,6 +107,13 @@ static void bleuart_printf(char *buf)
     hosal_uart_send(&ble_uart_dev, buf, strlen(buf));
 }
 
+static void exchange_func(struct bt_conn *conn, u8_t err,
+              struct bt_gatt_exchange_params *params)
+{
+    if (conn) {
+        printf("[BLE] Exchange %s MTU Size =%d \r\n", err == 0U ? "successful" : "failed",bt_gatt_get_mtu(conn));
+    }
+}
 /*蓝牙连接状态回调函数*/
 static void ble_connect_status_cb(uint8_t status, char *addr)
 {                    
@@ -111,6 +121,8 @@ static void ble_connect_status_cb(uint8_t status, char *addr)
     {
         bleuart_printf("+BLE_CONNECT\r\n");
         bleuart_connect_status = 1;
+        exchange_params.func = exchange_func;
+        bt_gatt_exchange_mtu(pconn, &exchange_params);
     }
     else if(status == MY_BLE_DEVICE_DISCONNECT)
     {                           

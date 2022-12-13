@@ -82,13 +82,15 @@
 #include <hosal_uart.h>
 #include "ble_interface.h"
 
+/*填写从机mac地址*/
+static uint8_t slave_mac[6]={0x7c,0xb9,0x4c,0x1d,0xc6,0x3A};
+
 #define OS_CMP(s1, s2) (strcmp(s1, s2)==0)
 extern unsigned char bleuart_connect_status;
 extern uint8_t axk_HalBleInit();
 extern uint8_t axk_HalBleCentralStartScan(void);
 extern uint8_t axk_HalBleCentralConnect(uint8_t *mac, uint8_t *uuid, uint8_t autoConnect);
 extern int axk_HalBleCentralTTWrite(uint16_t len, uint8_t *data);
-extern void my_bleuart_send(char *buf, u16_t len);
 hosal_uart_dev_t ble_uart_dev = {
         .config = {
             .uart_id = 1,
@@ -111,12 +113,44 @@ void bleuart_printf(char *buf)
 
 void ble_user_init(void)
 {
-    uint8_t slave_mac[6]={0x88,0x88,0x88,0x88,0x88,0x88};
-
     axk_HalBleInit();
     axk_HalBleCentralStartScan(); //扫描周围的蓝牙设备
-
     axk_HalBleCentralConnect(slave_mac,NULL, BLE_MASTER_AUTOCONN_ENABLE);//通过MAC地址和UUID指定连接从机,开启自动重连
+}
+
+int str2hex(char * pbuf, int len)
+{
+	int i = 0;
+	for(i = 0; i < len; i++)
+	{
+		if(((pbuf[i] >= '0') && (pbuf[i] <= '9')) || ((pbuf[i] >= 'A') && (pbuf[i] <= 'F')) || ((pbuf[i] >= 'a') && (pbuf[i] <= 'f')) )
+		{
+			if((pbuf[i] >= '0') && (pbuf[i] <= '9'))
+			{
+				pbuf[i] -= '0';
+			}
+			else if(((pbuf[i] >= 'A') && (pbuf[i] <= 'F')))
+			{
+				pbuf[i] -= 'A';
+				pbuf[i] += 0x0A;
+			}else 
+			{
+				pbuf[i] -= 'a';
+				pbuf[i] += 0x0A;
+			}
+
+			if(i%2)
+			{
+				pbuf[i/2] = (pbuf[i-1] << 4) | pbuf[i];
+			}
+		}
+		else
+		{
+			return -1;
+		}
+	}
+
+	return 0;
 }
 
 static void ble_loop_proc(void *pvParameters)
@@ -129,19 +163,35 @@ static void ble_loop_proc(void *pvParameters)
         /* Uart receive poll */
         ret = hosal_uart_receive(&ble_uart_dev, data, sizeof(data));
         if (ret > 0)
-        {
-            /* Uart send poll */
+        {   /* Uart send poll */
             //hosal_uart_send(&ble_uart_dev, data, ret);
             if(bleuart_connect_status == 1)
             {
-              rep = axk_HalBleCentralTTWrite(data,ret);
-              if (rep != -1)
-              hosal_uart_send(&ble_uart_dev, data, ret);
-              else 
-              bleuart_printf("send fail!\r\n");
+              rep = axk_HalBleCentralTTWrite(ret,(uint8_t*)data);
+              if(rep >= 0)
+              {
+                //hosal_uart_send(&ble_uart_dev, data, ret);//
+              }
+              else if(rep == -1)
+              {
+                bleuart_printf("ble status error!\r\n");
+              }
+              else if(rep == -2)
+              {
+                bleuart_printf("ble data len error!\r\n");  
+              }
+              else if(rep == -3)
+              {
+                bleuart_printf("ble data null!\r\n");  
+              }
+              else
+              {
+                bleuart_printf("ble send fail!\r\n");  
+              }
             }
             else
-              bleuart_printf("no ble connect!\r\n");
+                bleuart_printf("no ble connect!\r\n");
+           
         }
         vTaskDelay(100);
     }
@@ -162,6 +212,3 @@ void main()
     bl_sys_init();//if use ble ,must init
     xTaskCreate(ble_loop_proc, "ble master", 1024, NULL, 15, NULL);
 }
-
-
-

@@ -18,98 +18,6 @@ static int master_current_scan;
 static uint8_t scan_le_addr[6];
 
 
-static ssize_t ble_tt_write_val(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-             const void *buf, u16_t len, u16_t offset, u8_t flags);
-static ssize_t ble_cmd_write_val(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-             const void *buf, u16_t len, u16_t offset, u8_t flags);
-static void ble_ccc_cfg_changed(const struct bt_gatt_attr *attr,
-                       u16_t value);
-
-static struct bt_gatt_attr salve_tt_server[]= {
-    /* Primary Service */
-    BT_GATT_PRIMARY_SERVICE(BT_UUID_DECLARE_128(0x0000)),
-
-    /* Characteristic && Characteristic User Declaration */
-    BT_GATT_CHARACTERISTIC(BT_UUID_DECLARE_128(0x0000),
-                   BT_GATT_CHRC_NOTIFY,
-                   BT_GATT_PERM_READ, NULL, NULL,
-                   NULL),
-    BT_GATT_CCC(ble_ccc_cfg_changed, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE),
-
-    /* Characteristic && Characteristic User Declaration */
-    BT_GATT_CHARACTERISTIC(BT_UUID_DECLARE_128(0x0000),
-                   BT_GATT_CHRC_WRITE_WITHOUT_RESP,
-                   BT_GATT_PERM_WRITE, NULL, ble_tt_write_val,
-                   NULL),
-};
-#define SALVE_TT_SERVER_TX_INDEX 2
-#define SALVE_TT_SERVER_TX_CCD_INDEX 3
-#define SALVE_TT_SERVER_RX_INDEX 5
-
-static struct bt_uuid_128 salve_tt_svr_uuid = BT_UUID_INIT_128(0x0000);
-static struct bt_uuid_128 salve_tt_tx_uuid = BT_UUID_INIT_128(0x0000);
-static struct bt_uuid_128 salve_tt_rx_uuid = BT_UUID_INIT_128(0x0000);
-
-static struct bt_gatt_attr salve_cmd_server[]= {
-    /* Primary Service */
-    BT_GATT_PRIMARY_SERVICE(BT_UUID_DECLARE_128(0x0000)),
-
-    /* Characteristic && Characteristic User Declaration */
-    BT_GATT_CHARACTERISTIC(BT_UUID_DECLARE_128(0x0000),
-                   BT_GATT_CHRC_NOTIFY,
-                   BT_GATT_PERM_READ, NULL, NULL,
-                   NULL),
-    BT_GATT_CCC(ble_ccc_cfg_changed, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE),
-
-    /* Characteristic && Characteristic User Declaration */
-    BT_GATT_CHARACTERISTIC(BT_UUID_DECLARE_128(0x0000),
-                   BT_GATT_CHRC_WRITE_WITHOUT_RESP,
-                   BT_GATT_PERM_WRITE, NULL, ble_cmd_write_val,
-                   NULL),
-};
-#define SALVE_CMD_SERVER_TX_INDEX 2
-#define SALVE_CMD_SERVER_TX_CCD_INDEX 3
-#define SALVE_CMD_SERVER_RX_INDEX 5
-
-static struct bt_uuid_128 salve_cmd_svr_uuid = BT_UUID_INIT_128(0x0000);
-static struct bt_uuid_128 salve_cmd_tx_uuid = BT_UUID_INIT_128(0x0000);
-static struct bt_uuid_128 salve_cmd_rx_uuid = BT_UUID_INIT_128(0x0000);
-
-static struct bt_gatt_service ble_tt_server = BT_GATT_SERVICE(salve_tt_server);
-static struct bt_gatt_service ble_cmd_server = BT_GATT_SERVICE(salve_cmd_server);
-// static struct bt_gatt_service *server[] = {&ble_tt_server, &ble_cmd_server};
-
-static ssize_t ble_tt_write_val(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-             const void *buf, u16_t len, u16_t offset,
-             u8_t flags)
-{
-    //////axk_Callbacks.blePeripheralTTRxCallback(len, (uint8_t *)buf);
-
-    return len;
-}
-
-static ssize_t ble_cmd_write_val(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-             const void *buf, u16_t len, u16_t offset,
-             u8_t flags)
-{
-    ////axk_Callbacks.blePeripheralCmdRxCallback(len, (uint8_t *)buf);
-
-    return len;
-}
-
-static void ble_ccc_cfg_changed(const struct bt_gatt_attr *attr,
-                       u16_t value)
-{
-    char *str = "disabled";
-
-    if (value == BT_GATT_CCC_NOTIFY) {
-        str = "notify";
-    } else if (value == BT_GATT_CCC_INDICATE) {
-        str = "indicate";
-    }
-
-    printf("[BLE] ccc change %s", str);
-}
 
 static void bt_enable_cb(int err)
 {
@@ -274,7 +182,6 @@ static void find_device_found(const bt_addr_le_t *addr, s8_t rssi, u8_t evtype,
     if (find_uuid != NULL && *find_uuid != uuid) {
         return ;
     }
-
     /* found target */
     printf("[BLE] found target\r\n");
     memcpy(find_target_addr, addr, sizeof(bt_addr_le_t));
@@ -322,14 +229,10 @@ int ble_master_find_target(uint32_t scan_time, uint8_t *mac, uint16_t *uuid, bt_
     xSemaphoreTake(sem_found, scan_time / portTICK_PERIOD_MS);
     vSemaphoreDelete(sem_found);
     sem_found = NULL;
-
-    // vTaskDelay(scan_time / portTICK_PERIOD_MS);
     bt_le_scan_stop();
-
     if (find_result == 0) {
         printf("[BLE] not found target\r\n");
         return -1;
     }
-
     return 0;
 }

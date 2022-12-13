@@ -30,6 +30,7 @@ typedef struct
     uint8_t tx[16];
     uint8_t rx[16];
 } server_uuid_t;
+struct bt_conn *pconn;
 void ble_reverse_byte(uint8_t *arr, uint32_t size);
 void ble_stack_start(void);
 /************************************ble common*******************************************/

@@ -1,4 +1,6 @@
 
+# Component Makefile
+#
 include $(BL60X_SDK_PATH)/components/network/ble/ble_common.mk
 
 ifeq ($(CONFIG_ENABLE_PSM_RAM),1)
@@ -20,3 +22,9 @@ endif
 ifeq ($(CONFIG_ENABLE_VFS_ROMFS),1)
 CPPFLAGS += -DCONF_USER_ENABLE_VFS_ROMFS
 endif
+
+COMPONENT_ADD_INCLUDEDIRS := ./
+
+COMPONENT_OBJS := $(patsubst %.c,%.o, $(COMPONENT_SRCS))
+
+COMPONENT_SRCDIRS := ./

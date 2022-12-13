@@ -11,6 +11,7 @@
 #include "gatt.h"
 #include "hci_core.h"
 #include "ble_interface.h"
+#include <hosal_uart.h>
 #define    CODE_USER_MASTER_INIT     0x00
 #define    CODE_USER_MASTER_CONN     0x01
 #define    CODE_USER_MASTER_DISCONN  0x02
@@ -24,8 +25,6 @@ static struct
 {
     uint16_t tt_tx;
     uint16_t tt_rx;
-    uint16_t cmd_tx;
-    uint16_t cmd_rx;
 } discover_handle;
 
 static struct 
@@ -38,9 +37,9 @@ static struct bt_gatt_subscribe_params subscribe_tt;
 static struct bt_gatt_subscribe_params subscribe_cmd;
 static struct bt_gatt_exchange_params exchange_params;
 static int ble_master_autoconn;
-/*从机数据透传服务的特征UUID */
-const char MY_UUID1_USER_RXD[16] = {0x49,0x53,0x53,0x43,0x88,0x41,0x43,0xf4,0xa8,0xd4,0xec,0xbe,0x34,0x72,0x9b,0xb3};
-const char MY_UUID1_USER_TXD[16] = {0x49,0x53,0x53,0x43,0x1e,0x4d,0x4b,0xd9,0xba,0x61,0x23,0xc6,0x47,0x24,0x96,0x16};
+/*填写从机数据透传服务的特征UUID */
+const char MY_UUID1_USER_TXD[16] = {0x49,0x53,0x53,0x43,0x88,0x41,0x43,0xf4,0xa8,0xd4,0xec,0xbe,0x34,0x72,0x9b,0xb3};
+const char MY_UUID1_USER_RXD[16] = {0x49,0x53,0x53,0x43,0x1e,0x4d,0x4b,0xd9,0xba,0x61,0x23,0xc6,0x47,0x24,0x96,0x16};
 /*连接状态*/
 unsigned char bleuart_connect_status = 0;
 
@@ -49,17 +48,18 @@ static SemaphoreHandle_t sem_conn;
 static StaticSemaphore_t sem_autoconn_buffer;
 static SemaphoreHandle_t sem_autoconn;
 static TaskHandle_t ble_master_autoconn_handle;
-
+extern hosal_uart_dev_t ble_uart_dev;
 static uint8_t notify_func(
     struct bt_conn *conn,
     struct bt_gatt_subscribe_params *params,
     const void *data, 
     uint16_t length)
 {
+    pconn = conn;
     if (length != 0)
     {
         printf("[BLE] notify(%d):%d\r\n", params->value_handle, length);
-        bleuart_printf((char*)data);
+        hosal_uart_send(&ble_uart_dev, data, length);
     }
     return BT_GATT_ITER_CONTINUE;
 }
@@ -71,7 +71,7 @@ static uint8_t discover_func(
 {
     int err;
     uint8_t uuid128[16];
-
+    pconn = conn;
     if (!attr) 
     {
         printf("Discover complete\r\n");
@@ -84,16 +84,21 @@ static uint8_t discover_func(
     if (attr->uuid->type == BT_UUID_TYPE_128) 
     {
         memcpy(uuid128, ((struct bt_uuid_128 *)(attr->uuid))->val, 16);
+        char buf[12];
         ble_reverse_byte(uuid128, 16); 
         if (memcmp((char*)uuid128, MY_UUID1_USER_TXD, 16) == 0) 
         {
             discover_handle.tt_tx = attr->handle;
             bleuart_printf("found ble txd uuid\r\n");
+            sprintf(buf,"TXD handle:%02X\r\n",attr->handle);
+            bleuart_printf(buf);
         } 
         else if (memcmp((char*)uuid128,MY_UUID1_USER_RXD, 16) == 0) 
         {
             discover_handle.tt_rx = attr->handle;
             bleuart_printf("found ble rxd uuid\r\n");
+            sprintf(buf,"RXD handle:%02X\r\n",attr->handle);
+            bleuart_printf(buf);
         } 
         else 
         {
@@ -104,14 +109,14 @@ static uint8_t discover_func(
 
     if(!bt_uuid_cmp(attr->uuid, BT_UUID_GATT_CCC)) 
     {
-        if (discover_handle.tt_tx != 0) 
+        if (discover_handle.tt_rx != 0) 
         {
-            if (attr->handle == discover_handle.tt_tx + 1) 
+            if (attr->handle == discover_handle.tt_rx + 1) 
             {
                 subscribe_tt.notify = notify_func;
                 subscribe_tt.value = BT_GATT_CCC_NOTIFY;
                 subscribe_tt.ccc_handle = attr->handle;
-                subscribe_tt.value_handle = discover_handle.tt_tx;
+                subscribe_tt.value_handle = discover_handle.tt_rx;
                 err = bt_gatt_subscribe(conn, &subscribe_tt);
                 if (err && err != -EALREADY)
                 {
@@ -120,25 +125,6 @@ static uint8_t discover_func(
                 else 
                 {
                    bleuart_printf("tt SUBSCRIBED\r\n");
-                }
-            }
-        }
-        if (discover_handle.cmd_tx != 0) 
-        {
-            if (attr->handle == discover_handle.cmd_tx + 1)
-            {
-                subscribe_cmd.notify = notify_func;
-                subscribe_cmd.value = BT_GATT_CCC_NOTIFY;
-                subscribe_cmd.ccc_handle = attr->handle;
-                subscribe_cmd.value_handle = discover_handle.cmd_tx;
-                err = bt_gatt_subscribe(conn, &subscribe_cmd);
-                if (err && err != -EALREADY) 
-                {
-                    printf("[BLE] cmd Subscribe failed (err %d)\r\n", err);
-                } 
-                else 
-                {
-                    printf("[BLE] cmd SUBSCRIBED\r\n");
                 }
             }
         }
@@ -158,6 +144,7 @@ static int ble_master_discover_server(struct bt_conn *conn)
     discover_params.start_handle = 0x0001;
     discover_params.end_handle = 0x0040;  //
     discover_params.type = BT_GATT_DISCOVER_ATTRIBUTE;
+    pconn = conn;
     err = bt_gatt_discover(conn, &discover_params);
     if (err) 
     {
@@ -238,6 +225,7 @@ static int ble_master_conn_cb(struct bt_conn *conn, uint8_t code)
     {
         xSemaphoreGive(sem_conn);
     }
+    pconn = conn;
     aos_post_event(EV_USER, CODE_USER_MASTER_CONN, (unsigned long)conn);
 
     return 0;
@@ -245,6 +233,7 @@ static int ble_master_conn_cb(struct bt_conn *conn, uint8_t code)
 
 static int ble_master_disconn_cb(struct bt_conn *conn, uint8_t code)
 {
+    pconn = conn;
 	aos_post_event(EV_USER, CODE_USER_MASTER_DISCONN, (unsigned long)conn);
 
     return 0;
@@ -252,6 +241,7 @@ static int ble_master_disconn_cb(struct bt_conn *conn, uint8_t code)
 
 static void exchange_func(struct bt_conn *conn, u8_t err,struct bt_gatt_exchange_params *params)
 {
+    pconn = conn;
     printf("[BLE] Exchange %s MTU Size =%d \r\n", err == 0U ? "successful" : "faxkled", bt_gatt_get_mtu(conn));
 }
 
@@ -261,11 +251,9 @@ static void event_cb_user_event(input_event_t *event, void *private_data)
     {
         case CODE_USER_MASTER_INIT:
             bleuart_printf("[BLE] master event init\r\n");
-           // printf("[BLE] master event init\r\n");
             break;
         case CODE_USER_MASTER_CONN:
             bleuart_printf("+BLE_CONNECTED\r\n");
-            //printf("[BLE] master conn \r\n");
             bleuart_connect_status = 1;
             ble_master_discover_server((struct bt_conn *)event->value);
 
@@ -275,7 +263,6 @@ static void event_cb_user_event(input_event_t *event, void *private_data)
             break;
 		case CODE_USER_MASTER_DISCONN:
             bleuart_printf("+BLE_DISCONNECTED\r\n");
-            //printf("[BLE] master disconnect\r\n");
             bleuart_connect_status = 0;
             bt_conn_unref((struct bt_conn *)event->value);
             aos_post_event(EV_USER, CODE_USER_MASTER_AUTOCONN, 0);
@@ -283,7 +270,6 @@ static void event_cb_user_event(input_event_t *event, void *private_data)
         case CODE_USER_MASTER_AUTOCONN:
             if (ble_master_autoconn != BLE_MASTER_AUTOCONN_DISABLE) {
                 bleuart_printf("+BLE_AUTOCONNECTED\r\n");
-                //printf("[BLE] master autoconn\r\n");
                 xSemaphoreGive(sem_autoconn);
             }
             break;
@@ -301,19 +287,20 @@ static void _ble_autoconn_task(void)
             printf("[BLE] autoconn take Semaphore fail\r\n");
             break;
         }
-
+        bleuart_printf("send ok\r\n");
         ble_master_auto_connect();
     }
 
     vTaskDelete(NULL);
 }
 
-static int ble_master_write_data(struct bt_conn *conn, u16_t handle, void *data, uint16_t length)
+int ble_master_write_data(struct bt_conn *conn, u16_t handle, void *data, uint16_t length)
 {
     int ret;
     uint16_t mtu;
     uint16_t offset;
     uint16_t send_len;
+    char rep[40];
     offset = 0;
     mtu = bt_gatt_get_mtu(conn) - 3;
     while (length > 0) {
@@ -324,14 +311,12 @@ static int ble_master_write_data(struct bt_conn *conn, u16_t handle, void *data,
         /* set offset */
         offset += send_len;
         length -= send_len;
-
         printf("[BLE] write len:%d \r\n", send_len);
-
+        
         if (ret != 0) {
             break;
         }
     }
-
     return ret;
 }
 
@@ -392,15 +377,16 @@ uint8_t axk_HalBleCentralConnect(uint8_t *mac, uint8_t *uuid, uint8_t autoConnec
 
     memset(&discover_handle, 0, sizeof discover_handle);
     conn = bt_conn_create_le(&target_addr, &conn_param);
+    pconn = conn;
     if (!conn) {
-        printf("Connection failed\r\n");
+       bleuart_printf("Connection failed\r\n");
         return 2;
     } else {
-        printf("Connection pending\r\n");
+       bleuart_printf("Connection pending\r\n");
     }
 
     if (pdFAIL == xSemaphoreTake(sem_conn, 3000 / portTICK_PERIOD_MS)) {
-        bleuart_printf("timeout\r\n");
+        bleuart_printf("connect timeout\r\n");
         bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
     }
     ble_master_autoconn = autoConnect;
@@ -415,7 +401,7 @@ uint8_t axk_HalBleCentralConnect(uint8_t *mac, uint8_t *uuid, uint8_t autoConnec
 uint8_t axk_HalBleCentralStartScan(void)
 {
     int ret;
-    ret = ble_master_scan(3000);
+    ret = ble_master_scan(1000);
     if (ret != 0)
     {
         return 1;
@@ -437,20 +423,16 @@ uint8_t axk_HalBleCentralStartScan(void)
 /*    -128：未适配           */
 int axk_HalBleCentralTTWrite(uint16_t len, uint8_t *data)
 {
-    struct bt_conn *conn;
-
-    conn = ble_get_conn_cur();
-    if (conn == NULL) {
+    int ret;
+    if (pconn == NULL) {
         return -1;
     }
 
-    if (discover_handle.tt_rx == 0) {
+    if (discover_handle.tt_tx == 0){
         return -1;
     }
-    // bt_gatt_write_without_response(conn, discover_handle.tt_rx, (const void *)data, len, 0);
-    ble_master_write_data(conn, discover_handle.tt_rx, data, len);
-
-    return len;
+    ret = ble_master_write_data(pconn, discover_handle.tt_tx, (const void *)data, len);
+    return ret;
 }
 
 /*蓝牙主机断开连接函数*/
@@ -460,12 +442,12 @@ int axk_HalBleCentralTTWrite(uint16_t len, uint8_t *data)
 /*128：没有适配       */
 uint8_t axk_HalBleCentralDisconnect(void)
 {
-    struct bt_conn *conn;
-    conn = ble_get_conn_cur();
-    if (conn == NULL) {
+    //struct bt_conn *conn;
+    //conn = ble_get_conn_cur();
+    if (pconn == NULL) {
         return 1;
     }
-    bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+    bt_conn_disconnect(pconn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
     return 0;
 }
 
@@ -477,7 +459,7 @@ int ble_master_init(void)
     sem_conn = xSemaphoreCreateBinaryStatic(&sem_conn_buffer);
     if (sem_conn == NULL )
     {
-        printf("[BLE] create sem faxkl\r\n");
+        printf("[BLE] create sem fail\r\n");
         return -1;
     }
 
