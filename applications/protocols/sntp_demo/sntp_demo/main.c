@@ -11,9 +11,12 @@
 #include <hal_wifi.h>
 #include <lwip/tcpip.h>
 #include <sntp.h>
+#include <utils_time.h>
 
-#define ROUTER_SSID "your ssid"
-#define ROUTER_PWD "your password"
+#define ROUTER_SSID "ssid"
+#define ROUTER_PWD "password"
+#define sntp_server "ntp.aliyun.com"
+#define UTC 8       //your Timezone, for example,beijing Timezone is GMT+8
 
 static wifi_conf_t conf =
 {
@@ -32,7 +35,7 @@ void _startup_sntp(void *arg)
 {
     blog_info("--------------------------------------- Start NTP now\r\n");
     sntp_setoperatingmode(SNTP_OPMODE_POLL);
-    sntp_setservername(0, "0.asia.pool.ntp.org");
+    sntp_setservername(0, sntp_server);
     sntp_init();
     blog_info("--------------------------------------- Start NTP Done\r\n");
 }
@@ -44,8 +47,20 @@ void sntp_task()
     while(1)
     {
         uint32_t seconds = 0, frags = 0;
+        utils_time_date_t date;
         sntp_get_time(&seconds, &frags);
         blog_info("[NTP] time is %lu:%lu\r\n", seconds, frags);
+        utils_time_date_from_epoch(seconds+UTC*60*60, &date);
+        blog_info("Date & time is: %u-%02u-%02u %02u:%02u:%02u (Day %u of week, Day %u of Year)\r\n",
+            date.ntp_year,
+            date.ntp_month,
+            date.ntp_date,
+            date.ntp_hour,
+            date.ntp_minute,
+            date.ntp_second,
+            date.ntp_week_day,
+            date.day_of_year
+        );        
         vTaskDelay(1000 / portTICK_RATE_MS); 
     }
 }
