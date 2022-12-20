@@ -23,6 +23,7 @@
 #include "blufi_init.h"
 #include "axk_blufi.h"
 #include "ble_interface.h"
+#include "blufi_security.h"
 //////////////////////////////////
 
 static bool ble_is_connected = false;
@@ -31,6 +32,8 @@ blufi_config_t g_blufi_config = {0};
 
 static void blufi_wifi_event(int event, void *param)
 {
+
+    printf("BLUFI BLEblufi_wifi_event= %d \r\n", event);
     switch (event)
     {
 
@@ -72,6 +75,9 @@ static void example_event_callback(_blufi_cb_event_t event, _blufi_cb_param_t *p
 {
     /* actually, should post to blufi_task handle the procedure,
      * now, as a example, we do it more simply */
+
+    printf("BLUFI example_event_callback event= ]%d] \r\n", event);
+
     switch (event)
     {
     case AXK_BLUFI_EVENT_INIT_FINISH:
@@ -85,12 +91,12 @@ static void example_event_callback(_blufi_cb_event_t event, _blufi_cb_param_t *p
         printf("BLUFI ble connect\n");
         ble_is_connected = true;
         axk_blufi_adv_stop();
-        // blufi_security_init();
+        blufi_security_init();
         break;
     case AXK_BLUFI_EVENT_BLE_DISCONNECT:
         printf("BLUFI ble disconnect\n");
         ble_is_connected = false;
-        // blufi_security_deinit();
+        blufi_security_deinit();
         // axk_blufi_adv_start();
         axk_blufi_profile_deinit();
         axk_hal_blufi_deinit();
@@ -220,10 +226,10 @@ static void example_event_callback(_blufi_cb_event_t event, _blufi_cb_param_t *p
 
 static _blufi_callbacks_t example_callbacks = {
     .event_cb = example_event_callback,
-    // .negotiate_data_handler = blufi_dh_negotiate_data_handler,
-    // .encrypt_func = blufi_aes_encrypt,
-    // .decrypt_func = blufi_aes_decrypt,
-    // .checksum_func = blufi_crc_checksum,
+    .negotiate_data_handler = blufi_dh_negotiate_data_handler,
+    .encrypt_func = blufi_aes_encrypt,
+    .decrypt_func = blufi_aes_decrypt,
+    .checksum_func = blufi_crc_checksum,
 };
 
 int at_blufi_start(void)
@@ -249,11 +255,6 @@ static void cmd_blufi_deinit(char *buf, int len, int argc, char **argv)
     axk_hal_ble_role_set(BLE_ROLE_DEINIT);
 }
 
-const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
-    {"blufi_init", "blufi deinit", cmd_blufi_init},
-    {"blufi_deinit", "blufi deinit", cmd_blufi_deinit},
-};
-
 static void proc_main_entry(void *pvParameters)
 {
     wifi_interface_init(blufi_wifi_event);
@@ -265,7 +266,7 @@ void main()
 {
     static TaskHandle_t proc_main_task;
     bl_sys_init();
-    xTaskCreate(proc_main_entry, (char *)"main_entry", 1024, NULL, 15, &proc_main_task);
+    xTaskCreate(proc_main_entry, (char *)"main_entry", 1024 * 8, NULL, 11, &proc_main_task);
     tcpip_init(NULL, NULL);
     printf("blufi demo test\r\n");
 }
