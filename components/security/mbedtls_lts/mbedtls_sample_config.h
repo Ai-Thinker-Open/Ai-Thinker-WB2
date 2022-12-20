@@ -65,6 +65,7 @@
 
 #define MBEDTLS_CIPHER_MODE_CBC
 #define MBEDTLS_CIPHER_MODE_CTR
+#define MBEDTLS_CIPHER_MODE_CFB
 
 #define MBEDTLS_CIPHER_PADDING_PKCS7
 #define MBEDTLS_CIPHER_PADDING_ZEROS
@@ -152,6 +153,8 @@
 #define MBEDTLS_PLATFORM_STD_MEM_HDR "mbedtls_port_platform.h"
 
 #define MBEDTLS_SSL_SRV_C
+
+
 
 /* Target and application specific configurations
  *
