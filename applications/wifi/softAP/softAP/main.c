@@ -91,7 +91,10 @@ static void wifi_ap_start()
     ap_interface = wifi_mgmr_ap_enable();
     wifi_mgmr_conf_max_sta(4);
     wifi_mgmr_ap_start(ap_interface, AP_SSID, 0, AP_PWD, 6);
-    wifi_ap_ip_set("192.168.4.1", "255.255.255.0", "8.8.8.8");
+    wifi_ap_ip_set("192.168.169.1", "255.255.255.0", "192.168.169.1");  //defaut gateway ip is "192.168.169.1",if you want usb other gateway ip ,please change components/network/lwip_dhcpd/dhcp_server_raw.c：42   DHCPD_SERVER_IP 
+                                                                        //for example, gateway ip:"192.168.4.1" , change DHCPD_SERVER_IP to "192.168.4.1"  :
+                                                                        //wifi_ap_ip_set("192.168.4.1", "255.255.255.0", "192.168.4.1");
+                                                                        //components/network/lwip_dhcpd/dhcp_server_raw.c：42   #define DHCPD_SERVER_IP "192.168.4.1"
 }
 
 static void event_cb_wifi_event(input_event_t* event, void* private_data)
