@@ -486,6 +486,9 @@ void btc_blufi_cb_handler(btc_msg_t *msg)
     case AXK_BLUFI_EVENT_RECV_USERNAME:
         btc_blufi_cb_to_app(AXK_BLUFI_EVENT_RECV_USERNAME, param);
         break;
+        // case AXK_BLUFI_EVENT_GET_WIFI_LIST:
+        //     btc_blufi_cb_to_app(AXK_BLUFI_EVENT_GET_WIFI_LIST, param);
+        // break;
     case AXK_BLUFI_EVENT_RECV_CA_CERT:
         btc_blufi_cb_to_app(AXK_BLUFI_EVENT_RECV_CA_CERT, param);
         break;
@@ -728,6 +731,46 @@ static void btc_blufi_send_error_info(uint8_t state)
     free(data);
 }
 
+static void btcaxk_blufi_send_wifi_list(uint16_t apCount, _blufi_ap_record_t *list)
+{
+    uint8_t type;
+    uint8_t *data;
+    uint16_t data_len;
+    uint8_t *p;
+    uint16_t malloc_size = (1 + 1 + sizeof(list->ssid)) * apCount;
+    p = data = malloc(malloc_size);
+    if (data == NULL)
+    {
+        printf("malloc error\n");
+        return;
+    }
+    if (list == NULL || apCount == 0)
+    {
+        printf("%s value or value len error\r\n", __func__);
+        return;
+    }
+    type = BLUFI_BUILD_TYPE(BLUFI_TYPE_DATA, BLUFI_TYPE_DATA_SUBTYPE_WIFI_LIST);
+    for (int i = 0; i < apCount; ++i)
+    {
+        uint16_t len = strlen((const char *)list[i].ssid);
+        data_len = (p - data);
+        // current_len + ssid + rssi + total_len_value
+        if ((data_len + len + 1 + 1) > malloc_size)
+        {
+            printf("%s len error, data_len: %d, data_len_diff: %d, malloc_size: %d\r\n", __func__, data_len, (data_len + len + 1 + 1), malloc_size);
+            free(data);
+            return;
+        }
+        *p++ = len + 1; // length of ssid + rssi
+        *p++ = list[i].rssi;
+        memcpy(p, list[i].ssid, len);
+        p = p + len;
+    }
+    data_len = (p - data);
+    btc_blufi_send_encap(type, data, data_len);
+    free(data);
+}
+
 static void btc_blufi_send_custom_data(uint8_t *value, uint32_t value_len)
 {
     if (value == NULL || value_len == 0)
@@ -861,10 +904,11 @@ void btc_blufi_call_handler(btc_msg_t *msg)
                                    arg->wifi_conn_report.extra_info,
                                    arg->wifi_conn_report.extra_info_len);
         break;
-    // case BTC_BLUFI_ACT_SEND_WIFI_LIST:{
-    //     btcaxk_blufi_send_wifi_list(arg->wifi_list.apCount, arg->wifi_list.list);
-    //     break;
-    // }
+    case BTC_BLUFI_ACT_SEND_WIFI_LIST:
+    {
+        btcaxk_blufi_send_wifi_list(arg->wifi_list.apCount, arg->wifi_list.list);
+        break;
+    }
     case BTC_BLUFI_ACT_SEND_ERR_INFO:
         btc_blufi_send_error_info(arg->blufi_err_infor.state);
         break;

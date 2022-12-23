@@ -76,6 +76,10 @@ static void event_cb_wifi_event(input_event_t *event, void *private_data)
     break;
     case CODE_WIFI_ON_SCAN_DONE:
     {
+        if (sg_blufi_conn_cb && WIFI_SCAN_DONE_EVENT_OK == event->value)
+        {
+            sg_blufi_conn_cb(BLUFI_WIFI_SCAN_DONE, NULL);
+        }
         printf("[WIFI] [EVT] SCAN Result: %s\r\n", WIFI_SCAN_DONE_EVENT_OK == event->value ? "OK" : "Busy now");
     }
     break;
@@ -84,6 +88,11 @@ static void event_cb_wifi_event(input_event_t *event, void *private_data)
         printf("[WIFI] [EVT] CODE_WIFI_ON_DISCONNECT Reason: %s\r\n", wifi_mgmr_status_code_str(event->value));
 
         printf("event->value:%ld\r\n", event->value);
+
+        if (sg_blufi_conn_cb)
+        {
+            sg_blufi_conn_cb(BLUFI_STATION_DISCONNECTED, NULL);
+        }
 
         /* 以下情况过于复杂，注释掉 */
         if (event->value == WLAN_FW_4WAY_HANDSHAKE_ERROR_PSK_TIMEOUT_FAILURE ||
@@ -118,6 +127,10 @@ static void event_cb_wifi_event(input_event_t *event, void *private_data)
     break;
     case CODE_WIFI_ON_CONNECTED:
     {
+        if (sg_blufi_conn_cb)
+        {
+            sg_blufi_conn_cb(BLUFI_STATION_CONNECTED, NULL);
+        }
         printf("[WIFI] [EVT] CODE_WIFI_ON_CONNECTED \r\n");
 
         aos_post_event(EV_WIFI, CODE_WIFI_ON_GOT_IP, 0);
