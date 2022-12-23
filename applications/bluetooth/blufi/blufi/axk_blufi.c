@@ -43,7 +43,7 @@ void axk_blufi_adv_start(void)
     else
     {
         char *name = calloc(1, sizeof(char) * 8);
-        sprintf(name, "WB2_", sta_mac[4], sta_mac[5]);
+        sprintf(name, "WB2_%02X%02X", sta_mac[4], sta_mac[5]);
         blufiname_len = strlen(name);
         rsp_data[0] = blufiname_len + 1;
         rsp_data[1] = 0x09;
