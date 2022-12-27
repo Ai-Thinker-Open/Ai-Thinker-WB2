@@ -22,14 +22,15 @@
 /* ============================
  *  display driver
  * ===========================*/
-#define LV_DISPLAY_SSD1306
- // #define LV_DISPLAY_ST7796S
+ // #define LV_DISPLAY_SSD1306
+  // #define LV_DISPLAY_ST7796S
+#define LV_DISPLAY_ST7789
    /* ===================================================
    * Set display direction
    * LV_DISPLAY_ORIENTATION_LANDSCAPE :normal
    * LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED: inversion
    *=====================================================*/
-#if defined LV_DISPLAY_SSD1306
+#ifdef LV_DISPLAY_SSD1306
    /*================= SSD1306 I2C Pin config  ===================*/
 #define OLED_IIC_SCL 12
 #define OLED_IIC_SDA 3
@@ -40,7 +41,9 @@
 #define MY_DISP_HOR_RES    128
 #define MY_DISP_VER_RES    64
 #define LV_VER_RES_MAX     10
-#elif defined(LV_DISPLAY_ST7796S)
+#endif
+
+#ifdef LV_DISPLAY_ST7796S
    /*================= ST7796 SPI Pin config  ===================*/
 #define ST7796_SPI_SS 5
 #define ST7796_SPI_RST 4
@@ -64,39 +67,65 @@
 #define CONFIG_LV_PREDEFINED_DISPLAY_NONE
 
 #endif
-  /*========================================
-  *         Set color display
-  *  LV_INVERT_COLORS:Negative display
-  *=========================================*/
-  // #define LV_INVERT_COLORS  
 
-  /*====================
-       COLOR SETTINGS
- *====================*/
+#ifdef LV_DISPLAY_ST7789
+
+#define ST7789_DC 4
+#define ST7789_CS 5
+#define ST7789_RST 14
+#define ST7789_CLK 3
+#define ST7789_MOSI 12
+#define ST7789_MISO 17
+
+#define CONFIG_LV_DISP_USE_RST 1
+#define CONFIG_LV_INVERT_COLORS 1
+#define CONFIG_DISPLAY_ORIENTATION_PORTRAIT_INVERTED 1
+#define CONFIG_LV_DISPLAY_ORIENTATION_PORTRAIT 1
+#define CONFIG_LV_DISPLAY_ORIENTATION 0
+#define LV_HOR_RES_MAX 240
+#define LV_VER_RES_MAX 240
+#define MY_DISP_VER_RES LV_VER_RES_MAX
+#define MY_DISP_HOR_RES LV_HOR_RES_MAX
+
+#endif
+   /*========================================
+   *         Set color display
+   *  LV_INVERT_COLORS:Negative display
+   *=========================================*/
+   // #define LV_INVERT_COLORS  
+
+   /*====================
+        COLOR SETTINGS
+  *====================*/
 #if defined LV_DISPLAY_SSD1306
- /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
+  /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
 #define LV_COLOR_DEPTH 1
 
 /*Swap the 2 bytes of RGB565 color. Useful if the display has an 8-bit interface (e.g. SPI)*/
 #define LV_COLOR_16_SWAP 0
+
 #elif defined(LV_DISPLAY_ST7796S)
- /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
+  /*Color depth: 1 (1 byte per pixel), 8 (RGB332), 16 (RGB565), 32 (ARGB8888)*/
 #define LV_COLOR_DEPTH 16
 
 /*Swap the 2 bytes of RGB565 color. Useful if the display has an 8-bit interface (e.g. SPI)*/
 #define LV_COLOR_16_SWAP 1
 #endif
 
- /*Enable features to draw on transparent background.
-  *It's required if opa, and transform_* style properties are used.
-  *Can be also used if the UI is above another layer, e.g. an OSD menu or video player.*/
+#ifdef LV_DISPLAY_ST7789
+#define LV_COLOR_DEPTH 16
+#define LV_COLOR_16_SWAP 1
+#endif
+/*Enable features to draw on transparent background.
+ *It's required if opa, and transform_* style properties are used.
+ *Can be also used if the UI is above another layer, e.g. an OSD menu or video player.*/
 #define LV_COLOR_SCREEN_TRANSP 0
 
-  /* Adjust color mix functions rounding. GPUs might calculate color mix (blending) differently.
-   * 0: round down, 64: round up from x.75, 128: round up from half, 192: round up from x.25, 254: round up */
+ /* Adjust color mix functions rounding. GPUs might calculate color mix (blending) differently.
+  * 0: round down, 64: round up from x.75, 128: round up from half, 192: round up from x.25, 254: round up */
 #define LV_COLOR_MIX_ROUND_OFS 0
 
-   /*Images pixels with this color will not be drawn if they are chroma keyed)*/
+  /*Images pixels with this color will not be drawn if they are chroma keyed)*/
 #define LV_COLOR_CHROMA_KEY lv_color_hex(0x00ff00)         /*pure green*/
 
 /*=========================
@@ -415,9 +444,9 @@
 #define LV_FONT_MONTSERRAT_14 1
 #define LV_FONT_MONTSERRAT_16 0
 #define LV_FONT_MONTSERRAT_18 0
-#define LV_FONT_MONTSERRAT_20 0
+#define LV_FONT_MONTSERRAT_20 1
 #define LV_FONT_MONTSERRAT_22 0
-#define LV_FONT_MONTSERRAT_24 0
+#define LV_FONT_MONTSERRAT_24 1
 #define LV_FONT_MONTSERRAT_26 0
 #define LV_FONT_MONTSERRAT_28 0
 #define LV_FONT_MONTSERRAT_30 0
@@ -429,7 +458,7 @@
 #define LV_FONT_MONTSERRAT_42 0
 #define LV_FONT_MONTSERRAT_44 0
 #define LV_FONT_MONTSERRAT_46 0
-#define LV_FONT_MONTSERRAT_48 0
+#define LV_FONT_MONTSERRAT_48 1
 
   /*Demonstrate special features*/
 #define LV_FONT_MONTSERRAT_12_SUBPX      0

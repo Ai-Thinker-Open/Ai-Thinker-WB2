@@ -14,7 +14,7 @@
 #include "ssd1306_drive.h"
 #include "blog.h"
 #include "st7796s_drive.h"
-
+#include "st7789_drive.h"
  /**********************
   *      TYPEDEFS
   **********************/
@@ -74,16 +74,16 @@ void lv_port_disp_init(void)
 
       /* Example for 1) */
                          /*A buffer for 10 rows*/
-    static lv_disp_draw_buf_t draw_buf_dsc_1;
-    static lv_color_t buf_1[MY_DISP_HOR_RES * 8];
-    lv_disp_draw_buf_init(&draw_buf_dsc_1, buf_1, NULL, MY_DISP_HOR_RES * 8);   /*Initialize the display buffer*/
+    // static lv_disp_draw_buf_t draw_buf_dsc_1;
+    // static lv_color_t buf_1[MY_DISP_HOR_RES * 8];
+    // lv_disp_draw_buf_init(&draw_buf_dsc_1, buf_1, NULL, MY_DISP_HOR_RES * 8);   /*Initialize the display buffer*/
 
     // /* Example for 2) */
 
-    // static lv_disp_draw_buf_t draw_buf_dsc_2;
-    // static lv_color_t buf_2_1[MY_DISP_HOR_RES * 10];                        /*A buffer for 10 rows*/
-    // static lv_color_t buf_2_2[MY_DISP_HOR_RES * 10];                        /*An other buffer for 10 rows*/
-    // lv_disp_draw_buf_init(&draw_buf_dsc_2, buf_2_1, buf_2_2, MY_DISP_HOR_RES * 10);   /*Initialize the display buffer*/
+    static lv_disp_draw_buf_t draw_buf_dsc_2;
+    static lv_color_t buf_2_1[MY_DISP_HOR_RES * 20];                        /*A buffer for 10 rows*/
+    static lv_color_t buf_2_2[MY_DISP_HOR_RES * 20];                        /*An other buffer for 10 rows*/
+    lv_disp_draw_buf_init(&draw_buf_dsc_2, buf_2_1, buf_2_2, MY_DISP_HOR_RES * 20);   /*Initialize the display buffer*/
 
     // /* Example for 3) also set disp_drv.full_refresh = 1 below*/
     // static lv_disp_draw_buf_t draw_buf_dsc_3;
@@ -109,7 +109,7 @@ void lv_port_disp_init(void)
     disp_drv.flush_cb = disp_flush;
 
     /*Set a display buffer*/
-    disp_drv.draw_buf = &draw_buf_dsc_1;
+    disp_drv.draw_buf = &draw_buf_dsc_2;
 
     /*Required for Example 3)*/
     //disp_drv.full_refresh = 1;
@@ -136,6 +136,8 @@ static void disp_init(void)
     oled_i2c_driver_init(OLED_IIC_SCL, OLED_IIC_SDA);
 #elif defined(LV_DISPLAY_ST7796S)
     st7796s_drive_init();
+#elif defined(LV_DISPLAY_ST7789)
+    st7789_init();
 #endif
 }
 
@@ -160,12 +162,13 @@ void disp_disable_update(void)
  *'lv_disp_flush_ready()' has to be called when finished.*/
 static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_t* color_p)
 {
-
+#if (defined LV_DISPLAY_ST7796S) && (defined LV_DISPLAY_SSD1306)
     if (disp_flush_enabled) {
         /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 
         int32_t x;
         int32_t y;
+
 #if defined LV_DISPLAY_ST7796S
         st7796s_set_windows(area->x1, area->x2, area->y1, area->y2);
 #endif
@@ -187,7 +190,12 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 #if defined LV_DISPLAY_SSD1306
     oled_refresh_screen();
 #endif
+#endif
 
+
+#ifdef LV_DISPLAY_ST7789
+    st7789_flush(disp_drv, area, color_p);
+#endif
 
     lv_disp_flush_ready(disp_drv);
 }
@@ -213,6 +221,6 @@ static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_
 
 #else /*Enable this file at the top*/
 
-/*This dummy typedef exists purely to silence -Wpedantic.*/
+        /*This dummy typedef exists purely to silence -Wpedantic.*/
 typedef int keep_pedantic_happy;
 #endif
