@@ -12,7 +12,7 @@
 
 #include <hosal_timer.h>
 
-#define LVGV_Arc_EXAMPLE 1
+#define LVGV_Arc_EXAMPLE 2
 
 static void timer_cb(void* arg)
 {

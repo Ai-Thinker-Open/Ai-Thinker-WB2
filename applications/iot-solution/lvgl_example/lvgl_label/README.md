@@ -32,7 +32,7 @@ LVGL configuration is unified in the `lv_conf.h` file. You can configure the mod
 ```
 ## Run
 ### example 1
-<img src="img/example1.gif" width="50%">
+![example1](img/example1.gif)
 
 ### example 2
 <img src="img/example2.jpg" width="50%">
