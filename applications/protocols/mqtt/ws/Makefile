@@ -21,7 +21,7 @@ endif
 COMPONENTS_NETWORK := sntp dns_server
 COMPONENTS_BLSYS   := bltime blfdt blmtd blota bloop loopadc looprt loopset
 COMPONENTS_VFS     := romfs
-COMPONENTS_MQTT    := axk_common axk_log tcp_transport http-parser axk_tls axk_mqtt
+COMPONENTS_MQTT    := axk_common  tcp_transport http-parser axk_tls axk_mqtt
 
 INCLUDE_COMPONENTS += freertos_riscv_ram bl602 bl602_std newlibc wifi wifi_manager wpa_supplicant bl602_os_adapter wifi_hosal hosal mbedtls_lts lwip lwip_dhcpd vfs yloop utils cli netutils blog blog_testc blcrypto_suite
 INCLUDE_COMPONENTS += easyflash4 coredump

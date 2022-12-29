@@ -25,7 +25,7 @@ extern "C" {
  *
  */
 #define AXK_TRANSPORT_MEM_CHECK(TAG, a, action) if (!(a)) {                                         \
-        AXK_LOGE(TAG,"%s(%d): %s", __FUNCTION__, __LINE__, "Memory exhausted");                     \
+        blog_error("%s(%d): %s", __FUNCTION__, __LINE__, "Memory exhausted");                     \
         action;                                                                                     \
         }
 
@@ -36,7 +36,7 @@ extern "C" {
         {                                                     \
             axk_err_t _axk_transport_err_to_check = err;      \
             if (_axk_transport_err_to_check != AXK_OK) {      \
-                AXK_LOGE(TAG,"%s(%d): Expected AXK_OK; reported: %d", __FUNCTION__, __LINE__, _axk_transport_err_to_check); \
+                blog_error("%s(%d): Expected AXK_OK; reported: %d", __FUNCTION__, __LINE__, _axk_transport_err_to_check); \
                 action;                                       \
             }                                                 \
         }

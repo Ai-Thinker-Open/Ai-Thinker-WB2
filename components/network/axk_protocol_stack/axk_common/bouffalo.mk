@@ -8,7 +8,6 @@ COMPONENT_PRIV_INCLUDEDIRS :=
 
 ## This component's src
 
-# COMPONENT_OBJS := $(patsubst %.c,%.o, $(COMPONENT_SRCS))
 
 COMPONENT_LIB_ONLY := 1
 COMPONENT_ADD_INCLUDEDIRS += include

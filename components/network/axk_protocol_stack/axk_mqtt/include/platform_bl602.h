@@ -17,12 +17,12 @@ long long platform_tick_get_ms(void);
 void ms_to_timeval(int timeout_ms, struct timeval *tv);
 
 #define AXK_MEM_CHECK(TAG, a, action) if (!(a)) {                                                      \
-        AXK_LOGE(TAG,"%s(%d): %s",  __FUNCTION__, __LINE__, "Memory exhausted"); \
+        blog_error("%s(%d): %s",  __FUNCTION__, __LINE__, "Memory exhausted"); \
         action;                                                                                         \
         }
 
 #define AXK_OK_CHECK(TAG, a, action) if ((a) != AXK_OK) {                                                     \
-        AXK_LOGE(TAG,"%s(%d): %s", __FUNCTION__, __LINE__, "Failed with non AXK_OK err code"); \
+        blog_error("%s(%d): %s", __FUNCTION__, __LINE__, "Failed with non AXK_OK err code"); \
         action;                                                                                               \
         }
 

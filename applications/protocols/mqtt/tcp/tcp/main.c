@@ -121,6 +121,8 @@ static void proc_main_entry(void* pvParameters)
 void main()
 {
     blog_set_level_log_component(BLOG_LEVEL_ALL, "tcp");
+    blog_set_level_log_component(BLOG_LEVEL_ALL, "axk_mqtt");
+    blog_set_level_log_component(BLOG_LEVEL_ALL, "tcp_transport");       
     puts("[OS] Starting TCP/IP Stack...");
     tcpip_init(NULL, NULL);
     puts("[OS] proc_main_entry task...");
