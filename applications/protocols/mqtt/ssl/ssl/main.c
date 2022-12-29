@@ -9,8 +9,8 @@
 #include <wifi_mgmr_ext.h>
 #include <hal_wifi.h>
 
-#define ROUTER_SSID "AIOT@FAE"
-#define ROUTER_PWD "fae12345678"
+#define ROUTER_SSID "your ssid"
+#define ROUTER_PWD "your password"
 
 static wifi_conf_t conf =
 {

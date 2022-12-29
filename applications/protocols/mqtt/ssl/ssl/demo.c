@@ -33,7 +33,7 @@
 "SEVOMQswCQYDVQQKDAJOQTELMAkGA1UECwwCTkExFzAVBgNVBAMMDjExOS4yOS4x\r\n"\
 "NDEuMTE4MB4XDTIyMDkwMjExNTkyM1oXDTMyMDgzMDExNTkyM1owUzELMAkGA1UE\r\n"\
 "BhMCQ04xETAPBgNVBAgMCFpoZWppYW5nMREwDwYDVQQHDAhIYW5nemhvdTENMAsG\r\n"\
-"A1UECgwERU1RWDEPMA0GA1UEAwwGY2xpZW50MIIBIjANBgkqhkiG9w0BAQEFAAOC\r\n"\
+"kf0kfqWJatfP9xhwFdfnFbW6Tj4pqyo9hwQ5lVsd1t80jS0XK48ZFiLeRjaVsdqC\r\n"\
 "AQ8AMIIBCgKCAQEA1/cimuVevDg+V/5h8p+vOcGRHR9HqCYJq1HU7viK6aYaN7F6\r\n"\
 "cnbknPAK2qyyYT1dYWyOW2K4zx1QST1Wwn+7zGOgwvMXCoFmxqjAxOVr11lfFb8F\r\n"\
 "J9O1oyZS+2BO8vvORP3F9xZJQZ1GEmijyMMRrRu7ucX4j7aqFsG8wSyDxFyRCMwd\r\n"\
@@ -145,7 +145,7 @@ static axk_err_t event_cb(axk_mqtt_event_handle_t event)
 void mqtt_start(void)
 {  
     axk_mqtt_client_config_t mqtt_cfg = {
-        .uri="mqtts://119.29.141.118:8883",
+        .uri="mqtts://mqtt.eclipseprojects.io:8883",
         .cert_pem=CA_CRT,
         .client_cert_pem=CLIENT_CRT,
         .client_key_pem=CLIENT_KEY,
