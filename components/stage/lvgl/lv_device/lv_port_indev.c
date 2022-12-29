@@ -4,14 +4,18 @@
  */
 
  /*Copy this file as "lv_port_indev.c" and set this value to "1" to enable content*/
-#if 0
+#if 1
 
 /*********************
  *      INCLUDES
  *********************/
-#include "lv_port_indev_template.h"
+#include "lv_port_indev.h"
 #include "../../lvgl.h"
-
+#include "hosal_i2c.h"
+#include "cst816.h"
+#include "FreeRTOS.h"
+#include "queue.h"
+#include "blog.h"
  /*********************
   *      DEFINES
   *********************/
@@ -95,7 +99,7 @@ void lv_port_indev_init(void)
     indev_drv.type = LV_INDEV_TYPE_POINTER;
     indev_drv.read_cb = touchpad_read;
     indev_touchpad = lv_indev_drv_register(&indev_drv);
-
+#if 0 
     /*------------------
      * Mouse
      * -----------------*/
@@ -169,6 +173,7 @@ void lv_port_indev_init(void)
         {40, 100},  /*Button 1 -> x:40; y:100*/
     };
     lv_indev_set_button_points(indev_button, btn_points);
+#endif
 }
 
 /**********************
@@ -178,31 +183,46 @@ void lv_port_indev_init(void)
  /*------------------
   * Touchpad
   * -----------------*/
-
-  /*Initialize your touchpad*/
+static hosal_i2c_dev_t i2c0 = {
+    .config = {
+        .address_width = HOSAL_I2C_ADDRESS_WIDTH_7BIT,
+        .freq = 400000,
+        .mode = HOSAL_I2C_MODE_MASTER,
+        .scl = CST816_SCL,
+        .sda = CST816_SDA,
+    },
+    .port = 0,
+};
+/*Initialize your touchpad*/
 static void touchpad_init(void)
 {
     /*Your code comes here*/
+    hosal_i2c_init(&i2c0);
 }
 
 /*Will be called by the library to read the touchpad*/
 static void touchpad_read(lv_indev_drv_t* indev_drv, lv_indev_data_t* data)
 {
-    static lv_coord_t last_x = 0;
-    static lv_coord_t last_y = 0;
+    // static lv_coord_t last_x = 0;
+    // static lv_coord_t last_y = 0;
 
-    /*Save the pressed coordinates and the state*/
-    if (touchpad_is_pressed()) {
-        touchpad_get_xy(&last_x, &last_y);
-        data->state = LV_INDEV_STATE_PR;
-    }
-    else {
-        data->state = LV_INDEV_STATE_REL;
-    }
+    // /*Save the pressed coordinates and the state*/
+    // if (touchpad_is_pressed()) {
+    //     touchpad_get_xy(&last_x, &last_y);
+    //     data->state = LV_INDEV_STATE_PR;
+    // }
+    // else {
+    //     data->state = LV_INDEV_STATE_REL;
+    // }
 
-    /*Set the last pressed coordinates*/
-    data->point.x = last_x;
-    data->point.y = last_y;
+    // /*Set the last pressed coordinates*/
+    // data->point.x = last_x;
+    // data->point.y = last_y;
+
+    hosal_i2c_mem_read(&i2c0, CST816_DEFAULT_ADDR, 0x02, 1, &data->state, 1, 10);
+    hosal_i2c_mem_read(&i2c0, CST816_DEFAULT_ADDR, 0x04, 1, &data->point.y, 1, 10);
+    hosal_i2c_mem_read(&i2c0, CST816_DEFAULT_ADDR, 0x06, 1, &data->point.x, 1, 10);
+    data->point.x = 240 - data->point.x;
 }
 
 /*Return true is the touchpad is pressed*/
