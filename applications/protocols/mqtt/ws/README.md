@@ -1,4 +1,4 @@
-# mqtt_ssl Example
+# mqtt_ws Example
 
 ## Configure WiFi Connected
 
