@@ -59,4 +59,4 @@ CONFIG_MBEDTLS_BIGNUM_USE_HW:=1
 CONF_ENABLE_COREDUMP:=1
 
 #blog enable components format :=blog_testc cli vfs helper
-LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop http_client_tcp tcp
+LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop http_client_tcp tcp axk_common  tcp_transport http-parser axk_tls axk_mqtt

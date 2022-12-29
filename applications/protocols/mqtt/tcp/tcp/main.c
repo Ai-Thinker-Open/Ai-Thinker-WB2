@@ -9,8 +9,8 @@
 #include <wifi_mgmr_ext.h>
 #include <hal_wifi.h>
 
-#define ROUTER_SSID "AIOT@FAE"
-#define ROUTER_PWD "fae12345678"
+#define ROUTER_SSID "your ssid"
+#define ROUTER_PWD "your password"
 
 static wifi_conf_t conf =
 {
@@ -120,7 +120,7 @@ static void proc_main_entry(void* pvParameters)
 
 void main()
 {
-    blog_set_level_log_component(BLOG_LEVEL_ALL, "blog_demo");
+    blog_set_level_log_component(BLOG_LEVEL_ALL, "tcp");
     puts("[OS] Starting TCP/IP Stack...");
     tcpip_init(NULL, NULL);
     puts("[OS] proc_main_entry task...");

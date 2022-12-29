@@ -72,10 +72,8 @@ static axk_err_t event_cb(axk_mqtt_event_handle_t event)
 
 void mqtt_start(void)
 {
-    blog_set_level_log_component(BLOG_LEVEL_ALL, "blog_demo");
     axk_mqtt_client_config_t mqtt_cfg = {
-        .host="122.114.122.174",
-        .port=1883,
+        .uri = "mqtt://mqtt.eclipseprojects.io",
         .event_handle = event_cb,
     };
     axk_mqtt_client_handle_t client = axk_mqtt_client_init(&mqtt_cfg);
