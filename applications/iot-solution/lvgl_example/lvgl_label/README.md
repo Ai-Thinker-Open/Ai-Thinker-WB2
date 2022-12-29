@@ -1,34 +1,48 @@
-# LVGL Example
+# LVGL Label Example
+The screen used in this routine is a 240 * 240 TFT display screen driven by ST7789。
 
-The display driver used in this routine is SSD1306,and the size is `128 * 64`.I2C communication mode。
 ## LVGL config
 LVGL configuration is unified in the `lv_conf.h` file. You can configure the model, size and drive pin of the display,
 ### Model configuration
 ```c
-#define LV_DISPLAY_SSD1306
+#define LV_DISPLAY_ST7789
 ```
-### I2C pin configuration
+### SPI pin configuration
 ```c
-#define OLED_IIC_SCL 12
-#define OLED_IIC_SDA 3
+
+#define ST7789_DC 4
+#define ST7789_CS 5
+#define ST7789_RST 14
+#define ST7789_CLK 3
+#define ST7789_MOSI 12
+#define ST7789_MISO 17
 ```
 ### Display direction configuration
 ```c
-#define LV_DISPLAY_ORIENTATION_LANDSCAPE 
-  // #define LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED 
+#define CONFIG_LV_DISPLAY_ORIENTATION 1
 ```
-- LV_DISPLAY_ORIENTATION_LANDSCAPE:Normal display
-- LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED: Mirror Display
+>CONFIG_ LV_ DISPLAY_ ORIENTATION can be configured as 0 to 3, respectively identifying four display directions
 
 ### Display screen size configuration
 ```c
-#define MY_DISP_HOR_RES    128
-#define MY_DISP_VER_RES    64
-#define LV_VER_RES_MAX     10
+#define LV_HOR_RES_MAX 240
+#define LV_VER_RES_MAX 240
+#define MY_DISP_VER_RES LV_VER_RES_MAX
+#define MY_DISP_HOR_RES LV_HOR_RES_MAX
 ```
 ## Run
+### example 1
+<img src="img/example1.gif" width="50%">
 
-<img src="img/ssd1306.jpg" width="50%">
+### example 2
+<img src="img/example2.jpg" width="50%">
+
+### example 3
+<img src="img/example3.jpg" width="50%">
+
+### example 4
+
+<img src="img/example4.jpg" width="50%">
 
 ## Troubleshooting
 
