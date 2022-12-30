@@ -19,5 +19,5 @@ typedef struct {
 } touch_point_t;
 
 void cst816_init();
-
+void cst826_read(void* indev_data);
 #endif // CST816_H

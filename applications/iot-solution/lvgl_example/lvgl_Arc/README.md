@@ -1,4 +1,4 @@
-# LVGL Label Example
+# LVGL Arc Example
 The screen used in this routine is a 240 * 240 TFT display screen driven by ST7789。
 
 ## LVGL config
@@ -32,18 +32,11 @@ LVGL configuration is unified in the `lv_conf.h` file. You can configure the mod
 ```
 ## Run
 ### example 1
-
-![example1](img/example1.gif)
+<img src="img/example1.jpg" width="50%">
 
 ### example 2
-<img src="img/example2.jpg" width="50%">
+![example2](img/example2.gif)
 
-### example 3
-<img src="img/example3.jpg" width="50%">
-
-### example 4
-
-<img src="img/example4.jpg" width="50%">
 
 ## Troubleshooting
 
