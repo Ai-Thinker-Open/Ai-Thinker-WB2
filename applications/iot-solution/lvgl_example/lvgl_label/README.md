@@ -32,6 +32,7 @@ LVGL configuration is unified in the `lv_conf.h` file. You can configure the mod
 ```
 ## Run
 ### example 1
+
 ![example1](img/example1.gif)
 
 ### example 2
