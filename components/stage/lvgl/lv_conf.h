@@ -25,13 +25,17 @@
  // #define LV_DISPLAY_SSD1306
   // #define LV_DISPLAY_ST7796S
 #define LV_DISPLAY_ST7789
-   /* ===================================================
-   * Set display direction
-   * LV_DISPLAY_ORIENTATION_LANDSCAPE :normal
-   * LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED: inversion
-   *=====================================================*/
+/* ===================================================
+* input driver
+*=====================================================*/
+#define LV_INDEV_CST816
+/* ===================================================
+* Set display direction
+* LV_DISPLAY_ORIENTATION_LANDSCAPE :normal
+* LV_DISPLAY_ORIENTATION_LANDSCAPE_INVERTED: inversion
+*=====================================================*/
 #ifdef LV_DISPLAY_SSD1306
-   /*================= SSD1306 I2C Pin config  ===================*/
+/*================= SSD1306 I2C Pin config  ===================*/
 #define OLED_IIC_SCL 12
 #define OLED_IIC_SDA 3
 

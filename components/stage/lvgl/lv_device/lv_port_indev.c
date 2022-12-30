@@ -183,46 +183,24 @@ void lv_port_indev_init(void)
  /*------------------
   * Touchpad
   * -----------------*/
-static hosal_i2c_dev_t i2c0 = {
-    .config = {
-        .address_width = HOSAL_I2C_ADDRESS_WIDTH_7BIT,
-        .freq = 400000,
-        .mode = HOSAL_I2C_MODE_MASTER,
-        .scl = CST816_SCL,
-        .sda = CST816_SDA,
-    },
-    .port = 0,
-};
-/*Initialize your touchpad*/
+  /*Initialize your touchpad*/
 static void touchpad_init(void)
 {
     /*Your code comes here*/
-    hosal_i2c_init(&i2c0);
+#ifdef LV_INDEV_CST816
+    cst816_init();
+#endif
+
 }
 
 /*Will be called by the library to read the touchpad*/
 static void touchpad_read(lv_indev_drv_t* indev_drv, lv_indev_data_t* data)
 {
-    // static lv_coord_t last_x = 0;
-    // static lv_coord_t last_y = 0;
 
-    // /*Save the pressed coordinates and the state*/
-    // if (touchpad_is_pressed()) {
-    //     touchpad_get_xy(&last_x, &last_y);
-    //     data->state = LV_INDEV_STATE_PR;
-    // }
-    // else {
-    //     data->state = LV_INDEV_STATE_REL;
-    // }
+#ifdef LV_INDEV_CST816
+    cst826_read(data);
+#endif
 
-    // /*Set the last pressed coordinates*/
-    // data->point.x = last_x;
-    // data->point.y = last_y;
-
-    hosal_i2c_mem_read(&i2c0, CST816_DEFAULT_ADDR, 0x02, 1, &data->state, 1, 10);
-    hosal_i2c_mem_read(&i2c0, CST816_DEFAULT_ADDR, 0x04, 1, &data->point.y, 1, 10);
-    hosal_i2c_mem_read(&i2c0, CST816_DEFAULT_ADDR, 0x06, 1, &data->point.x, 1, 10);
-    data->point.x = 240 - data->point.x;
 }
 
 /*Return true is the touchpad is pressed*/
