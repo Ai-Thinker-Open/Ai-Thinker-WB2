@@ -9,6 +9,10 @@
 #include "axk_ble.h"
 #include "blufi.h"
 #include "ble_interface.h"
+#include "conn.h"
+#include "hci_core.h"
+
+
 
 #define MANUFACTURER_DATA_LEN 8
 static uint8_t test_manufacturer[MANUFACTURER_DATA_LEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x88, 0x00};
@@ -22,12 +26,12 @@ void axk_blufi_adv_start(void)
     uint8_t rsp_data[37] = {0};
     ble_adv_data_t data = {0};
     ble_adv_param_t adv_param = {0};
-    uint8_t sta_mac[6] = {0};
-    wifi_mgmr_sta_mac_get(sta_mac);
+    bt_addr_le_t bt_addr;
+    bt_get_local_public_address(&bt_addr);
 
     for (int i = 0; i < 6; i++)
     {
-        test_manufacturer[i] = sta_mac[i];
+        test_manufacturer[i] = bt_addr.a.val[5-i];
     }
     adv_param.adv_int_max = 180;
     adv_param.adv_int_min = 180;
@@ -43,7 +47,7 @@ void axk_blufi_adv_start(void)
     else
     {
         char *name = calloc(1, sizeof(char) * 8);
-        sprintf(name, "WB2_%02X%02X", sta_mac[4], sta_mac[5]);
+        sprintf(name, "WB2_%02X%02X", bt_addr.a.val[1], bt_addr.a.val[0]);
         blufiname_len = strlen(name);
         rsp_data[0] = blufiname_len + 1;
         rsp_data[1] = 0x09;
