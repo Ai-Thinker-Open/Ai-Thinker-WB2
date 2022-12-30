@@ -5,7 +5,7 @@
 #include "blufi_init.h"
 #include "blufi_prf.h"
 #include "blufi_hal.h"
-
+#include "bluetooth.h"
 #include "axk_ble.h"
 #include "blufi.h"
 #include "ble_interface.h"
@@ -43,15 +43,17 @@ void axk_blufi_adv_start(void)
         rsp_data[0] = blufiname_len + 1;
         rsp_data[1] = 0x09;
         memcpy(&rsp_data[2], g_blufi_config.ble.blufi.blufiname, blufiname_len);
+        bt_set_name(g_blufi_config.ble.blufi.blufiname);
     }
     else
     {
-        char *name = calloc(1, sizeof(char) * 8);
-        sprintf(name, "WB2_%02X%02X", bt_addr.a.val[1], bt_addr.a.val[0]);
+        char *name = calloc(1, sizeof(char) * 15);
+        sprintf(name, "BLUFI_WB2_%02X%02X", bt_addr.a.val[1], bt_addr.a.val[0]);
         blufiname_len = strlen(name);
         rsp_data[0] = blufiname_len + 1;
         rsp_data[1] = 0x09;
         memcpy(&rsp_data[2], name, strlen(name));
+        bt_set_name(name);
     }
 
     adv_data[offect++] = 2;
