@@ -1,4 +1,4 @@
-# LVGL Arc Example
+# LVGL Bar Example
 The screen used in this routine is a 240 * 240 TFT display screen driven by ST7789。
 
 ## LVGL config

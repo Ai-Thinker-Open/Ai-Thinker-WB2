@@ -12,7 +12,7 @@
 
 #include <hosal_timer.h>
 
-#define LVGL_BAR_EXAMPLE 1
+#define LVGL_BAR_EXAMPLE 2
 
 static void timer_cb(void* arg)
 {
