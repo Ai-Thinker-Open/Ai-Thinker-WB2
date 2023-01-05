@@ -87,7 +87,9 @@ void axk_fill_random(void *buf, size_t len)
     uint8_t *buf_bytes = (uint8_t *)buf;
     while (len > 0)
     {
-        uint32_t word = random();
+        // uint32_t word = random();
+        uint32_t word = 0;
+        hosal_random_num_read(&word, 1);
         printf("word=%d \r\n", word);
         uint32_t to_copy = MIN_UM(sizeof(word), len);
         memcpy(buf_bytes, &word, to_copy);

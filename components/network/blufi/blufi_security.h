@@ -28,10 +28,10 @@
 #include <aos/kernel.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <hosal_rng.h>
 
 #define BLUFI_INFO(fmt, ...) printf(fmt, ##__VA_ARGS__)
 #define BLUFI_ERROR(fmt, ...) printf(fmt, ##__VA_ARGS__)
-
 
 void blufi_dh_negotiate_data_handler(uint8_t *data, int len, uint8_t **output_data, int *output_len, bool *need_free);
 int blufi_aes_encrypt(uint8_t iv8, uint8_t *crypt_data, int crypt_len);

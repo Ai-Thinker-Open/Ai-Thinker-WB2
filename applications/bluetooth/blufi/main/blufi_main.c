@@ -79,10 +79,10 @@ static void blufi_wifi_event(int event, void *param)
         {
             if (wifiMgmr.scan_items[i].is_used && (!wifi_mgmr_scan_item_is_timeout(&wifiMgmr, &wifiMgmr.scan_items[i])))
             {
+                ap_record[ap_count].rssi = wifiMgmr.scan_items[i].rssi;
+                memcpy(ap_record[ap_count].ssid, wifiMgmr.scan_items[i].ssid, sizeof(wifiMgmr.scan_items[i].ssid));
+                printf("index[%02d]: rssi: %3d, SSID: %s\r\n", i, ap_record[ap_count].rssi, ap_record[ap_count].ssid);
                 ap_count++;
-                ap_record[i].rssi = wifiMgmr.scan_items[i].rssi;
-                memcpy(ap_record[i].ssid, wifiMgmr.scan_items[i].ssid, sizeof(wifiMgmr.scan_items[i].ssid));
-                printf("index[%02d]: rssi: %3d, SSID: %s\r\n", i, ap_record[i].rssi, ap_record[i].ssid);
             }
             else
             {
