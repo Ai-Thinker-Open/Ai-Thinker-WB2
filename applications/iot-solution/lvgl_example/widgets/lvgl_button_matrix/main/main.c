@@ -12,7 +12,7 @@
 
 #include <hosal_timer.h>
 
-#define LVGL_BUTTON_MATRIX_EXAMPLE 2
+#define LVGL_BUTTON_MATRIX_EXAMPLE 1
 
 static void timer_cb(void* arg)
 {
