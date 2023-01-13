@@ -38,8 +38,6 @@ LVGL configuration is unified in the `lv_conf.h` file. You can configure the mod
 ### example 2
 <img src="img/example2.jpg" width="50%">
 
-### example 3
-<img src="img/example3.jpg" width="50%">
 
 ## Troubleshooting
 
