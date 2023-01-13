@@ -81,6 +81,9 @@
 #define ST7789_MOSI 12
 #define ST7789_MISO 17
 
+#if ST7789_ENABLE_BACKLIGHT_CONTROL
+#define ST7789_BCKL 2
+#endif
 #define CONFIG_LV_DISP_USE_RST 1
 #define CONFIG_LV_INVERT_COLORS 1
 #define CONFIG_DISPLAY_ORIENTATION_PORTRAIT_INVERTED 1
@@ -781,7 +784,7 @@
 #define LV_USE_FRAGMENT 0
 
 /*1: Support using images as font in label or span widgets */
-#define LV_USE_IMGFONT 0
+#define LV_USE_IMGFONT 1
 
 /*1: Enable a published subscriber based messaging system */
 #define LV_USE_MSG 0
