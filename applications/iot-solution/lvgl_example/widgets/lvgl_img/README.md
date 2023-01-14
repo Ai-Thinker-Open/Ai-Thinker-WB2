@@ -1,4 +1,4 @@
-# LVGL Drop down list Example
+# LVGL img Example
 The screen used in this routine is a 240 * 240 TFT display screen driven by ST7789。
 
 ## LVGL config
@@ -40,6 +40,9 @@ LVGL configuration is unified in the `lv_conf.h` file. You can configure the mod
 
 ### example 3
 <img src="img/example3.jpg" width="50%">
+
+### example 4
+<img src="img/example4.jpg" width="50%">
 
 ## Troubleshooting
 

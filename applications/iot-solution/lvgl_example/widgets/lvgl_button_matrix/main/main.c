@@ -12,7 +12,7 @@
 
 #include <hosal_timer.h>
 
-#define LVGL_BUTTON_MATRIX_EXAMPLE 1
+#define LVGL_BUTTON_MATRIX_EXAMPLE 2
 
 static void timer_cb(void* arg)
 {
@@ -33,8 +33,10 @@ static void event_handler(lv_event_t* e)
     }
 
 #elif (LVGL_BUTTON_MATRIX_EXAMPLE==2)
+
     lv_event_code_t code = lv_event_get_code(e);
     lv_obj_t* obj = lv_event_get_target(e);
+
 
     if (code == LV_EVENT_DRAW_PART_BEGIN) {
         lv_obj_draw_part_dsc_t* dsc = lv_event_get_param(e);
@@ -59,16 +61,34 @@ static void event_handler(lv_event_t* e)
             dsc->label_dsc->color = lv_color_white();
         }
         else if (dsc->id == 3) {
-            // dsc->label_dsc->opa = LV_OPA_TRANSP; /*Hide the text if any*/
-            dsc->label_dsc->color = lv_color_black();
+            dsc->label_dsc->opa = LV_OPA_TRANSP; /*Hide the text if any*/
+
         }
     }
+    if (code == LV_EVENT_DRAW_PART_END) {
+        lv_obj_draw_part_dsc_t* dsc = lv_event_get_param(e);
 
-    if (code == LV_EVENT_VALUE_CHANGED) {
-        uint32_t id = lv_btnmatrix_get_selected_btn(obj);
-        const char* txt = lv_btnmatrix_get_btn_text(obj, id);
+        /*Add custom content to the 4th button when the button itself was drawn*/
+        if (dsc->id == 3) {
+            LV_IMG_DECLARE(img_star);
+            lv_img_header_t header;
+            lv_res_t res = lv_img_decoder_get_info(&img_star, &header);
 
-        blog_info("%s was pressed", txt);
+            if (res != LV_RES_OK) return;
+
+            lv_area_t a;
+            a.x1 = dsc->draw_area->x1 + (lv_area_get_width(dsc->draw_area) - header.w) / 2;
+            a.x2 = a.x1 + header.w - 1;
+            a.y1 = dsc->draw_area->y1 + (lv_area_get_height(dsc->draw_area) - header.h) / 2;
+            a.y2 = a.y1 + header.h - 1;
+
+            lv_draw_img_dsc_t img_draw_dsc;
+            lv_draw_img_dsc_init(&img_draw_dsc);
+            img_draw_dsc.recolor = lv_color_black();
+            if (lv_btnmatrix_get_selected_btn(obj) == dsc->id)  img_draw_dsc.recolor_opa = LV_OPA_30;
+
+            lv_draw_img(dsc->draw_ctx, &img_draw_dsc, &a, &img_star);
+        }
     }
 #elif (LVGL_BUTTON_MATRIX_EXAMPLE==3)
     lv_obj_t* obj = lv_event_get_target(e);

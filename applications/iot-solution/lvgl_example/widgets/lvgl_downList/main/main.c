@@ -12,7 +12,7 @@
 
 #include <hosal_timer.h>
 
-#define LVGL_DROPDOWNLIST_EXAMPLE 1
+#define LVGL_DROPDOWNLIST_EXAMPLE 3
 
 static void timer_cb(void* arg)
 {
@@ -29,7 +29,11 @@ static void event_handler(lv_event_t* e)
         lv_dropdown_get_selected_str(obj, buf, sizeof(buf));
         blog_info("Option: %s", buf);
     }
-
+#elif (LVGL_DROPDOWNLIST_EXAMPLE ==3)
+    lv_obj_t* dropdown = lv_event_get_target(e);
+    char buf[64];
+    lv_dropdown_get_selected_str(dropdown, buf, sizeof(buf));
+    blog_info("'%s' is selected", buf);
 #endif
 }
 
@@ -94,6 +98,33 @@ void lv_example_dropdown_2(void)
     lv_obj_align(dd, LV_ALIGN_RIGHT_MID, -10, 0);
 }
 
+void lv_example_dropdown_3(void)
+{
+    /*Create a drop down list*/
+    lv_obj_t* dropdown = lv_dropdown_create(lv_scr_act());
+    lv_obj_align(dropdown, LV_ALIGN_TOP_LEFT, 10, 10);
+    lv_dropdown_set_options(dropdown, "New project\n"
+                                      "New file\n"
+                                      "Save\n"
+                                      "Save as ...\n"
+                                      "Open project\n"
+                                      "Recent projects\n"
+                                      "Preferences\n"
+                                      "Exit");
+
+    /*Set a fixed text to display on the button of the drop-down list*/
+    lv_dropdown_set_text(dropdown, "Menu");
+
+    /*Use a custom image as down icon and flip it when the list is opened*/
+    LV_IMG_DECLARE(img_caret_down);
+    lv_dropdown_set_symbol(dropdown, &img_caret_down);
+    lv_obj_set_style_transform_angle(dropdown, 1800, LV_PART_INDICATOR | LV_STATE_CHECKED);
+
+    /*In a menu we don't need to show the last clicked item*/
+    lv_dropdown_set_selected_highlight(dropdown, false);
+
+    lv_obj_add_event_cb(dropdown, event_handler, LV_EVENT_VALUE_CHANGED, NULL);
+}
 
 void main(void)
 {
@@ -119,7 +150,8 @@ void main(void)
     lv_example_dropdown_1();
 #elif (LVGL_DROPDOWNLIST_EXAMPLE==2)
     lv_example_dropdown_2();
-
+#elif (LVGL_DROPDOWNLIST_EXAMPLE==3)
+    lv_example_dropdown_3();
 #endif
 
     while (1) {
