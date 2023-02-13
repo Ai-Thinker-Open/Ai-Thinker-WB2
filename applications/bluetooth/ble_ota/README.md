@@ -40,7 +40,7 @@ The OTA file path is as follows:`tools/flash_tool/chips/bl602/ota`，Recommended
 
 ### Upgrade progress log
 ```
-eft_size (0x08d0) wData.index (0x0816) len (230) progress:1%
+left_size (0x08d0) wData.index (0x0816) len (230) progress:1%
 left_size (0x00ba) wData.index (0x002c) len (230) progress:2%
 left_size (0x098a) wData.index (0x075c) len (230) progress:3%
 left_size (0x0174) wData.index (0x0f72) len (230) progress:4%
