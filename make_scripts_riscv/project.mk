@@ -26,8 +26,11 @@ help:
 	@echo ""
 	@echo "make all - Build app, components"
 	@echo "make clean - Remove all app components output"
+	@echo "make flash - Download firmware"
+	@echo "make eflash - Use the flash after erasing it"
+	@echo "make erase_flash - Erase all internal contents of flash"
 	@echo "make list-components - List all components in the project"
-	@echo "make [component name]" - build a component as a library
+	@echo "make [component name] - build a component as a library"
 
 # Non-interactive targets. Mostly, those for which you do not need to build a binary
 # NON_INTERACTIVE_TARGET += defconfig clean% %clean help list-components print_flash_cmd
