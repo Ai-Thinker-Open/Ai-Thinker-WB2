@@ -590,7 +590,7 @@ eflash:
 clean: app-clean
 
 
-erase_flash: all
+erase_flash:
 	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool-ubuntu --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT) --firmware=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/eflash_loader/eflash_loader_40m.bin --erase
 
 
