@@ -22,15 +22,15 @@ all: all_binaries
 # flash..." output targets.)
 
 help:
-	@echo "Welcome to BL60x SDK build system. make targets:"
+	@echo "Welcome to Ai-WB2 SDK build system. make targets:"
 	@echo ""
-	@echo "make all - Build app, components"
-	@echo "make clean - Remove all app components output"
-	@echo "make flash - Download firmware"
-	@echo "make eflash - Use the flash after erasing it"
-	@echo "make erase_flash - Erase all internal contents of flash"
-	@echo "make list-components - List all components in the project"
-	@echo "make [component name] - build a component as a library"
+	@echo "\033[33m\"make all\"\033[0m - Build app, components"
+	@echo "\033[33m\"make clean\"\033[0m - Remove all app components output"
+	@echo "\033[33m\"make flash\"\033[0m - Download firmware"
+	@echo "\033[33m\"make eflash\"\033[0m - Use the flash after erasing it"
+	@echo "\033[33m\"make erase_flash\"\033[0m - Erase all internal contents of flash"
+	@echo "\033[33m\"make list-components\"\033[0m - List all components in the project"
+	@echo "\033[33m\"make [component name]\"\033[0m - build a component as a library"
 
 # Non-interactive targets. Mostly, those for which you do not need to build a binary
 # NON_INTERACTIVE_TARGET += defconfig clean% %clean help list-components print_flash_cmd
