@@ -69,12 +69,12 @@ make help
 >
 > - "make all" - Build app, components
 > - "make clean" - Remove all app components output
-> -"make flash" - Build and download firmware 
-> -"make flash-only" - Only download firmware
-> -"make eflash" - Use the flash after erasing it
-> -"make erase_flash" - Erase all internal contents of flash
-> -"make list-components" - List all components in the project
-> -"make [component name]" - build a component as a library
+> - "make flash" - Build and download firmware 
+> - "make flash-only" - Only download firmware
+> - "make eflash" - Use the flash after erasing it
+> - "make erase_flash" - Erase all internal contents of flash
+> - "make list-components" - List all components in the project
+> - "make [component name]" - build a component as a library
 
 
 Note: After erasing the flash, you need to use this command to download it,but always press the BURN button,then press the EN button.next,release all keys.
