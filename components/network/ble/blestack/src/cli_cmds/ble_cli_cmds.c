@@ -1710,7 +1710,7 @@ static void blecli_disable(char *pcWriteBuffer, int xWriteBufferLen, int argc, c
 
     err = bt_disable();
     if(err){
-        vOutputString("Fail to disable bt, there is existed scan/adv/conn event \r\n");
+        vOutputString("err =%d,fail to disable bt\r\n",err);
     }else{
         vOutputString("Disable bt successfully\r\n");
     }

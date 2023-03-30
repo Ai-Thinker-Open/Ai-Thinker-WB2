@@ -1491,12 +1491,6 @@ uint16_t bt_gatts_add_service(void);
 int bt_gatts_del_service(uint16_t svc_id);
 #endif
 #endif
-
-#if defined(CONFIG_BT_GAP_SERVER_CHAR_DYNAMIC)
-bool bt_gatt_gap_set_devname(const char *name);
-bool bt_gatt_gap_set_gap_appearance(uint16_t appearance);
-bool bt_gatt_gap_set_ppcp(uint16_t min_int, uint16_t max_int, uint16_t latency, uint16_t timeout);
-#endif
 #ifdef __cplusplus
 }
 #endif

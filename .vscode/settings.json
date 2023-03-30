@@ -1,0 +1,7 @@
+{
+    "git.ignoreLimitWarning": true,
+    "files.associations": {
+        "bluetooth.h": "c",
+        "axk_ble.h": "c"
+    }
+}

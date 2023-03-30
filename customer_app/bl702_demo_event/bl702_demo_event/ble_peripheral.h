@@ -1,0 +1,24 @@
+#if defined(CFG_BLE_PERIPHERAL_AUTORUN)
+#ifndef __BLE_PERIPHERAL_H__
+#define __BLE_PERIPHERAL_H__
+
+#define BLE_EVT    0x01
+
+typedef enum{
+    BLE_INIT_IND = 0,
+    BLE_START_ADV_IND,
+    BLE_CONNECTED_IND,
+    BLE_CONNECTED_CFM,
+    BLE_DISCONNECT_IND,
+    BLE_DISCONNECT_CFM,
+    BLE_START_SECURITY_IND,
+    BLE_PAIRING_FAILED_CFM,
+    BLE_PAIRING_SUCCEED_CFM,
+    BLE_MAX_EVT,
+
+}ble_evt;
+
+void BleStart(void);
+
+#endif
+#endif

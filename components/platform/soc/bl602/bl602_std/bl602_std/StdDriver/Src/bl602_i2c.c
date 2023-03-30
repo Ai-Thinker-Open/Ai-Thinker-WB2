@@ -276,6 +276,17 @@ void I2C_Init(I2C_ID_Type i2cNo, I2C_Direction_Type direct, I2C_Transfer_Cfg *cf
     /* Check the parameters */
     CHECK_PARAM(IS_I2C_ID_TYPE(i2cNo));
 
+    /* set i2c clk,default is 400000,max support clk is 400000 */
+    if (cfg->clk == 0 || cfg->clk > 400000){
+        I2C_ClockSet(i2cNo, 400000);
+    } else {
+        I2C_ClockSet(i2cNo, cfg->clk);
+    }
+
+    if (cfg->dataSize > 256) {
+        cfg->dataSize = 256;
+    }
+
     /* I2C write config */
     tmpVal = BL_RD_REG(I2Cx, I2C_CONFIG);
     if(direct == I2C_WRITE){
@@ -290,6 +301,10 @@ void I2C_Init(I2C_ID_Type i2cNo, I2C_Direction_Type direct, I2C_Transfer_Cfg *cf
     }else{
         tmpVal = BL_CLR_REG_BIT(tmpVal, I2C_CR_I2C_SUB_ADDR_EN);
     }
+
+    /* align clock when 1 master */
+    tmpVal = BL_SET_REG_BITS_VAL(tmpVal, I2C_CR_I2C_SCL_SYNC_EN, DISABLE);
+    
     tmpVal = BL_SET_REG_BITS_VAL(tmpVal, I2C_CR_I2C_PKT_LEN, cfg->dataSize-1);
     BL_WR_REG(I2Cx, I2C_CONFIG, tmpVal);
 
@@ -484,7 +499,7 @@ BL_Sts_Type I2C_TransferEndStatus(I2C_ID_Type i2cNo)
 *******************************************************************************/
 BL_Err_Type I2C_MasterSendBlocking(I2C_ID_Type i2cNo, I2C_Transfer_Cfg *cfg)
 {
-    uint8_t i;
+    uint16_t i;
     uint32_t timeOut = 0;
     uint32_t temp = 0;
     uint32_t I2Cx = I2C_BASE;
@@ -494,7 +509,6 @@ BL_Err_Type I2C_MasterSendBlocking(I2C_ID_Type i2cNo, I2C_Transfer_Cfg *cfg)
 
     I2C_Disable(i2cNo);
     I2C_Init(i2cNo, I2C_WRITE, cfg);
-    I2C_Enable(i2cNo);
 
     /* Set I2C write data */
     for(i=0; i<cfg->dataSize; i++){
@@ -509,6 +523,9 @@ BL_Err_Type I2C_MasterSendBlocking(I2C_ID_Type i2cNo, I2C_Transfer_Cfg *cfg)
                 }
             }
             BL_WR_REG(I2Cx, I2C_FIFO_WDATA, temp);
+            if(BL_GET_REG_BITS_VAL(BL_RD_REG(I2Cx, I2C_CONFIG), I2C_CR_I2C_M_EN) == 0) {
+                I2C_Enable(i2cNo);
+            }
             temp = 0;
         }
     }
@@ -522,6 +539,9 @@ BL_Err_Type I2C_MasterSendBlocking(I2C_ID_Type i2cNo, I2C_Transfer_Cfg *cfg)
             }
         }
         BL_WR_REG(I2Cx, I2C_FIFO_WDATA, temp);
+        if(BL_GET_REG_BITS_VAL(BL_RD_REG(I2Cx, I2C_CONFIG), I2C_CR_I2C_M_EN) == 0) {
+            I2C_Enable(i2cNo);
+        }
     }
 
     timeOut = I2C_FIFO_STATUS_TIMEOUT;
@@ -548,7 +568,7 @@ BL_Err_Type I2C_MasterSendBlocking(I2C_ID_Type i2cNo, I2C_Transfer_Cfg *cfg)
 *******************************************************************************/
 BL_Err_Type I2C_MasterReceiveBlocking(I2C_ID_Type i2cNo, I2C_Transfer_Cfg *cfg)
 {
-    uint8_t i = 0;
+    uint16_t i = 0;
     uint32_t timeOut = 0;
     uint32_t temp = 0;
     uint32_t I2Cx = I2C_BASE;

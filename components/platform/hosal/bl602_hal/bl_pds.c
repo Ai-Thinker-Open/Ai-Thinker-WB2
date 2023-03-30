@@ -490,15 +490,27 @@ void ATTR_TCM_SECTION bl_pds_enter(uint32_t pdsLevel, uint32_t pdsSleepCycles)
     __enable_irq();
 }
 
+void bl_pds_sec_turnoff(void)
+{
+    GLB_AHB_Slave1_Clock_Gate(1, BL_AHB_SLAVE1_SEC);
+}
+
+void bl_pds_sec_turnon(void)
+{
+    GLB_AHB_Slave1_Clock_Gate(0, BL_AHB_SLAVE1_SEC);
+}
+
 int bl_pds_rf_turnoff(void *arg)
 {
     AON_LowPower_Enter_PDS0();
+    bl_pds_sec_turnoff();
 
     return 0;
 }
 
 int bl_pds_rf_turnon(void *arg)
 {
+    bl_pds_sec_turnon();
     AON_LowPower_Exit_PDS0();
 
     return 0;

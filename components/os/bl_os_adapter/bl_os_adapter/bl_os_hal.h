@@ -94,8 +94,6 @@ BL_Timer_t bl_os_timer_create(void *func, void *argv);
 
 int bl_os_timer_delete(BL_Timer_t timerid, uint32_t tick);
 
-int bl_os_timer_stop(BL_Timer_t timerid, uint32_t tick);
-
 int bl_os_timer_start_once(BL_Timer_t timerid, long t_sec, long t_nsec);
 
 int bl_os_timer_start_periodic(BL_Timer_t timerid, long t_sec, long t_nsec);

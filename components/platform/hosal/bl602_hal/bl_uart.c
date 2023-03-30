@@ -28,7 +28,7 @@ static bl_uart_notify_t g_uart_notify_arg[UART_NUMBER_SUPPORTED];
 static void gpio_init(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pin, uint8_t rts_pin)
 {
     GLB_GPIO_Cfg_Type cfg;
-    GLB_UART_SIG_FUN_Type tx_sigfun, rx_sigfun;
+    GLB_UART_SIG_FUN_Type tx_sigfun, rx_sigfun, cts_sigfun, rts_sigfun;
 
     cfg.drive = 1;
     cfg.smtCtrl = 1;
@@ -44,13 +44,31 @@ static void gpio_init(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pi
     cfg.pullType = GPIO_PULL_UP;
     GLB_GPIO_Init(&cfg);
 
+    if (cts_pin != 0x00 && cts_pin != 0xff) {
+        cfg.gpioPin = cts_pin;
+        cfg.gpioMode = GPIO_MODE_AF;
+        cfg.pullType = GPIO_PULL_UP;
+        GLB_GPIO_Init(&cfg);
+    }
+
+    if (rts_pin != 0x00 && rts_pin != 0xff) {
+        cfg.gpioPin = rts_pin;
+        cfg.gpioMode = GPIO_MODE_AF;
+        cfg.pullType = GPIO_PULL_UP;
+        GLB_GPIO_Init(&cfg);
+    }
+
     /* select uart gpio function */
     if (id == 0) {
         tx_sigfun = GLB_UART_SIG_FUN_UART0_TXD;
         rx_sigfun = GLB_UART_SIG_FUN_UART0_RXD;
+        cts_sigfun = GLB_UART_SIG_FUN_UART0_CTS;
+        rts_sigfun = GLB_UART_SIG_FUN_UART0_RTS;
     } else {
         tx_sigfun = GLB_UART_SIG_FUN_UART1_TXD;
         rx_sigfun = GLB_UART_SIG_FUN_UART1_RXD;
+        cts_sigfun = GLB_UART_SIG_FUN_UART1_CTS;
+        rts_sigfun = GLB_UART_SIG_FUN_UART1_RTS;
     }
 
     // clk
@@ -58,6 +76,13 @@ static void gpio_init(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pi
 
     GLB_UART_Fun_Sel(tx_pin%8, tx_sigfun);
     GLB_UART_Fun_Sel(rx_pin%8, rx_sigfun);
+
+    if (cts_pin != 0x00 && cts_pin != 0xff) {
+        GLB_UART_Fun_Sel(cts_pin%8, cts_sigfun);
+    }
+    if (rts_pin != 0x00 && rts_pin != 0xff) {
+        GLB_UART_Fun_Sel(rts_pin%8, rts_sigfun);
+    }
 }
 
 int bl_uart_init(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pin, uint8_t rts_pin, uint32_t baudrate)
@@ -158,6 +183,13 @@ int bl_uart_init_ex(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pin,
     uartCfg.dataBits = dataBits;
     uartCfg.stopBits = stopBits;
     uartCfg.parity = parity;
+
+    if (cts_pin != 0x00 && cts_pin != 0xff) {
+        uartCfg.ctsFlowControl = ENABLE;
+    }
+    if (rts_pin != 0x00 && rts_pin != 0xff) {
+        uartCfg.rtsSoftwareControl = ENABLE;
+    }
 
     /* Disable all interrupt */
     UART_IntMask(id, UART_INT_ALL, MASK);

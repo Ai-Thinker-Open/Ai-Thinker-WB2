@@ -19,6 +19,7 @@
 // for MAC related elements (mac_addr, mac_ssid...)
 #include "lmac_types.h"
 #include <bl60x_fw_api.h>
+#include <wifi_mgmr_ext.h>
 #include "lmac_mac.h"
 #define MAX_PSK_PASS_PHRASE_LEN 64
 
@@ -81,22 +82,6 @@ enum mm_remain_on_channel_op
 
 /// The two following definitions are needed for message structure consistency
 /// Structure of a list element header
-struct co_list_hdr
-{
-    struct co_list_hdr *next;
-};
-
-/// Structure of a list
-struct co_list
-{
-    /// pointer to first element of the list
-    struct co_list_hdr *first;
-    /// pointer to the last element
-    struct co_list_hdr *last;
-    /// number of element in the list
-    u32_l cnt;
-};
-
 /// Message structure.
 struct lmac_msg
 {
@@ -400,6 +385,7 @@ struct mm_setpowermode_cfm
 struct mm_monitor_req
 {
     uint32_t enable;
+    uint8_t  phy_lr_on;
 };
 
 /// Structure containing the parameters of the @ref MM_MONITOR_CHANNEL_REQ message.
@@ -790,8 +776,7 @@ struct scanu_start_req
     bool no_cck;
     /// MISC flags
     uint32_t flags;
-
-    uint8_t scan_mode;
+    /// channel scan time
     uint32_t duration_scan;
 };
 
@@ -839,6 +824,8 @@ struct scanu_result_ind
     int8_t ppm_abs;
     ///Rel. PPM of the received frame
     int8_t ppm_rel;
+    /// Flags
+    uint8_t flags;
     /// Date rate of the received frame.
     uint8_t data_rate;
     /// Frame payload.
@@ -1028,6 +1015,8 @@ struct me_rc_set_rate_req
     u8_l sta_idx;
     /// Rate configuration to be set
     u16_l fixed_rate_cfg;
+    /// Force power table update
+    u16_l power_table_req;
 };
 
 
@@ -1119,6 +1108,8 @@ struct sm_connect_ind
 
     /// EDCA parameters
     u32_l ac_param[AC_MAX];
+    /// Pointer to the structure used for the diagnose module
+    struct sm_tlv_list connect_diagnose;
 };
 
 /// Structure containing the parameters of the @ref SM_DISCONNECT_REQ message.
@@ -1147,6 +1138,8 @@ struct sm_disconnect_ind
     u8_l vif_idx;
     /// FT over DS is ongoing
     bool_l ft_over_ds;
+    /// Pointer to the structure used for the diagnose module
+    struct sm_tlv_list connect_diagnose;
 };
 
 /// Structure containing the parameters of the @ref SM_CONNECT_ABORT_REQ message.
@@ -1268,6 +1261,9 @@ struct apm_start_req
     /// AP Passphrase
     uint8_t phrase[MAX_PSK_PASS_PHRASE_LEN];
     uint8_t phrase_tail[1];
+    // Buf for storing IE
+    uint8_t bcn_buf_len;
+    uint8_t bcn_buf[64];
 };
 
 /// Structure containing the parameters of the @ref APM_START_CFM message.

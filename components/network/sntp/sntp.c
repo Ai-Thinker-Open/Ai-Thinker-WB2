@@ -340,7 +340,7 @@ sntp_process(const struct sntp_timestamps *timestamps)
   time_obtained = xTaskGetTickCount();
   if (ntp_time_sync_cb)
     ntp_time_sync_cb();
-  bl_sys_time_update(((uint64_t)ntp_sec) * 1000 + ntp_frag / 1000);
+  bl_sys_time_update(((uint64_t)ntp_sec) * 1000 + SNTP_FRAC_TO_US(ntp_frag) / 1000);
   taskEXIT_CRITICAL();
 
   LWIP_UNUSED_ARG(frac); /* might be unused if only seconds are set */

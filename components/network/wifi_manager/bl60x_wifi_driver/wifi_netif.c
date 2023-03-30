@@ -5,6 +5,7 @@
 
 #define DEBUG_HEADER "[WF][IF] "
 
+//Fix: Xiaomi R4A get IP slow
 static void *wifi_dhcp_start_timer = NULL;
 
 static void wifi_dhcp_start(void *data)

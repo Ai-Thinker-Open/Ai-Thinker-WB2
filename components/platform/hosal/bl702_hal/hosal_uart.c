@@ -28,7 +28,7 @@ static void gpio_init(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pi
     cfg.gpioPin = rx_pin;
     cfg.gpioMode = GPIO_MODE_AF;
     cfg.pullType = GPIO_PULL_UP;
-#if defined(CFG_PDS_OPTIMIZE) || defined(CFG_HBN_OPTIMIZE)
+#if 0//defined(CFG_PDS_OPTIMIZE) || defined(CFG_HBN_OPTIMIZE)
     RomDriver_GLB_GPIO_Init(&cfg);
 #else
     GLB_GPIO_Init(&cfg);
@@ -37,7 +37,7 @@ static void gpio_init(uint8_t id, uint8_t tx_pin, uint8_t rx_pin, uint8_t cts_pi
     cfg.gpioPin = tx_pin;
     cfg.gpioMode = GPIO_MODE_AF;
     cfg.pullType = GPIO_PULL_UP;
-#if defined(CFG_PDS_OPTIMIZE) || defined(CFG_HBN_OPTIMIZE)
+#if 0//defined(CFG_PDS_OPTIMIZE) || defined(CFG_HBN_OPTIMIZE)
     RomDriver_GLB_GPIO_Init(&cfg);
 #else
     GLB_GPIO_Init(&cfg);
@@ -240,8 +240,8 @@ static void __uart_config_set(hosal_uart_dev_t *uart, const hosal_uart_config_t 
     };
 
     uartCfg.baudRate = cfg->baud_rate;
-    uartCfg.dataBits = cfg->data_width;
-    uartCfg.parity = cfg->parity;
+    uartCfg.dataBits = (UART_DataBits_Type)cfg->data_width;
+    uartCfg.parity = (UART_Parity_Type)cfg->parity;
 
     if (cfg->flow_control == HOSAL_FLOW_CONTROL_CTS) {
     	uartCfg.ctsFlowControl = 1;
@@ -381,8 +381,8 @@ int hosal_uart_init(hosal_uart_dev_t *uart)
     gpio_init(id, cfg->tx_pin, cfg->rx_pin, cfg->cts_pin, cfg->rts_pin);
 
     uartCfg.baudRate = cfg->baud_rate;
-    uartCfg.dataBits = cfg->data_width;
-    uartCfg.parity = cfg->parity;
+    uartCfg.dataBits = (UART_DataBits_Type)cfg->data_width;
+    uartCfg.parity = (UART_Parity_Type)cfg->parity;
 
     if (cfg->flow_control == HOSAL_FLOW_CONTROL_CTS) {
     	uartCfg.ctsFlowControl = 1;

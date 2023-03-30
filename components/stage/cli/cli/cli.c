@@ -278,14 +278,19 @@ static int handle_input(char *inbuf)
     return ret;
 }
 
+__attribute__((weak)) void *fhost_cmd_tab_complete(char *inbuf, unsigned int *bp, int cli_cmd, int *fhost_cmd)
+{
+    return NULL;
+}
+
 /* Perform basic tab-completion on the input buffer by string-matching the
  * current input line against the cli functions table.  The current input line
  * is assumed to be NULL-terminated.
  */
 static void tab_complete(char *inbuf, unsigned int *bp)
 {
-    int         i, n, m;
-    const char *fm = NULL;
+    int         i, n, m, fhost_cmd = 0;
+    const char *fm = NULL, *fhost_fm = NULL;
 
     aos_cli_printf("\r\n");
 
@@ -307,8 +312,10 @@ static void tab_complete(char *inbuf, unsigned int *bp)
         }
     }
 
+    fhost_fm = fhost_cmd_tab_complete(inbuf, bp, m, &fhost_cmd);
+
     /* there's only one match, so complete the line */
-    if (m == 1 && fm) {
+    if ((m == 1 && fm) && fhost_cmd == 0) {
         n = strlen(fm) - *bp;
         if (*bp + n < INBUF_SIZE) {
             memcpy(inbuf + *bp, fm + *bp, n);
@@ -316,8 +323,19 @@ static void tab_complete(char *inbuf, unsigned int *bp)
             inbuf[(*bp)++] = ' ';
             inbuf[*bp]     = '\0';
         }
+    } else if (m == 0 && (fhost_cmd == 1 && fhost_fm)) {
+        n = strlen(fhost_fm) - *bp;
+        if (*bp + n < INBUF_SIZE) {
+            memcpy(inbuf + *bp, fhost_fm + *bp, n);
+            *bp += n;
+            inbuf[(*bp)++] = ' ';
+            inbuf[*bp]     = '\0';
+        }
+    } else if (m == 1 && fhost_cmd != 0) {
+        aos_cli_printf("%s ", fm);
     }
-    if (m >= 2) {
+
+    if ((m + fhost_cmd) >= 2) {
         aos_cli_printf("\r\n");
     }
 
@@ -583,6 +601,16 @@ static int get_input(char *inbuf, unsigned int *bp, char *buffer_cb, int count)
     return 0;
 }
 
+__attribute__((weak)) int fhost_ipc_help(void)
+{
+    return 0;
+}
+
+__attribute__((weak)) int _extra_command(char *cmd_string)
+{
+    return -1;
+}
+
 /* Print out a bad command string, including a hex
  * representation of non-printable characters.
  * Non-printable characters show as "\0xXX".
@@ -611,12 +639,14 @@ static void cli_main_input(char *buffer, int count)
             cli_history_input();
         }
 #endif
-
-        ret = handle_input(msg);
-        if (ret == 1) {
-            print_bad_command(msg);
-        } else if (ret == 2) {
-            aos_cli_printf("syntax error\r\n");
+        ret = _extra_command(msg);
+        if (ret != 0) {
+            ret = handle_input(msg);
+            if (ret == 1) {
+                print_bad_command(msg);
+            } else if (ret == 2) {
+                aos_cli_printf("syntax error\r\n");
+            }
         }
 
         aos_cli_printf("\r\n");
@@ -682,6 +712,8 @@ static void help_cmd(char *buf, int len, int argc, char **argv)
 {
     int      i, n;
     uint32_t build_in_count = sizeof(built_ins) / sizeof(built_ins[0]);
+
+    fhost_ipc_help();
 
     aos_cli_printf("====Build-in Commands====\r\n");
     aos_cli_printf("====Support %d cmds once, seperate by ; ====\r\n",
@@ -1002,7 +1034,7 @@ static void ls_cmd(char *buf, int len, int argc, char **argv)
     int env = 0;
 
     st = pvPortMalloc(sizeof(struct stat));
-    memset(stat, 0, sizeof(struct stat));
+    memset(st, 0, sizeof(struct stat));
     memset(path_name, 0, sizeof(path_name));
 
     if (argc == 2) {

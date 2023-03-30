@@ -12,6 +12,7 @@
 #define _RWNX_RX_H_
 #include "bl_defs.h"
 #include "lmac_types.h"
+#include <wifi_mgmr_ext.h>
 
 enum rx_status_bits
 {
@@ -192,7 +193,7 @@ int bl_txdatacfm(void *pthis, void *hostid);
 void bl_prim_tbtt_ind(void *pthis);
 void bl_sec_tbtt_ind(void *pthis);
 void bl_rx_handle_msg(struct bl_hw *bl_hw, struct ipc_e2a_msg *msg);
-void bl_rx_pkt_cb(uint8_t *pkt, int len);
+void bl_rx_pkt_cb(uint8_t *pkt, int len, void *pkt_wrap, bl_rx_info_t *info);
 const char* wifi_mgmr_get_sm_status_code_str(uint16_t status_code);
 
 #endif /* _RWNX_RX_H_ */

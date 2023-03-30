@@ -67,7 +67,7 @@ void wpa_sm_set_pmk_from_pmksa(struct wpa_sm *sm);
 static bool wpa_supplicant_gtk_in_use(struct wpa_sm *sm, struct wpa_gtk_data *gd);
 static inline enum wpa_states wpa_sm_get_state(struct wpa_sm *sm)
 {
-    return sm->wpa_state;;
+    return sm->wpa_state;
 }
 
 static inline void wpa_sm_cancel_auth_timeout(struct wpa_sm *sm)
@@ -196,13 +196,39 @@ static void wpa_tx_cb_(void *cb_arg, bool tx_ok)
 int wpa_sm_ether_send(const u8 *own_addr, const u8 *dest, u16 proto,
         const u8 *data, size_t data_len)
 {
+    struct wpa_sm *sm = &gWpaSm;
     void *buffer = (void *)(data - sizeof(struct l2_ethhdr));
     struct l2_ethhdr *eth = (struct l2_ethhdr *)buffer;
     struct bl_custom_tx_cfm cfm = { wpa_tx_cb_, NULL };
+    eapol_frame_id_t id;
 
+    // Skip TX CFM for M2
+    if (WPA_SM_STATE(sm) == WPA_FIRST_HALF_4WAY_HANDSHAKE) {
+        cfm.cb = NULL;
+    }
     memcpy(eth->h_dest, dest, ETH_ALEN);
     memcpy(eth->h_source, own_addr, ETH_ALEN);
     eth->h_proto = host_to_be16(proto);
+
+    switch (gWpaSm.wpa_state)
+    {
+    case WPA_FIRST_HALF_4WAY_HANDSHAKE:
+        id = EAPOL_FRAME_4_2;
+        break;
+     case WPA_LAST_HALF_4WAY_HANDSHAKE:
+        id = EAPOL_FRAME_4_4;
+        break;
+    case WPA_GROUP_HANDSHAKE:
+        id = EAPOL_FRAME_2_2;
+        break;   
+    default:
+        goto WRAPPER_SEND;
+    }
+    if (gWpaSm.tlv_pack_cb) {
+        gWpaSm.tlv_pack_cb(id, buffer, (uint16_t)(sizeof(struct l2_ethhdr) + data_len));
+    }
+
+WRAPPER_SEND:
     wpa_sendto_wrapper(true, buffer, sizeof(struct l2_ethhdr) + data_len, &cfm);
 
     return 0;
@@ -1545,8 +1571,6 @@ void wpa_supplicant_process_1_of_2(struct wpa_sm *sm,
 
     wpa_sm_set_state(WPA_GROUP_HANDSHAKE);
 
-    wpa_neg_complete(sm->sta_idx);
-
     if (ret)
         goto failed;
 
@@ -1775,12 +1799,17 @@ void wpa_eapol_key_dump(int level, const struct wpa_eapol_key *key)
 int wpa_sm_rx_eapol(u8 *src_addr, u8 *buf, u32 len)
 {
     struct wpa_sm *sm = &gWpaSm;
-    u32 plen, data_len, extra_len;
+    u32 plen, data_len, extra_len, frame_id;
     struct ieee802_1x_hdr *hdr;
     struct wpa_eapol_key *key;
     u16 key_info, ver;
     u8 *tmp;
     int ret = -1;
+
+    if (WPA_SM_STATE(sm) == WPA_DISCONNECTED) {
+        // Not in correct state, drop the packet
+        return -1;
+    }
 
     if (len < sizeof(*hdr) + sizeof(*key)) {
 #ifdef DEBUG_PRINT
@@ -1953,15 +1982,27 @@ int wpa_sm_rx_eapol(u8 *src_addr, u8 *buf, u32 len)
         }
 
         if (key_info & WPA_KEY_INFO_MIC) {
+            if (sm->tlv_pack_cb) {
+                sm->tlv_pack_cb(EAPOL_FRAME_4_3, buf, (uint16_t)len);
+            }
+
             /* 3/4 4-Way Handshake */
             wpa_supplicant_process_3_of_4(sm, key, ver);
         } else {
+            if (sm->tlv_pack_cb) {
+                sm->tlv_pack_cb(EAPOL_FRAME_4_1, buf, (uint16_t)len);
+            }
+
             /* 1/4 4-Way Handshake */
             wpa_supplicant_process_1_of_4(sm, src_addr, key,
                               ver);
         }
     } else {
         if (key_info & WPA_KEY_INFO_MIC) {
+            if (sm->tlv_pack_cb) {
+                sm->tlv_pack_cb(EAPOL_FRAME_2_1, buf, (uint16_t)len);
+            }
+
             /* 1/2 Group Key Handshake */
             wpa_supplicant_process_1_of_2(sm, src_addr, key,
                               extra_len, ver);
@@ -2464,13 +2505,15 @@ static void fourway_hs_timeout_handler_(void *arg)
     bl_wifi_auth_done_internal(sm->sta_idx, WLAN_REASON_4WAY_HANDSHAKE_TIMEOUT);
 }
 
-void wpa_set_4way_handshake_timer(void)
+void wpa_set_4way_handshake_timer(u8 quick_conn)
 {
     struct wpa_sm *sm = &gWpaSm;
 
     bl_wifi_timer_disarm(&sm->fourway_hs_timer);
     bl_wifi_timer_setfn(&sm->fourway_hs_timer, fourway_hs_timeout_handler_, NULL);
-    bl_wifi_timer_arm(&sm->fourway_hs_timer, WPA_SUPPLICANT_4WAY_HANDSHAKE_TIMEOUT_MS, 0);
+    bl_wifi_timer_arm(&sm->fourway_hs_timer, (quick_conn) ? 
+                      WPA_SUPPLICANT_QUICKCONN_4WAY_HANDSHAKE_TIMEOUT_MS :
+                      WPA_SUPPLICANT_4WAY_HANDSHAKE_TIMEOUT_MS, 0);
 }
 
 void wpa_clear_4way_handshake_timer(void)
@@ -2478,4 +2521,9 @@ void wpa_clear_4way_handshake_timer(void)
     struct wpa_sm *sm = &gWpaSm;
 
     bl_wifi_timer_disarm(&sm->fourway_hs_timer);
+}
+
+void wpa_reg_diag_tlv_cb(void* tlv_pack)
+{
+    gWpaSm.tlv_pack_cb = (WPA_TLV_PACK_CB)tlv_pack;
 }

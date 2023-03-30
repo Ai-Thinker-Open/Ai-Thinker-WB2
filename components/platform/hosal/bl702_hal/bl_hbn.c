@@ -1,6 +1,7 @@
 #include <bl_hbn.h>
 #include <bl_irq.h>
 #include <bl_flash.h>
+#include <bl_rtc.h>
 #include <hosal_uart.h>
 #include <utils_log.h>
 
@@ -24,6 +25,11 @@ typedef __PACKED_STRUCT
 
 #define FAST_BOOT_TEST             0
 #define TEST_GPIO                  22
+#define OPEN_JTAG                  0
+
+
+/* ACOMP Pin List */
+static const GLB_GPIO_Type acompPinList[8] = {8, 15, 17, 11, 12, 14, 7, 9};
 
 
 /* Cache Way Disable, will get from l1c register */
@@ -51,10 +57,13 @@ ATTR_HBN_NOINIT_SECTION static uint32_t flashImageOffset;
 ATTR_HBN_NOINIT_SECTION static SF_Ctrl_Cfg_Type sfCtrlCfg;
 
 /* HBN Wakeup Pin Configuration */
-ATTR_HBN_DATA_SECTION static uint8_t hbnWakeupPin = 0;
+ATTR_HBN_NOINIT_SECTION static uint8_t hbnWakeupPin;
 
 /* HBN IRQ Status, will get from hbn register after wakeup */
-ATTR_HBN_DATA_SECTION static uint32_t hbnIrqStatus = 0;
+ATTR_HBN_NOINIT_SECTION static uint32_t hbnIrqStatus;
+
+/* HBN Wakeup Time, will get in rtc cycles after wakeup */
+ATTR_HBN_NOINIT_SECTION static uint64_t hbnWakeupTime;
 
 
 static void bl_hbn_set_sf_ctrl(SPI_Flash_Cfg_Type *pFlashCfg)
@@ -88,6 +97,7 @@ static void bl_hbn_set_sf_ctrl(SPI_Flash_Cfg_Type *pFlashCfg)
 
 static void bl_hbn_xtal_cfg(void)
 {
+#if 0
     uint32_t tmpVal;
     
     // optimize xtal ready time
@@ -109,6 +119,7 @@ static void bl_hbn_xtal_cfg(void)
     tmpVal = BL_SET_REG_BITS_VAL(tmpVal, AON_XTAL_RDY_INT_SEL_AON, 0);
     tmpVal = BL_SET_REG_BITS_VAL(tmpVal, AON_XTAL_INN_CFG_EN_AON, 1);
     BL_WR_REG(AON_BASE, AON_TSEN, tmpVal);
+#endif
 #endif
 }
 
@@ -196,6 +207,49 @@ void bl_hbn_gpio_wakeup_cfg(uint8_t pin_list[], uint8_t pin_num)
     }
 }
 
+void bl_hbn_acomp_wakeup_cfg(uint8_t acomp_id, uint8_t ch_sel, uint8_t edge_sel)
+{
+    AON_ACOMP_CFG_Type cfg = {
+        .muxEn = ENABLE,                                          /*!< ACOMP mux enable */
+        .posChanSel = ch_sel,                                     /*!< ACOMP positive channel select */
+        .negChanSel = AON_ACOMP_CHAN_0P3125VBAT,                  /*!< ACOMP negtive channel select */
+        .levelFactor = AON_ACOMP_LEVEL_FACTOR_1,                  /*!< ACOMP level select factor */
+        .biasProg = AON_ACOMP_BIAS_POWER_MODE1,                   /*!< ACOMP bias current control */
+        .hysteresisPosVolt = AON_ACOMP_HYSTERESIS_VOLT_50MV,      /*!< ACOMP hysteresis voltage for positive */
+        .hysteresisNegVolt = AON_ACOMP_HYSTERESIS_VOLT_50MV,      /*!< ACOMP hysteresis voltage for negtive */
+    };
+    
+    GLB_GPIO_Func_Init(GPIO_FUN_ANALOG, (GLB_GPIO_Type *)&acompPinList[ch_sel], 1);
+    
+    AON_ACOMP_Init((AON_ACOMP_ID_Type)acomp_id, &cfg);
+    AON_ACOMP_Enable((AON_ACOMP_ID_Type)acomp_id);
+    
+    if(edge_sel == HBN_ACOMP_EDGE_RISING){
+        if(acomp_id == 0){
+            HBN_Enable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
+            HBN_Disable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
+        }else{
+            HBN_Enable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
+            HBN_Disable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
+        }
+    }else if(edge_sel == HBN_ACOMP_EDGE_FALLING){
+        if(acomp_id == 0){
+            HBN_Disable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
+            HBN_Enable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
+        }else{
+            HBN_Disable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
+            HBN_Enable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
+        }
+    }else{
+        if(acomp_id == 0){
+            HBN_Enable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
+            HBN_Enable_AComp0_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
+        }else{
+            HBN_Enable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_POSEDGE);
+            HBN_Enable_AComp1_IRQ(HBN_ACOMP_INT_EDGE_NEGEDGE);
+        }
+    }
+}
 
 // must be placed in hbncode section
 static void ATTR_HBN_CODE_SECTION bl_hbn_restore_flash(SPI_Flash_Cfg_Type *pFlashCfg)
@@ -205,6 +259,9 @@ static void ATTR_HBN_CODE_SECTION bl_hbn_restore_flash(SPI_Flash_Cfg_Type *pFlas
     *(volatile uint32_t *)0x4000F02C &= ~((0x3F << 16) | (0x3F << 24));
     
     RomDriver_SF_Cfg_Init_Flash_Gpio((devInfo.flash_cfg<<2)|devInfo.sf_swap_cfg, 1);
+    
+    *(volatile uint32_t *)0x40000130 |= (1U << 16);  // enable GPIO25 input
+    *(volatile uint32_t *)0x40000134 |= (1U << 16);  // enable GPIO27 input
     
     RomDriver_SFlash_Init(&sfCtrlCfg);
     
@@ -304,7 +361,7 @@ static void ATTR_NOINLINE ATTR_HBN_CODE_SECTION bl_hbn_set_gpio_high_z(void)
     
     // Set all gpio pads in High-Z state (GPIO0 - GPIO31)
     for(pin = 0; pin <= 31; pin++){
-#if 0
+#if OPEN_JTAG
         if(pin == 0 || pin == 1 || pin == 2 || pin == 9){
             continue;
         }
@@ -375,6 +432,23 @@ static void ATTR_HBN_CODE_SECTION bl_hbn_fastboot_entry(void)
     
     hbnIrqStatus = BL_RD_REG(HBN_BASE, HBN_IRQ_STAT);
     
+#if 1
+    if(hbnIrqStatus & 0x01){
+        *(uint32_t *)0x40000110 = 0x0B020B03;
+        *(uint32_t *)0x40000188 = 0x00000200;
+        *(uint32_t *)0x40000190 = 0x00000200;
+        RomDriver_BL702_Delay_US(500);
+        *(uint32_t *)0x40000190 = 0x00000000;
+        *(uint32_t *)0x40000188 = 0x00000000;
+        *(uint32_t *)0x40000110 = 0x0B030B03;
+        RomDriver_BL702_Delay_US(500);
+        hbnIrqStatus &= ~((*(volatile uint32_t *)0x40000180 >> 9) & 0x01);
+#if OPEN_JTAG
+        *(uint32_t *)0x40000110 = 0x0E020B03;
+#endif
+    }
+#endif
+    
 #if !defined(CFG_HBN_OPTIMIZE)
     // Configure clock (must use rom driver, since tcm code is lost and flash is power down)
     RomDriver_GLB_Set_System_CLK(clkCfg.xtal_type, clkCfg.pll_clk);
@@ -418,6 +492,9 @@ static void ATTR_HBN_CODE_SECTION bl_hbn_fastboot_entry(void)
     *pOut &= ~(1<<pos);
 #endif
     
+    // Get wakeup time in rtc cycles
+    hbnWakeupTime = bl_rtc_get_counter();
+    
     // Switch stack pointer
     __asm__ __volatile__(
             "la sp, _sp_main\n\t"
@@ -459,6 +536,7 @@ static void ATTR_HBN_CODE_SECTION bl_hbn_fastboot_entry(void)
     
     // Wait until XTAL32M is ready for use
     while(!BL_IS_REG_BIT_SET(BL_RD_REG(AON_BASE, AON_TSEN), AON_XTAL_RDY));
+    RomDriver_BL702_Delay_MS(1);
     
     // Select XTAL32M as root clock
     RomDriver_HBN_Set_ROOT_CLK_Sel(HBN_ROOT_CLK_XTAL);
@@ -541,7 +619,7 @@ void bl_hbn_enter_with_fastboot(uint32_t hbnSleepCycles)
     *(volatile uint32_t *)(AON_BASE + AON_RF_TOP_AON_OFFSET) &= ~(uint32_t)((1<<0)|(1<<1)|(1<<2));
 #endif
     
-    BL_WR_REG(HBN_BASE, HBN_IRQ_CLR, 0x1F);
+    BL_WR_REG(HBN_BASE, HBN_IRQ_CLR, 0x0050001F);
     
     if(hbnSleepCycles != 0){
         HBN_Get_RTC_Timer_Val(&valLow, &valHigh);
@@ -562,9 +640,13 @@ void bl_hbn_enter_with_fastboot(uint32_t hbnSleepCycles)
 
 int bl_hbn_get_wakeup_source(void)
 {
-    // irq_rtc is cleared in bootrom, so we assume wakeup by RTC if not wakeup by GPIO
+    // irq_rtc is cleared in bootrom, so we assume wakeup by RTC if not wakeup by GPIO and ACOMP
     if(hbnIrqStatus & 0x1F){
         return HBN_WAKEUP_BY_GPIO;
+    }else if(hbnIrqStatus & (1U << 20)){
+        return HBN_WAKEUP_BY_ACOMP0;
+    }else if(hbnIrqStatus & (1U << 22)){
+        return HBN_WAKEUP_BY_ACOMP1;
     }else{
         return HBN_WAKEUP_BY_RTC;
     }
@@ -573,6 +655,11 @@ int bl_hbn_get_wakeup_source(void)
 uint32_t bl_hbn_get_wakeup_gpio(void)
 {
     return (hbnIrqStatus & 0x1F) << 9;
+}
+
+uint64_t bl_hbn_get_wakeup_time(void)
+{
+    return hbnWakeupTime;
 }
 
 __attribute__((weak)) void bl_hbn_fastboot_done_callback(void)

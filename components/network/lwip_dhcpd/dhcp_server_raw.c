@@ -18,10 +18,10 @@
 #include <lwip/sockets.h>
 #include <lwip/inet_chksum.h>
 #include <netif/etharp.h>
-#include <ethernetif.h>
 #include <lwip/ip.h>
 #include <lwip/init.h>
 #include <aos/yloop.h>
+
 
 #include <lwip/prot/dhcp.h>
 
@@ -184,6 +184,7 @@ dhcp_client_find(struct dhcp_server *dhcpserver, struct dhcp_msg *msg,
                 return node;
             } else {
                 puts("IP Found, but MAC address is NOT the same\r\n");
+                return node;  //FIXME use hostname instead of mac address
             }
         }
     }
@@ -648,6 +649,8 @@ dhcp_server_start(struct netif *netif, ip4_addr_t *start, ip4_addr_t *end)
     /* set up local and remote port for the pcb */
     udp_bind(dhcp_server->pcb, &netif->ip_addr, DHCP_SERVER_PORT);
     //udp_connect(dhcp_server->pcb, IP_ADDR_ANY, DHCP_CLIENT_PORT);
+    /* bind to a specific netif */
+    udp_bind_netif(dhcp_server->pcb, netif);
     /* set up the recv callback and argument */
     udp_recv(dhcp_server->pcb, dhcp_server_recv, dhcp_server);
     LWIP_DEBUGF(DHCP_DEBUG | LWIP_DBG_TRACE, ("dhcp_server_start(): starting DHCP server\n"));
@@ -684,6 +687,29 @@ err_t dhcp_server_stop(struct netif *netif)
     return ERR_OK;
 }
 
+static void set_if(struct netif *netif, char* ip_addr, char* gw_addr, char* nm_addr)
+{
+    ip4_addr_t *ip;
+    ip4_addr_t addr;
+
+    ip = (ip4_addr_t *)&addr;
+
+    /* set ip address */
+    if ((ip_addr != NULL) && ip4addr_aton(ip_addr, &addr)) {
+        netif_set_ipaddr(netif, ip);
+    }
+
+    /* set gateway address */
+    if ((gw_addr != NULL) && ip4addr_aton(gw_addr, &addr)) {
+        netif_set_gw(netif, ip);
+    }
+
+    /* set netmask address */
+    if ((nm_addr != NULL) && ip4addr_aton(nm_addr, &addr)) {
+        netif_set_netmask(netif, ip);
+    }
+}
+
 //TODO better dhcpd_stop flow?
 void dhcpd_start(struct netif *netif)
 {
@@ -706,11 +732,8 @@ void dhcpd_start(struct netif *netif)
         client_ip_max = DHCPD_CLIENT_IP_MAX;
     }
 
-
     if (1)
     {
-        extern void set_if(struct netif *netif, char* ip_addr, char* gw_addr, char* nm_addr);
-
         dhcp_stop(netif);
 
         set_if(netif, ip_addr, "0.0.0.0", mask_addr);
@@ -723,7 +746,7 @@ void dhcpd_start(struct netif *netif)
         char *p = str_tmp;
         ip4_addr_t ip_start, ip_end;
 
-        strcpy(str_tmp, ip_addr);
+		strcpy(str_tmp, ip_addr);
         p = strchr(str_tmp, '.');
         if (p)
         {

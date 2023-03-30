@@ -76,7 +76,7 @@ void bl_irq_default(void)
     }
 }
 
-static void (*handler_list[2][16 + 64])(void) = {
+void (*handler_list[2][16 + 64])(void) = {
     
 };
 
@@ -375,6 +375,9 @@ void exception_entry(uint32_t mcause, uint32_t mepc, uint32_t mtval, uintptr_t *
     } else if ((mcause & 0x3ff) == EXCPT_STORE_MISALIGNED){
         misaligned_store_trap(regs, mcause, mepc);
     } else {
+        extern int bl_sys_wdt_rst_count_get();
+        printf("wdt reset count %d\r\n", bl_sys_wdt_rst_count_get());
+
         registerdump(tasksp);
         __dump_exception_code_str(mcause & 0xFFFF);
         backtrace_now((int (*)(const char *fmt, ...))printf, regs);
@@ -382,8 +385,7 @@ void exception_entry(uint32_t mcause, uint32_t mepc, uint32_t mtval, uintptr_t *
             /*Deap loop now*/
 #ifdef SYS_ENABLE_COREDUMP
             /* For stack check */
-            extern uintptr_t _sp_main, _sp_base;
-
+            extern uintptr_t _sp_main;
             /* XXX change sp to irq stack base */
             __asm__ volatile("add sp, x0, %0" ::"r"(&_sp_main));
             bl_coredump_run();
@@ -423,4 +425,3 @@ void bl_irq_restore(int flags)
                     : /* no output */
                     : "r"(flags));
 }
-

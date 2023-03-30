@@ -1,10 +1,9 @@
 #include <stdio.h>
-#include "bugkiller_heap_dump.h"
 
 extern uint8_t _heap_start;
 extern char *heap_dump_string[];
 
-void __attribute__((section(".bugkiller_code"))) bugkiller_heap_dump(void *res)
+void __attribute__((section(".bugkiller_code"))) bugkiller_heap_dump()
 {
     size_t xAddress;
     size_t BlockSize = 0;

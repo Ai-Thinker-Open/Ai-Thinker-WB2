@@ -26,23 +26,22 @@ static uint32_t factory_addr = 0;
 #ifdef CFG_BLE_ENABLE
 #include "ble_lib_api.h"
 #endif
-static int update_mac_config_get_mac_from_dtb(const void* fdt, int offset1, uint8_t mac_addr[6])
+static int update_mac_config_get_mac_from_dtb(const void *fdt, int offset1, uint8_t mac_addr[6])
 {
     int lentmp;
-    const uint8_t* addr_prop = 0;
+    const uint8_t *addr_prop = 0;
 
     /* set sta_mac_addr ap_mac_addr */
     addr_prop = fdt_getprop(fdt, offset1, "sta_mac_addr", &lentmp);
     if (6 == lentmp) {
 
         memcpy(mac_addr, addr_prop, 6);
-        //blog_info("sta_mac_addr :");
+        //blog_info("sta_mac_addr :\r\n");
         //blog_buf(mac_addr, 6);
 
         bl_wifi_sta_mac_addr_set(mac_addr);
-    }
-    else {
-        blog_error("sta_mac_addr NULL.");
+    } else {
+        blog_error("sta_mac_addr NULL.\r\n");
         return -1;
     }
 
@@ -50,13 +49,12 @@ static int update_mac_config_get_mac_from_dtb(const void* fdt, int offset1, uint
     if (6 == lentmp) {
 
         memcpy(mac_addr, addr_prop, 6);
-        //blog_info("ap_mac_addr :");
+        //blog_info("ap_mac_addr :\r\n");
         //blog_buf(mac_addr, 6);
 
         bl_wifi_ap_mac_addr_set(mac_addr);
-    }
-    else {
-        blog_error("ap_mac_addr NULL.");
+    } else {
+        blog_error("ap_mac_addr NULL.\r\n");
         return -1;
     }
 
@@ -102,11 +100,11 @@ static int update_mac_config_get_mac_from_factory(uint8_t mac_addr[6])
  *  'M' for manufacutre configured EFUSE built-in MAC address
  * */
 #define MAC_ORDER_ADDR_LEN_MAX      (3)
-static void update_mac_config_with_order(const void* fdt, int offset1, const char* order)
+static void update_mac_config_with_order(const void *fdt, int offset1, const char *order)
 {
     int i, set, len;
     uint8_t mac_addr[6];
-    static const uint8_t mac_default[] = { 0x18, 0xB9, 0x05, 0x88, 0x88, 0x88 };
+    static const uint8_t mac_default[] = {0x18, 0xB9, 0x05, 0x88, 0x88, 0x88};
 
     set = 0;
     len = strlen(order);
@@ -116,11 +114,10 @@ static void update_mac_config_with_order(const void* fdt, int offset1, const cha
             {
                 if (0 == update_mac_config_get_mac_from_efuse(mac_addr)) {
                     set = 1;
-                    blog_debug("get MAC from B ready");
+                    blog_debug("get MAC from B ready\r\n");
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get MAC from B failed");
+                } else {
+                    blog_debug("get MAC from B failed\r\n");
                 }
             }
             break;
@@ -128,11 +125,10 @@ static void update_mac_config_with_order(const void* fdt, int offset1, const cha
             {
                 if (0 == update_mac_config_get_mac_from_dtb(fdt, offset1, mac_addr)) {
                     set = 1;
-                    blog_debug("get MAC from F ready");
+                    blog_debug("get MAC from F ready\r\n");
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get MAC from F failed");
+                } else {
+                    blog_debug("get MAC from F failed\r\n");
                 }
             }
             break;
@@ -140,11 +136,10 @@ static void update_mac_config_with_order(const void* fdt, int offset1, const cha
             {
                 if (0 == update_mac_config_get_mac_from_factory(mac_addr)) {
                     set = 1;
-                    blog_debug("get MAC from M ready");
+                    blog_debug("get MAC from M ready\r\n");
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get MAC from M failed");
+                } else {
+                    blog_debug("get MAC from M failed\r\n");
                 }
             }
             break;
@@ -156,11 +151,11 @@ static void update_mac_config_with_order(const void* fdt, int offset1, const cha
     }
 break_scan:
     if (0 == set) {
-        blog_info("Using Default MAC address");
+        blog_info("Using Default MAC address\r\n");
         memcpy(mac_addr, mac_default, 6);
     }
     //FIXME maybe we should set a different MAC address
-    blog_info("Set MAC addrress %02X:%02X:%02X:%02X:%02X:%02X",
+    blog_info("Set MAC addrress %02X:%02X:%02X:%02X:%02X:%02X\r\n",
             mac_addr[0],
             mac_addr[1],
             mac_addr[2],
@@ -172,20 +167,20 @@ break_scan:
     bl_wifi_sta_mac_addr_set(mac_addr);
 }
 
-static void update_mac_config(const void* fdt, int offset1)
+static void update_mac_config(const void *fdt, int offset1)
 {
     int countindex = 0, lentmp = 0;
-    const char* result = 0;
+    const char *result = 0;
     char mac_mode[4];
 
     countindex = fdt_stringlist_count(fdt, offset1, "mode");
     if (1 == countindex) {
         result = fdt_stringlist_get(fdt, offset1, "mode", 0, &lentmp);
-        blog_info_user(dts, "MAC address mode length %d", lentmp);
+        blog_info_user(dts, "MAC address mode length %d\r\n", lentmp);
         if (lentmp <= MAC_ORDER_ADDR_LEN_MAX) {
             memcpy(mac_mode, result, lentmp);
             mac_mode[3] = '\0';
-            blog_info_user(dts, "MAC address mode is %s", mac_mode);
+            blog_info_user(dts, "MAC address mode is %s\r\n", mac_mode);
             update_mac_config_with_order(fdt, offset1, mac_mode);
         }
     }
@@ -209,16 +204,16 @@ static int update_xtal_config_get_mac_from_factory(uint32_t capcode[5])
     return 0;
 }
 
-static int update_xtal_config_get_mac_from_dtb(const void* fdt, int offset1, uint32_t capcode[5])
+static int update_xtal_config_get_mac_from_dtb(const void *fdt, int offset1, uint32_t capcode[5])
 {
-    const uint8_t* addr_prop = 0;
+    const uint8_t *addr_prop = 0;
     int lentmp = 0;
 
     addr_prop = fdt_getprop(fdt, offset1, "xtal", &lentmp);
 
     if (5*4 == lentmp) {
         blog_info(
-            "xtal dtb in DEC :%u %u %u %u %u",
+            "xtal dtb in DEC :%u %u %u %u %u\r\n",
             BL_FDT32_TO_U8(addr_prop, 4*0),
             BL_FDT32_TO_U8(addr_prop, 4*1),
             BL_FDT32_TO_U8(addr_prop, 4*2),
@@ -230,8 +225,7 @@ static int update_xtal_config_get_mac_from_dtb(const void* fdt, int offset1, uin
         capcode[2] = BL_FDT32_TO_U8(addr_prop, 4*2);
         capcode[3] = BL_FDT32_TO_U8(addr_prop, 4*3);
         capcode[4] = BL_FDT32_TO_U8(addr_prop, 4*4);
-    }
-    else {
+    } else {
         blog_error("xtal dtb NULL.");
         return -1;
     }
@@ -239,7 +233,7 @@ static int update_xtal_config_get_mac_from_dtb(const void* fdt, int offset1, uin
 }
 
 #define XTAL_ORDER_ADDR_LEN_MAX      (2)
-static void update_xtal_config_with_order(const void* fdt, int offset1, const char* order)
+static void update_xtal_config_with_order(const void *fdt, int offset1, const char *order)
 {
     int i, set, len;
     uint32_t capcode[5];
@@ -252,11 +246,10 @@ static void update_xtal_config_with_order(const void* fdt, int offset1, const ch
             {
                 if (0 == update_xtal_config_get_mac_from_dtb(fdt, offset1, capcode)) {
                     set = 1;
-                    blog_debug("get xtal from F ready");
+                    blog_debug("get xtal from F ready\r\n");
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get xtal from F failed");
+                } else {
+                    blog_debug("get xtal from F failed\r\n");
                 }
             }
             break;
@@ -264,11 +257,10 @@ static void update_xtal_config_with_order(const void* fdt, int offset1, const ch
             {
                 if (0 == update_xtal_config_get_mac_from_factory(capcode)) {
                     set = 1;
-                    blog_debug("get xtal from M ready");
+                    blog_debug("get xtal from M ready\r\n");
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get xtal from M failed");
+                } else {
+                    blog_debug("get xtal from M failed\r\n");
                 }
             }
             break;
@@ -280,7 +272,7 @@ static void update_xtal_config_with_order(const void* fdt, int offset1, const ch
     }
 break_scan:
     if (0 == set) {
-        blog_info("Using Default xtal");
+        blog_info("Using Default xtal\r\n");
         capcode[0] = 50;
         capcode[1] = 50;
         capcode[2] = 1;
@@ -290,20 +282,20 @@ break_scan:
     hal_sys_capcode_update(capcode[0], capcode[1]);
 }
 
-static void update_xtal_config(const void* fdt, int offset1)
+static void update_xtal_config(const void *fdt, int offset1)
 {
     int lentmp = 0, countindex;
     char xtal_mode[3];
-    const char* result = 0;
+    const char *result = 0;
 
     countindex = fdt_stringlist_count(fdt, offset1, "xtal_mode");
     if (1 == countindex) {
         result = fdt_stringlist_get(fdt, offset1, "xtal_mode", 0, &lentmp);
-        blog_info("xtal_mode length %d", lentmp);
+        blog_info("xtal_mode length %d\r\n", lentmp);
         if (lentmp <= XTAL_ORDER_ADDR_LEN_MAX) {
             memcpy(xtal_mode, result, lentmp);
             xtal_mode[sizeof(xtal_mode) - 1] = '\0';
-            blog_info("xtal_mode is %s", xtal_mode);
+            blog_info("xtal_mode is %s\r\n", xtal_mode);
             update_xtal_config_with_order(fdt, offset1, xtal_mode);
         }
     }
@@ -312,13 +304,13 @@ static void update_xtal_config(const void* fdt, int offset1)
 static void update_xtal_config_rftv(uint32_t tlv_addr)
 {
     int i, set, len;
-    uint8_t buffer[20] = { 0 };
-    uint32_t capcode[5] = { 0 };
-    char xtal_mode[3] = { 0 };
-
+    uint8_t buffer[20] = {0};
+    uint32_t capcode[5] = {0};
+    char xtal_mode[3] = {0};
+    
     if (rftlv_get(tlv_addr, RFTLV_API_TYPE_XTAL_MODE, 3, xtal_mode) > 0) {
         xtal_mode[sizeof(xtal_mode) - 1] = '\0';
-        blog_info("xtal_mode is %s", xtal_mode);
+        blog_info("xtal_mode is %s\r\n", xtal_mode);
     }
 
     set = 0;
@@ -328,22 +320,21 @@ static void update_xtal_config_rftv(uint32_t tlv_addr)
             case 'F':
             {
                 if (rftlv_get(tlv_addr, RFTLV_API_TYPE_XTAL, sizeof(buffer), buffer) > 0) {
-                    capcode[0] = *(uint32_t*)buffer;
-                    capcode[1] = *(uint32_t*)(buffer + 4);
-                    capcode[2] = *(uint32_t*)(buffer + 8);
-                    capcode[3] = *(uint32_t*)(buffer + 12);
-                    capcode[4] = *(uint32_t*)(buffer + 16);
+                    capcode[0] = *(uint32_t *)buffer;
+                    capcode[1] = *(uint32_t *)(buffer + 4);
+                    capcode[2] = *(uint32_t *)(buffer + 8);
+                    capcode[3] = *(uint32_t *)(buffer + 12);
+                    capcode[4] = *(uint32_t *)(buffer + 16);
                     set = 1;
-                    blog_info("get xtal from F ready %d %d %d %d %d",
+                    blog_info("get xtal from F ready %d %d %d %d %d\r\n",
                             capcode[0],
                             capcode[1],
                             capcode[2],
                             capcode[3],
                             capcode[4]);
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get xtal from F failed");
+                } else {
+                    blog_debug("get xtal from F failed\r\n");
                 }
             }
             break;
@@ -351,16 +342,15 @@ static void update_xtal_config_rftv(uint32_t tlv_addr)
             {
                 if (0 == update_xtal_config_get_mac_from_factory(capcode)) {
                     set = 1;
-                    blog_info("get xtal from M ready %d %d %d %d %d",
+                    blog_info("get xtal from M ready %d %d %d %d %d\r\n",
                             capcode[0],
                             capcode[1],
                             capcode[2],
                             capcode[3],
                             capcode[4]);
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get xtal from M failed");
+                } else {
+                    blog_debug("get xtal from M failed\r\n");
                 }
             }
             break;
@@ -372,7 +362,7 @@ static void update_xtal_config_rftv(uint32_t tlv_addr)
     }
 break_scan:
     if (0 == set) {
-        blog_info("Using Default xtal");
+        blog_info("Using Default xtal\r\n");
         capcode[0] = 50;
         capcode[1] = 50;
         capcode[2] = 1;
@@ -382,10 +372,10 @@ break_scan:
     hal_sys_capcode_update(capcode[0], capcode[1]);
 }
 
-static int update_poweroffset_config_get_mac_from_dtb(const void* fdt, int offset1, int8_t poweroffset[14])
+static int update_poweroffset_config_get_mac_from_dtb(const void *fdt, int offset1, int8_t poweroffset[14])
 {
     int lentmp = 0, i;
-    const uint8_t* addr_prop = 0;
+    const uint8_t *addr_prop = 0;
 
 #define PWR_OFFSET_BASE (10)
     addr_prop = fdt_getprop(fdt, offset1, "pwr_offset", &lentmp);
@@ -393,24 +383,23 @@ static int update_poweroffset_config_get_mac_from_dtb(const void* fdt, int offse
         for (i = 0; i < 14; i++) {
             poweroffset[i] = BL_FDT32_TO_U32(addr_prop, 4*i);
         }
-        blog_info("pwr_offset from dtb:");
+        blog_info("pwr_offset from dtb:\r\n");
         blog_buf(poweroffset, 14);
         for (i = 0; i < 14; i++) {
             poweroffset[i] -= PWR_OFFSET_BASE;
             poweroffset[i] = poweroffset[i] * 4;
         }
-        blog_info("pwr_offset from dtb (rebase on %d):", PWR_OFFSET_BASE);
+        blog_info("pwr_offset from dtb (rebase on %d):\r\n", PWR_OFFSET_BASE);
         //TODO FIXME log buffer
         //blog_buf_int8(poweroffset, 14);
-    }
-    else {
-        blog_error("pwr_offset NULL. lentmp = %d", lentmp);
+    }  else {
+        blog_error("pwr_offset NULL. lentmp = %d\r\n", lentmp);
         return -1;
     }
     return 0;
 }
 
-static void update_poweroffset_config_with_order(const void* fdt, int offset1, const char* order)
+static void update_poweroffset_config_with_order(const void *fdt, int offset1, const char *order)
 {
     int i, set, len, j;
     int8_t poweroffset[14], poweroffset_tmp[14];
@@ -426,26 +415,24 @@ static void update_poweroffset_config_with_order(const void* fdt, int offset1, c
             {
                 if (0 == bl_efuse_read_pwroft(poweroffset_tmp)) {
                     set = 1;
-                    blog_info("get pwr offset from B(b) ready");
+                    blog_info("get pwr offset from B(b) ready\r\n");
                     log_buf_int8(poweroffset_tmp, sizeof(poweroffset_tmp));
                     if ('B' == order[i]) {
                         /*non-incremental mode*/
                         for (j = 0; j < sizeof(poweroffset); j++) {
                             poweroffset[j] = poweroffset_tmp[j];
                         }
-                        blog_debug("Use pwr offset from B only");
+                        blog_debug("Use pwr offset from B only\r\n");
                         goto break_scan;
-                    }
-                    else {
+                    } else {
                         /*incremental mode*/
-                        blog_debug("Use pwr offset from b in incremental mode");
+                        blog_debug("Use pwr offset from b in incremental mode\r\n");
                         for (j = 0; j < sizeof(poweroffset); j++) {
                             poweroffset[j] += poweroffset_tmp[j];
                         }
                     }
-                }
-                else {
-                    blog_debug("get pwr offset from B(b) failed");
+                } else {
+                    blog_debug("get pwr offset from B(b) failed\r\n");
                 }
             }
             break;
@@ -454,26 +441,24 @@ static void update_poweroffset_config_with_order(const void* fdt, int offset1, c
             {
                 if (0 == update_poweroffset_config_get_mac_from_dtb(fdt, offset1, poweroffset_tmp)) {
                     set = 1;
-                    blog_debug("get pwr offset from F(f) ready");
-                    if ('B' == order[i]) {
+                    blog_debug("get pwr offset from F(f) ready\r\n");
+                    if ('F' == order[i]) {
                         /*non-incremental mode*/
                         for (j = 0; j < sizeof(poweroffset); j++) {
                             poweroffset[j] = poweroffset_tmp[j];
                         }
-                        blog_debug("Use pwr offset from F only");
+                        blog_debug("Use pwr offset from F only\r\n");
                         goto break_scan;
-                    }
-                    else {
+                    } else {
                         /*incremental mode*/
-                        blog_debug("Use pwr offset from f in incremental mode");
+                        blog_debug("Use pwr offset from f in incremental mode\r\n");
                         for (j = 0; j < sizeof(poweroffset); j++) {
                             poweroffset[j] += poweroffset_tmp[j];
                         }
                     }
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get pwr offset from F(f) failed");
+                } else {
+                    blog_debug("get pwr offset from F(f) failed\r\n");
                 }
             }
             break;
@@ -485,38 +470,38 @@ static void update_poweroffset_config_with_order(const void* fdt, int offset1, c
     }
 break_scan:
     if (0 == set) {
-        blog_info("Using Default pwr offset");//all zeros actually
+        blog_info("Using Default pwr offset\r\n");//all zeros actually
     }
     log_buf_int8(poweroffset, sizeof(poweroffset));
 #ifdef CFG_BLE_ENABLE
     extern void ble_rf_set_pwr_offset_table(int8_t *poweroffset_table);
-    ble_rf_set_pwr_offset_table(poweroffset);
+	ble_rf_set_pwr_offset_table(poweroffset);
 #endif
     phy_powroffset_set(poweroffset);
 }
 
 
 #define PWR_OFFSET_ORDER_ADDR_LEN_MAX      (2)
-static void update_poweroffset_config(const void* fdt, int offset1)
+static void update_poweroffset_config(const void *fdt, int offset1)
 {
     int lentmp = 0, countindex;
     char pwr_mode[3];
-    const char* result = 0;
+    const char *result = 0;
 
     countindex = fdt_stringlist_count(fdt, offset1, "pwr_mode");
     if (1 == countindex) {
         result = fdt_stringlist_get(fdt, offset1, "pwr_mode", 0, &lentmp);
-        blog_info("pwr_mode length %d", lentmp);
+        blog_info("pwr_mode length %d\r\n", lentmp);
         if (lentmp <= PWR_OFFSET_ORDER_ADDR_LEN_MAX) {
             memcpy(pwr_mode, result, lentmp);
             pwr_mode[sizeof(pwr_mode) - 1] = '\0';
-            blog_info("pwr_mode is %s", pwr_mode);
+            blog_info("pwr_mode is %s\r\n", pwr_mode);
             update_poweroffset_config_with_order(fdt, offset1, pwr_mode);
         }
     }
 }
 
-static void update_poweroffset_config_rftv(uint32_t tlv_addr, const char* pw_mode)
+static void update_poweroffset_config_rftv(uint32_t tlv_addr, const char *pw_mode)
 {
     int i, set, len, j;
     int8_t poweroffset[14], poweroffset_tmp[14];
@@ -532,26 +517,24 @@ static void update_poweroffset_config_rftv(uint32_t tlv_addr, const char* pw_mod
             {
                 if (0 == bl_efuse_read_pwroft(poweroffset_tmp)) {
                     set = 1;
-                    blog_info("get pwr offset from B(b) ready");
+                    blog_info("get pwr offset from B(b) ready\r\n");
                     log_buf_int8(poweroffset_tmp, sizeof(poweroffset_tmp));
                     if ('B' == pw_mode[i]) {
                         /*non-incremental mode*/
                         for (j = 0; j < sizeof(poweroffset); j++) {
                             poweroffset[j] = poweroffset_tmp[j];
                         }
-                        blog_debug("Use pwr offset from B only");
+                        blog_debug("Use pwr offset from B only\r\n");
                         goto break_scan;
-                    }
-                    else {
+                    } else {
                         /*incremental mode*/
-                        blog_debug("Use pwr offset from b in incremental mode");
+                        blog_debug("Use pwr offset from b in incremental mode\r\n");
                         for (j = 0; j < sizeof(poweroffset); j++) {
                             poweroffset[j] += poweroffset_tmp[j];
                         }
                     }
-                }
-                else {
-                    blog_debug("get pwr offset from B(b) failed");
+                } else {
+                    blog_debug("get pwr offset from B(b) failed\r\n");
                 }
             }
             break;
@@ -560,26 +543,24 @@ static void update_poweroffset_config_rftv(uint32_t tlv_addr, const char* pw_mod
             {
                 if (rftlv_get(tlv_addr, RFTLV_TYPE_PWR_OFFSET, sizeof(poweroffset_tmp), poweroffset_tmp) > 0) {
                     set = 1;
-                    blog_debug("get pwr offset from F(f) ready");
+                    blog_debug("get pwr offset from F(f) ready\r\n");
                     if ('F' == pw_mode[i]) {
                         /*non-incremental mode*/
                         for (j = 0; j < sizeof(poweroffset); j++) {
                             poweroffset[j] = (poweroffset_tmp[j] - 10)*4;
                         }
-                        blog_debug("Use pwr offset from F only");
+                        blog_debug("Use pwr offset from F only\r\n");
                         goto break_scan;
-                    }
-                    else {
+                    } else {
                         /*incremental mode*/
-                        blog_debug("Use pwr offset from f in incremental mode");
+                        blog_debug("Use pwr offset from f in incremental mode\r\n");
                         for (j = 0; j < sizeof(poweroffset); j++) {
                             poweroffset[j] = (poweroffset_tmp[j] - 10)*4;
                         }
                     }
                     goto break_scan;
-                }
-                else {
-                    blog_debug("get pwr offset from F(f) failed");
+                } else {
+                    blog_debug("get pwr offset from F(f) failed\r\n");
                 }
             }
             break;
@@ -591,22 +572,22 @@ static void update_poweroffset_config_rftv(uint32_t tlv_addr, const char* pw_mod
     }
 break_scan:
     if (0 == set) {
-        blog_info("Using Default pwr offset");//all zeros actually
+        blog_info("Using Default pwr offset\r\n");//all zeros actually
     }
     log_buf_int8(poweroffset, sizeof(poweroffset));
 #ifdef CFG_BLE_ENABLE
     extern void ble_rf_set_pwr_offset_table(int8_t *poweroffset_table);
-    ble_rf_set_pwr_offset_table(poweroffset);
+	ble_rf_set_pwr_offset_table(poweroffset);
 #endif
     phy_powroffset_set(poweroffset);
 }
 
-static int update_sta_field(const void* fdt, int wifi_offset, const char* name)
+static int update_sta_field(const void *fdt, int wifi_offset, const char *name)
 {
     int offset1 = 0;        /* subnode offset1 */
     int countindex = 0, lentmp = 0;
-    const char* result = 0;
-    const uint8_t* addr_prop = 0;
+    const char *result = 0;
+    const uint8_t *addr_prop = 0;
     int auto_connect_enable;
 
     /* set ssid pwd */
@@ -622,7 +603,7 @@ static int update_sta_field(const void* fdt, int wifi_offset, const char* name)
         if (1 == countindex) {
             result = fdt_stringlist_get(fdt, offset1, "ssid", 0, &lentmp);
             if ((lentmp > 0) &&(lentmp<32)) {/* !NULL */
-                blog_info("[STA] ap_ssid string[%d] = %s, ap_ssid_len = %d", 0, result, lentmp);
+                blog_info("[STA] ap_ssid string[%d] = %s, ap_ssid_len = %d\r\n", 0, result, lentmp);
                 memcpy(ap_ssid, result, lentmp);
                 ap_ssid[lentmp] = '\0';
                 ap_ssid_len = lentmp;
@@ -633,7 +614,7 @@ static int update_sta_field(const void* fdt, int wifi_offset, const char* name)
         if (1 == countindex) {
             result = fdt_stringlist_get(fdt, offset1, "pwd", 0, &lentmp);
             if ((lentmp > 0) &&(lentmp<32)) {/* !NULL */
-                blog_info("[STA] ap_psk string[%d] = %s, ap_psk_len = %d", 0, result, lentmp);
+                blog_info("[STA] ap_psk string[%d] = %s, ap_psk_len = %d\r\n", 0, result, lentmp);
                 memcpy(ap_psk, result, lentmp);
                 ap_psk[lentmp] = '\0';
                 ap_psk_len = lentmp;
@@ -641,11 +622,10 @@ static int update_sta_field(const void* fdt, int wifi_offset, const char* name)
         }
         addr_prop = fdt_getprop(fdt, offset1, "auto_connect_enable", &lentmp);
         if (addr_prop) {
-            blog_info("auto_connect_enable = %ld", BL_FDT32_TO_U32(addr_prop, 0));
+            blog_info("auto_connect_enable = %ld\r\n", BL_FDT32_TO_U32(addr_prop, 0));
 
             auto_connect_enable = BL_FDT32_TO_U32(addr_prop, 0);
-        }
-        else {
+        } else {
             auto_connect_enable = 0;
         }
 
@@ -654,13 +634,13 @@ static int update_sta_field(const void* fdt, int wifi_offset, const char* name)
     return offset1;
 }
 
-static int update_ap_field(const void* fdt, int wifi_offset, const char* name)
+static int update_ap_field(const void *fdt, int wifi_offset, const char *name)
 {
     int offset1 = 0;        /* subnode offset1 */
     int countindex = 0, lentmp = 0;
-    const char* result = 0;
-    const uint8_t* addr_prop = 0;
-
+    const char *result = 0;
+    const uint8_t *addr_prop = 0;
+     
     /* set ssid pwd */
     uint8_t ap_ssid[32];
     uint8_t ap_ssid_len = 0;
@@ -675,7 +655,7 @@ static int update_ap_field(const void* fdt, int wifi_offset, const char* name)
         if (1 == countindex) {
             result = fdt_stringlist_get(fdt, offset1, "ssid", 0, &lentmp);
             if ((lentmp > 0) &&(lentmp<32)) {/* !NULL */
-                blog_info("ap_ssid string[%d] = %s, ap_ssid_len = %d", 0, result, lentmp);
+                blog_info("ap_ssid string[%d] = %s, ap_ssid_len = %d\r\n", 0, result, lentmp);
                 memcpy(ap_ssid, result, lentmp);
                 ap_ssid[lentmp] = '\0';
                 ap_ssid_len = lentmp;
@@ -686,7 +666,7 @@ static int update_ap_field(const void* fdt, int wifi_offset, const char* name)
         if (1 == countindex) {
             result = fdt_stringlist_get(fdt, offset1, "pwd", 0, &lentmp);
             if ((lentmp > 0) &&(lentmp<32)) {/* !NULL */
-                blog_info("ap_psk string[%d] = %s, ap_psk_len = %d", 0, result, lentmp);
+                blog_info("ap_psk string[%d] = %s, ap_psk_len = %d\r\n", 0, result, lentmp);
                 memcpy(ap_psk, result, lentmp);
                 ap_psk[lentmp] = '\0';
                 ap_psk_len = lentmp;
@@ -695,12 +675,11 @@ static int update_ap_field(const void* fdt, int wifi_offset, const char* name)
 
         addr_prop = fdt_getprop(fdt, offset1, "ap_channel", &lentmp);
         if (addr_prop) {
-            blog_info("ap_channel = %ld", BL_FDT32_TO_U32(addr_prop, 0));
+            blog_info("ap_channel = %ld\r\n", BL_FDT32_TO_U32(addr_prop, 0));
 
             ap_channel = BL_FDT32_TO_U32(addr_prop, 0);
-        }
-        else {
-            blog_error("ap_channel NULL.");
+        } else {
+            blog_error("ap_channel NULL.\r\n");
         }
 
         bl_wifi_ap_info_set(ap_ssid, ap_ssid_len,
@@ -710,7 +689,7 @@ static int update_ap_field(const void* fdt, int wifi_offset, const char* name)
     return offset1;
 }
 
-typedef struct {
+typedef struct{
     uint16_t Tchannels[5];
     int16_t Tchannel_os[5];
     int16_t Tchannel_os_low[5];
@@ -725,11 +704,11 @@ enum {
 void rf_pri_update_tcal_param(uint8_t operation);//FIXME
 #define TCAL_PARA_CHANNELS          5
 
-static int update_rf_temp_field(const void* fdt, int wifi_offset, const char* name)
+static int update_rf_temp_field(const void *fdt, int wifi_offset, const char *name)
 {
     int lentmp, i;
     int offset1 = 0;
-    const uint8_t* addr_prop = 0;
+    const uint8_t *addr_prop = 0;
     uint32_t tmp[TCAL_PARA_CHANNELS];
     tcal_param_struct tcal_param_tmp;
 
@@ -737,94 +716,69 @@ static int update_rf_temp_field(const void* fdt, int wifi_offset, const char* na
     if (offset1 > 0) {
         addr_prop = fdt_getprop(fdt, offset1, "Troom_os", &lentmp);
         if (addr_prop) {
-            tcal_param_tmp.Troom_os = BL_FDT32_TO_U32(addr_prop, 0)-256;
-            blog_info_user(dts, "Troom_os = %d, lentmp = %d", (int)tcal_param_tmp.Troom_os, lentmp);
-        }
-        else {
-            blog_info_user(dts, "Troom_os NULL.");
+            tcal_param_tmp.Troom_os=BL_FDT32_TO_U32(addr_prop, 0)-256;
+            blog_info_user(dts, "Troom_os = %d, lentmp = %d\r\n", (int)tcal_param_tmp.Troom_os, lentmp);
+        } else {
+            blog_info_user(dts, "Troom_os NULL.\r\n");
             return -1;
         }
 
         addr_prop = fdt_getprop(fdt, offset1, "linear_or_follow", &lentmp);
         if (addr_prop) {
-            tcal_param_tmp.linear_or_follow = BL_FDT32_TO_U32(addr_prop, 0);
-            blog_info_user(dts, "linear_or_follow = %d, lentmp = %d", (int)tcal_param_tmp.linear_or_follow, lentmp);
-        }
-        else {
-            blog_info_user(dts, "linear_or_follow NULL.");
+            tcal_param_tmp.linear_or_follow=BL_FDT32_TO_U32(addr_prop, 0);
+            blog_info_user(dts, "linear_or_follow = %d, lentmp = %d\r\n", (int)tcal_param_tmp.linear_or_follow, lentmp);
+        } else {
+            blog_info_user(dts, "linear_or_follow NULL.\r\n");
             return -1;
         }
 
         addr_prop = fdt_getprop(fdt, offset1, "Tchannels", &lentmp);
-        if (lentmp == TCAL_PARA_CHANNELS*4) {
-            memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);
-
-            for (i = 0; i < TCAL_PARA_CHANNELS; i++)
-                tcal_param_tmp.Tchannels[i] = fdt32_to_cpu(tmp[i]);
-            blog_info_user(dts, "Tchannels:%d,%d,%d,%d,%d",
-           (int)tcal_param_tmp.Tchannels[0],
-           (int)tcal_param_tmp.Tchannels[1],
-           (int)tcal_param_tmp.Tchannels[2],
-           (int)tcal_param_tmp.Tchannels[3],
-           (int)tcal_param_tmp.Tchannels[4]
-            );
-
-        }
-        else {
-            blog_info_user(dts, "Tchannels NULL.");
+        if (lentmp == TCAL_PARA_CHANNELS*4) {            
+            memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);         
+            blog_info_user(dts, "Tchannels:");
+            for (i = 0; i < TCAL_PARA_CHANNELS; i++){
+                tcal_param_tmp.Tchannels[i]=fdt32_to_cpu(tmp[i]);
+                blog_info_user_raw(dts, "%d,", (int)tcal_param_tmp.Tchannels[i]);
+            }
+            blog_info_user_raw(dts, "\r\n");
+        } else {
+            blog_info_user(dts, "Tchannels NULL.\r\n");
             return -1;
         }
 
         addr_prop = fdt_getprop(fdt, offset1, "Tchannel_os", &lentmp);
-        if (lentmp == TCAL_PARA_CHANNELS*4) {
-            memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);
-
-            for (i = 0; i < TCAL_PARA_CHANNELS; i++) {
-                tcal_param_tmp.Tchannel_os[i] = fdt32_to_cpu(tmp[i]);
-
+        if (lentmp == TCAL_PARA_CHANNELS*4) {            
+            memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);         
+            blog_info_user(dts, "Tchannel_os:");
+            for (i = 0; i < TCAL_PARA_CHANNELS; i++){
+                tcal_param_tmp.Tchannel_os[i]=fdt32_to_cpu(tmp[i]);
+                blog_info_user_raw(dts, "%d,", (int)tcal_param_tmp.Tchannel_os[i]);
             }
-            blog_info_user(dts, "Tchannel_os:%d,%d,%d,%d,%d",
-           (int)tcal_param_tmp.Tchannel_os[0],
-           (int)tcal_param_tmp.Tchannel_os[1],
-           (int)tcal_param_tmp.Tchannel_os[2],
-           (int)tcal_param_tmp.Tchannel_os[3],
-           (int)tcal_param_tmp.Tchannel_os[4]
-            );
-
-        }
-        else {
-            blog_info_user(dts, "Tchannel_os NULL.");
+            blog_info_user_raw(dts, "\r\b");
+        } else {
+            blog_info_user(dts, "Tchannel_os NULL.\r\n");
             return -1;
         }
 
         addr_prop = fdt_getprop(fdt, offset1, "Tchannel_os_low", &lentmp);
-        if (lentmp == TCAL_PARA_CHANNELS*4) {
-
-            for (i = 0; i < TCAL_PARA_CHANNELS; i++) {
-                tcal_param_tmp.Tchannel_os_low[i] = fdt32_to_cpu(tmp[i]);
-
+        if (lentmp == TCAL_PARA_CHANNELS*4) {            
+            memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);         
+            blog_info_user(dts, "Tchannel_os_low:");
+            for (i = 0; i < TCAL_PARA_CHANNELS; i++){
+                tcal_param_tmp.Tchannel_os_low[i]=fdt32_to_cpu(tmp[i]);
+                blog_info_user_raw(dts, "%d,", (int)tcal_param_tmp.Tchannel_os_low[i]);
             }
-            memcpy(tmp, addr_prop, TCAL_PARA_CHANNELS*4);
-            blog_info_user(dts, "Tchannel_os_low:%d,%d,%d,%d,%d",
-            (int)tcal_param_tmp.Tchannel_os_low[0],
-            (int)tcal_param_tmp.Tchannel_os_low[1],
-            (int)tcal_param_tmp.Tchannel_os_low[2],
-            (int)tcal_param_tmp.Tchannel_os_low[3],
-            (int)tcal_param_tmp.Tchannel_os_low[4]
-            );
-
-        }
-        else {
-            blog_info_user(dts, "Tchannel_os_low NULL.");
+            blog_info_user_raw(dts, "\r\n");
+        } else {
+            blog_info_user(dts, "Tchannel_os_low NULL.\r\n");
             return -1;
         }
         addr_prop = fdt_getprop(fdt, offset1, "en_tcal", &lentmp);
         if (addr_prop) {
-            tcal_param_tmp.en_tcal = BL_FDT32_TO_U32(addr_prop, 0);
-            blog_info_user(dts, "en_tcal = %u, lentmp = %d", tcal_param_tmp.en_tcal, lentmp);
-        }
-        else {
-            blog_info_user(dts, "en_tcal NULL.");
+            tcal_param_tmp.en_tcal=BL_FDT32_TO_U32(addr_prop, 0);
+            blog_info_user(dts, "en_tcal = %u, lentmp = %d\r\n", tcal_param_tmp.en_tcal, lentmp);
+        } else {
+            blog_info_user(dts, "en_tcal NULL.\r\n");
             return -1;
         }
     }
@@ -837,13 +791,13 @@ static int update_rf_temp_field(const void* fdt, int wifi_offset, const char* na
 static int hal_board_load_rftv_info(uint32_t rftlv_addr)
 {
     int i;
-    uint8_t* p_buffer;
+    uint8_t *p_buffer;
 
     /* set tx_pwr_tbl */
     int8_t pwr_table[24];
 
     int pwr_table_ble = 0;
-
+ 
     if (!rftlv_valid(rftlv_addr)) {
         return -2;
     }
@@ -858,24 +812,23 @@ static int hal_board_load_rftv_info(uint32_t rftlv_addr)
 
     if (rftlv_get(rftlv_addr, RFTLV_API_TYPE_PWR_TABLE_11B, 80, p_buffer) > 0) {
         for (i = 0; i < 4; i++) {
-            pwr_table[i] = *(int8_t*)(p_buffer + i);
+            pwr_table[i] = *(int8_t *)(p_buffer + i);
         }
-        blog_info("pwr_table_11b :%u %u %u %u",
+        blog_info("pwr_table_11b :%u %u %u %u\r\n",
             pwr_table[0],
             pwr_table[1],
             pwr_table[2],
             pwr_table[3]
         );
         bl_tpc_update_power_rate_11b((int8_t*)pwr_table);
-    }
-    else {
-        blog_error("RFTLV_TYPE_PWR_TABLE_11B NULL");
+    } else {
+        blog_error("RFTLV_TYPE_PWR_TABLE_11B NULL\r\n");
     }
     if (rftlv_get(rftlv_addr, RFTLV_API_TYPE_PWR_TABLE_11G, 80, p_buffer) > 0) {
         for (i = 0; i < 8; i++) {
-            pwr_table[i] = *(int8_t*)(p_buffer + i);
+            pwr_table[i] = *(int8_t *)(p_buffer + i);
         }
-        blog_info("pwr_table_11g :%u %u %u %u %u %u %u %u",
+        blog_info("pwr_table_11g :%u %u %u %u %u %u %u %u\r\n",
             pwr_table[0],
             pwr_table[1],
             pwr_table[2],
@@ -886,15 +839,14 @@ static int hal_board_load_rftv_info(uint32_t rftlv_addr)
             pwr_table[7]
         );
         bl_tpc_update_power_rate_11g((int8_t*)pwr_table);
-    }
-    else {
-        blog_error("RFTLV_TYPE_PWR_TABLE_11G NULL");
+    } else {
+        blog_error("RFTLV_TYPE_PWR_TABLE_11G NULL\r\n");
     }
     if (rftlv_get(rftlv_addr, RFTLV_API_TYPE_PWR_TABLE_11N, 80, p_buffer) > 0) {
         for (i = 0; i < 8; i++) {
-            pwr_table[i] = *(int8_t*)(p_buffer + i);
+            pwr_table[i] = *(int8_t *)(p_buffer + i);
         }
-        blog_info("pwr_table_11n :%u %u %u %u %u %u %u %u",
+        blog_info("pwr_table_11n :%u %u %u %u %u %u %u %u\r\n",
             pwr_table[0],
             pwr_table[1],
             pwr_table[2],
@@ -905,44 +857,41 @@ static int hal_board_load_rftv_info(uint32_t rftlv_addr)
             pwr_table[7]
         );
         bl_tpc_update_power_rate_11n((int8_t*)pwr_table);
-    }
-    else {
-        blog_error("RFTLV_TYPE_PWR_TABLE_11N NULL");
+    } else {
+        blog_error("RFTLV_TYPE_PWR_TABLE_11N NULL\r\n");
     }
 
     if (rftlv_get(rftlv_addr, RFTLV_API_TYPE_PWR_MODE, 80, p_buffer) > 0) {
         p_buffer[2] = '\0';
-        update_poweroffset_config_rftv(rftlv_addr, (const char*)p_buffer);
-    }
-    else {
-        blog_error("RFTLV_TYPE_PWR_MODE NULL");
+        update_poweroffset_config_rftv(rftlv_addr, (const char *)p_buffer);
+    } else {
+        blog_error("RFTLV_TYPE_PWR_MODE NULL\r\n");
     }
 
     if (rftlv_get(rftlv_addr, RFTLV_API_TYPE_PWR_TABLE_BLE, 80, p_buffer) > 0) {
-        pwr_table_ble = *(int8_t*)p_buffer;
-        blog_info("set pwr_table_ble = %ld in dts", pwr_table_ble);
-    }
-    else {
-        blog_error("RFTLV_TYPE_PWR_TABLE_BLE NULL");
+        pwr_table_ble = *(int8_t *)p_buffer;
+        blog_info("set pwr_table_ble = %ld in dts\r\n", pwr_table_ble);
+    } else {
+        blog_error("RFTLV_TYPE_PWR_TABLE_BLE NULL\r\n");
     }
 #ifdef CFG_BLE_ENABLE
-    ble_controller_set_tx_pwr(pwr_table_ble);
+        ble_controller_set_tx_pwr(pwr_table_ble);
 #endif
 
     vPortFree(p_buffer);
-
+    
     return 0;
 }
 
 static int __try_load_rftlv()
 {
-    extern uint32_t _ld_symbol_rftlv_address;
+extern uint32_t _ld_symbol_rftlv_address;
     return hal_board_load_rftv_info((uint32_t)&_ld_symbol_rftlv_address);
 }
 
-static int hal_board_load_fdt_info(const void* dtb)
+static int hal_board_load_fdt_info(const void *dtb)
 {
-    const void* fdt = (const void*)dtb;/* const */
+    const void *fdt = (const void *)dtb;/* const */
 
     /* set tx_pwr_tbl */
     uint8_t pwr_table[24];
@@ -954,14 +903,14 @@ static int hal_board_load_fdt_info(const void* dtb)
 
     int wifi_offset = 0, bt_offset = 0;    /* subnode wifi & bluetooth */
     int offset1 = 0, offset2 = 0;        /* subnode offset1 */
-    const uint8_t* addr_prop = 0;
+    const uint8_t *addr_prop = 0;
 
     int lentmp = 0;
     int i;
 
     wifi_offset = fdt_subnode_offset(fdt, 0, "wifi");
     if (!(wifi_offset > 0)) {
-        blog_error("wifi NULL.");
+       blog_error("wifi NULL.\r\n");
     }
 
     offset1 = fdt_subnode_offset(fdt, wifi_offset, "mac");
@@ -974,12 +923,11 @@ static int hal_board_load_fdt_info(const void* dtb)
         /* set country_code */
         addr_prop = fdt_getprop(fdt, offset1, "country_code", &lentmp);
         if (4 == lentmp) {
-            blog_info("country_code : %d", BL_FDT32_TO_U8(addr_prop, 4*0));
+            blog_info("country_code : %d\r\n", BL_FDT32_TO_U8(addr_prop, 4*0));
 
             bl_wifi_country_code_set(BL_FDT32_TO_U8(addr_prop, 4*0));
-        }
-        else {
-            blog_error("country_code NULL.");
+        }  else {
+            blog_error("country_code NULL.\r\n");
         }
     }
 
@@ -1006,11 +954,10 @@ static int hal_board_load_fdt_info(const void* dtb)
             for (i = 0; i < 15; i++) {
                 channel_div_table[i] = BL_FDT32_TO_U32(addr_prop, 4*i);
             }
-            blog_info("channel_div_table :");
+            blog_info("channel_div_table :\r\n");
             blog_buf(channel_div_table, 15*4);
-        }
-        else {
-            blog_error("channel_div_table NULL.");
+        }  else {
+            blog_error("channel_div_table NULL.\r\n");
         }
 
         addr_prop = fdt_getprop(fdt, offset1, "channel_cnt_table", &lentmp);
@@ -1018,20 +965,18 @@ static int hal_board_load_fdt_info(const void* dtb)
             for (i = 0; i < 14; i++) {
                 channel_cnt_table[i] = BL_FDT32_TO_U16(addr_prop, 4*i);
             }
-            blog_info("channel_cnt_table :");
+            blog_info("channel_cnt_table :\r\n");
             blog_buf(channel_cnt_table, 14*4);
-        }
-        else {
-            blog_error("channel_cnt_table NULL.");
+        }  else {
+            blog_error("channel_cnt_table NULL.\r\n");
         }
 
         addr_prop = fdt_getprop(fdt, offset1, "lo_fcal_div", &lentmp);
         if (4 == lentmp) {
             lo_fcal_div = BL_FDT32_TO_U16(addr_prop, 4*0);
-            blog_info("lo_fcal_div : %d", lo_fcal_div);
-        }
-        else {
-            blog_error("lo_fcal_div NULL.");
+            blog_info("lo_fcal_div : %d\r\n", lo_fcal_div);
+        }  else {
+            blog_error("lo_fcal_div NULL.\r\n");
         }
 
         //TODO FIXME POWER
@@ -1043,16 +988,15 @@ static int hal_board_load_fdt_info(const void* dtb)
             for (i = 0; i < 4; i++) {
                 pwr_table[i] = BL_FDT32_TO_U32(addr_prop, 4*i);
             }
-            blog_info("pwr_table_11b :%u %u %u %u",
+            blog_info("pwr_table_11b :%u %u %u %u\r\n",
                 pwr_table[0],
                 pwr_table[1],
                 pwr_table[2],
                 pwr_table[3]
             );
             bl_tpc_update_power_rate_11b((int8_t*)pwr_table);
-        }
-        else {
-            blog_error("pwr_table_11b NULL. lentmp = %d", lentmp);
+        }  else {
+            blog_error("pwr_table_11b NULL. lentmp = %d\r\n", lentmp);
         }
 
         addr_prop = fdt_getprop(fdt, offset1, "pwr_table_11g", &lentmp);
@@ -1060,7 +1004,7 @@ static int hal_board_load_fdt_info(const void* dtb)
             for (i = 0; i < 8; i++) {
                 pwr_table[i] = BL_FDT32_TO_U32(addr_prop, 4*i);
             }
-            blog_info("pwr_table_11g :%u %u %u %u %u %u %u %u",
+            blog_info("pwr_table_11g :%u %u %u %u %u %u %u %u\r\n",
                 pwr_table[0],
                 pwr_table[1],
                 pwr_table[2],
@@ -1071,9 +1015,8 @@ static int hal_board_load_fdt_info(const void* dtb)
                 pwr_table[7]
             );
             bl_tpc_update_power_rate_11g((int8_t*)pwr_table);
-        }
-        else {
-            blog_error("pwr_table_11g NULL. lentmp = %d", lentmp);
+        } else {
+            blog_error("pwr_table_11g NULL. lentmp = %d\r\n", lentmp);
         }
 
         addr_prop = fdt_getprop(fdt, offset1, "pwr_table_11n", &lentmp);
@@ -1081,7 +1024,7 @@ static int hal_board_load_fdt_info(const void* dtb)
             for (i = 0; i < 8; i++) {
                 pwr_table[i] = BL_FDT32_TO_U32(addr_prop, 4*i);
             }
-            blog_info("pwr_table_11n :%u %u %u %u %u %u %u %u",
+            blog_info("pwr_table_11n :%u %u %u %u %u %u %u %u\r\n",
                 pwr_table[0],
                 pwr_table[1],
                 pwr_table[2],
@@ -1092,16 +1035,15 @@ static int hal_board_load_fdt_info(const void* dtb)
                 pwr_table[7]
             );
             bl_tpc_update_power_rate_11n((int8_t*)pwr_table);
-        }
-        else {
-            blog_error("pwr_table_11n NULL. lentmp = %d", lentmp);
+        }  else {
+            blog_error("pwr_table_11n NULL. lentmp = %d\r\n", lentmp);
         }
         update_poweroffset_config(fdt, offset1);
     }
 
     bt_offset = fdt_subnode_offset(fdt, 0, "bluetooth");
     if (!(bt_offset > 0)) {
-        blog_error("bt NULL.");
+       blog_error("bt NULL.\r\n");
     }
 
     offset2 = fdt_subnode_offset(fdt, bt_offset, "brd_rf");
@@ -1109,11 +1051,10 @@ static int hal_board_load_fdt_info(const void* dtb)
         addr_prop = fdt_getprop(fdt, offset2, "pwr_table_ble", &lentmp);
         if (addr_prop) {
             pwr_table_ble = (int8_t)BL_FDT32_TO_U32(addr_prop, 0);
-        }
-        else {
+        } else {
             pwr_table_ble = 0;
         }
-        blog_info("set pwr_table_ble = %ld in dts", pwr_table_ble);
+        blog_info("set pwr_table_ble = %ld in dts\r\n", pwr_table_ble);
 #ifdef CFG_BLE_ENABLE
         ble_controller_set_tx_pwr(pwr_table_ble);
 #endif
@@ -1276,24 +1217,24 @@ int hal_board_cfg(uint8_t board_code)
 
     USER_UNUSED(ret);
     ret = hal_boot2_partition_addr_active("factory", &factory_addr, &size);
-    blog_info("[MAIN] [BOARD] [FLASH] addr from partition is %08x, ret is %d", (unsigned int)factory_addr, ret);
+    blog_info("[MAIN] [BOARD] [FLASH] addr from partition is %08x, ret is %d\r\n", (unsigned int)factory_addr, ret);
     if (0 == factory_addr) {
-        blog_error("[MAIN] [BOARD] [FLASH] Dead loop. Reason: NO valid Param Parition found");
+        blog_error("[MAIN] [BOARD] [FLASH] Dead loop. Reason: NO valid Param Parition found\r\n");
         while (1) {
         }
     }
 
     ret = hal_boot2_partition_bus_addr_active("factory", &factory_addr, &size);
-    blog_info("[MAIN] [BOARD] [XIP] addr from partition is %08x, ret is %d", (unsigned int)factory_addr, ret);
+    blog_info("[MAIN] [BOARD] [XIP] addr from partition is %08x, ret is %d\r\n", (unsigned int)factory_addr, ret);
     if (0 == factory_addr) {
-        blog_error("[MAIN] [BOARD] [XIP] Dead loop. Reason: NO valid Param Parition found");
+        blog_error("[MAIN] [BOARD] [XIP] Dead loop. Reason: NO valid Param Parition found\r\n");
         while (1) {
         }
     }
 #endif
 
 #ifndef FEATURE_WIFI_DISABLE
-    hal_board_load_fdt_info((const void*)factory_addr);
+    hal_board_load_fdt_info((const void *)factory_addr);
 #endif
 
     return 0;

@@ -941,23 +941,6 @@ int bl_os_timer_delete(BL_Timer_t timerid, uint32_t tick)
     return pdTRUE;
 }
 
-int bl_os_timer_stop(BL_Timer_t timerid, uint32_t tick)
-{
-    struct timer_adpt *timer;
-
-    timer = (struct timer_adpt *)timerid;
-
-    if (!timer) {
-        return pdFALSE;
-    }
-
-    xTimerStop(timer->handle, tick);
-
-    vPortFree(timer);
-
-    return pdTRUE;
-}
-
 /****************************************************************************
  * Name: bl_os_timer_start_once
  *

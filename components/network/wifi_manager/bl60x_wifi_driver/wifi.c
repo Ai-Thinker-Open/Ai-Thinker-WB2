@@ -3,11 +3,16 @@
 #include <netif/etharp.h>
 #include <lwip/dns.h>
 
+#ifdef BL602_MATTER_SUPPORT
+#include <lwip/ethip6.h>
+#endif
+
 #ifdef CFG_CHIP_BL602
 #include <bl_efuse.h>
 #endif
 
 #include <bl_wifi.h>
+#include <wifi_pkt_hooks.h>
 
 #include "bl_defs.h"
 #include "bl_tx.h"
@@ -79,6 +84,16 @@ static err_t wifi_tx(struct netif *netif, struct pbuf* p)
     int dump_i;
 #endif
 
+#ifdef PKT_OUTPUT_HOOK
+    if (bl_wifi_pkt_eth_output_hook) {
+        bool is_sta = netif == wifi_mgmr_sta_netif_get();
+        p = bl_wifi_pkt_eth_output_hook(is_sta, p, bl_wifi_pkt_eth_output_hook_arg);
+        if (p == NULL) {
+            // hook ate the packet
+            return ERR_IF;
+        }
+    }
+#endif
     if (p->tot_len > WIFI_MTU_SIZE) {
         if (bl_os_get_time_ms() - ticks > WARNING_LIMIT_TICKS_TX_SIZE) {
             bl_os_printf("[TX] %s, TX size too big: %u bytes\r\n", __func__, p->tot_len);
@@ -132,11 +147,11 @@ int bl_wifi_eth_tx(struct pbuf *p, bool is_sta, struct bl_custom_tx_cfm *custom_
         iface = wifi_mgmr_ap_netif_get();
     }
     ret = bl_output(bl606a0_sta.bl_hw, iface, p, is_sta, custom_cfm);
-    if (ret != ERR_OK) {
-        pbuf_free(p);
+    if (ret == ERR_OK) {
+        return 0;
+    } else {
         return -1;
     }
-    return 0;
 }
 
 static void netif_status_callback(struct netif *netif)
@@ -159,7 +174,12 @@ err_t bl606a0_wifi_netif_init(struct netif *netif)
     /* set netif maximum transfer unit */
     netif->mtu = 1500;
     /* Accept broadcast address and ARP traffic */
+#ifdef BL602_MATTER_SUPPORT
+    netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP | NETIF_FLAG_ETHERNET | NETIF_FLAG_IGMP | NETIF_FLAG_MLD6;
+    netif->output_ip6 = ethip6_output;
+#else
     netif->flags = NETIF_FLAG_BROADCAST | NETIF_FLAG_ETHARP;
+#endif
     netif->output = etharp_output;
     netif->linkoutput = wifi_tx;
     netif_set_status_callback(netif, netif_status_callback);
@@ -186,10 +206,13 @@ int bl606a0_wifi_init(wifi_conf_t *conf)
     wifiMgmr.hostname[MAX_HOSTNAME_LEN_CHECK - 1] = '\0';
     bl_os_printf("     hostname: %s\r\n", wifiMgmr.hostname);
     bl_msg_update_channel_cfg(conf->country_code);
+    strncpy(wifiMgmr.country_code, conf->country_code, sizeof(wifiMgmr.country_code));
+    wifiMgmr.country_code[2] = '\0';
     bl_os_printf("-----------------------------------------------------\r\n");
     bl_wifi_clock_enable();//Enable wifi clock
     memset(&bl606a0_sta, 0, sizeof(bl606a0_sta));
     ret = bl_main_rtthread_start(&(bl606a0_sta.bl_hw));
+    wifiMgmr.channel_nums = bl_msg_get_channel_nums();
 
     return ret;
 }

@@ -37,7 +37,7 @@ static void bl_spi_ir_dma_int_handler_tx(void);
 
 struct ir_rx_ctx {
     uint32_t data_check;
-};
+}; 
 
 static void ir_gpio_init(int pin)
 {
@@ -67,7 +67,7 @@ static void ir_init(int pin, int ctrltype)
 }
 
 uint32_t bl_receivedata(void)
-{
+{ 
     return IR_ReceiveData(IR_WORD_0);
 }
 
@@ -92,8 +92,7 @@ static int check_cmd(uint32_t data)
 
     if (hdata == 0xff) {
         return 0;
-    }
-    else {
+    } else {
         return -1;
     }
 }
@@ -106,17 +105,16 @@ static int check_addr(uint32_t data)
 
     if (ldata == 0xff) {
         return 0;
-    }
-    else {
+    } else {
         return -1;
     }
 }
 
 int bl_ir_data_check_config(uint32_t data_check)
 {
-    struct ir_rx_ctx* pstctx;
-
-    bl_irq_ctx_get(IRRX_IRQn, (void**)&pstctx);
+    struct ir_rx_ctx *pstctx;
+   
+    bl_irq_ctx_get(IRRX_IRQn, (void **)&pstctx);
     if (pstctx == NULL) {
         return -1;
     }
@@ -131,9 +129,9 @@ static void ir_interrupt_entry(void)
     uint32_t data;
     int flag_cmd = 0;
     int flag_addr = 0;
-    struct ir_rx_ctx* pstctx;
-
-    bl_irq_ctx_get(IRRX_IRQn, (void**)&pstctx);
+    struct ir_rx_ctx *pstctx;
+    
+    bl_irq_ctx_get(IRRX_IRQn, (void **)&pstctx);
     IR_Disable(IR_RX);
     IR_IntMask(IR_INT_RX, MASK);
     IR_ClrIntStatus(IR_INT_RX);
@@ -148,7 +146,7 @@ static void ir_interrupt_entry(void)
     if (pstctx->data_check & BL_IR_CHECK_CMD) {
         flag_cmd = check_cmd(data);
     }
-
+ 
     if (pstctx->data_check & BL_IR_CHECK_ADDR) {
         flag_addr = check_addr(data);
     }
@@ -156,7 +154,7 @@ static void ir_interrupt_entry(void)
     if (flag_cmd != 0 || flag_addr != 0) {
         bl_enable_rx_int();
         return;
-    }
+    } 
 
     //TODO use with irq context
     ir_async_post();
@@ -164,14 +162,14 @@ static void ir_interrupt_entry(void)
 
 int bl_ir_init(int pin, int ctrltype, int data_check)
 {
-    struct ir_rx_ctx* pstctx;
-
+    struct ir_rx_ctx *pstctx;
+    
     pstctx = pvPortMalloc(sizeof(struct ir_rx_ctx));
     if (pstctx == NULL) {
         return -1;
     }
 
-    pstctx->data_check = data_check;
+    pstctx->data_check = data_check; 
     ir_init(pin, ctrltype);
     bl_irq_register_with_ctx(IRRX_IRQn, ir_interrupt_entry, pstctx);
     bl_irq_enable(IRRX_IRQn);
@@ -182,11 +180,11 @@ int bl_ir_init(int pin, int ctrltype, int data_check)
 }
 
 /*
- *  spi clock select 4M,
- *  two kinds chip WS2812B and UCS1903 ,default chip is WS2812B ,5 spi bits mean WS2812B 0 or 1, 10 spi bits mean UCS1903 0 or 1
+ *  spi clock select 4M, 
+ *  two kinds chip WS2812B and UCS1903 ,default chip is WS2812B ,5 spi bits mean WS2812B 0 or 1, 10 spi bits mean UCS1903 0 or 1 
  *
  * */
-static int ir_convert_ws2812b(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
+static int ir_convert_ws2812b(uint8_t *pbuf0_tx, uint8_t *data, uint32_t nbytes)
 {
     int i, status, n = 0;
     uint32_t nbits, code;
@@ -215,8 +213,7 @@ static int ir_convert_ws2812b(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
                 /*0x00 or 0x01 means chip WS2812B bit*/
                 if (code == 0x00) {
                     pbuf0_tx[i-n] = 0xC0;
-                }
-                else {
+                } else {
                     pbuf0_tx[i-n] = 0xE0;
                 }
             }
@@ -226,21 +223,19 @@ static int ir_convert_ws2812b(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
                 if (code == 0x00) {
                     pbuf0_tx[i-n-1] = (pbuf0_tx[i-n-1] | 0x06);
                     pbuf0_tx[i-n] = 0x00;
-                }
-                else {
+                } else {
                     pbuf0_tx[i-n-1] = (pbuf0_tx[i-n-1] | 0x07);
                     pbuf0_tx[i-n] = 0x00;
                 }
             }
             break;
             case 2:
-            {
+            {   
                 if (code == 0x00) {
                     pbuf0_tx[i-n-1] = (pbuf0_tx[i-n-1] | 0x30);
-                }
-                else {
+                } else {
                     pbuf0_tx[i-n-1] = (pbuf0_tx[i-n-1] | 0x38);
-                }
+                }    
             }
             break;
             case 3:
@@ -248,8 +243,7 @@ static int ir_convert_ws2812b(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
                 if (code == 0x00) {
                     pbuf0_tx[i-n-2] = (pbuf0_tx[i-n-2] | 0x01);
                     pbuf0_tx[i-n-1] = 0x80;
-                }
-                else {
+                } else {
                     pbuf0_tx[i-n-2] = (pbuf0_tx[i-n-2] | 0x01);
                     pbuf0_tx[i-n-1] = 0xC0;
                 }
@@ -258,11 +252,10 @@ static int ir_convert_ws2812b(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
             case 4:
             {
                 if (code == 0x00) {
-
+                    
                     pbuf0_tx[i-n-2] = (pbuf0_tx[i-n-2] | 0x0C);
                     pbuf0_tx[i-n-1] = 0x00;
-                }
-                else {
+                } else {
                     pbuf0_tx[i-n-2] = (pbuf0_tx[i-n-2] | 0x0E);
                     pbuf0_tx[i-n-1] = 0x00;
                 }
@@ -272,33 +265,30 @@ static int ir_convert_ws2812b(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
             {
                 if (code == 0x00) {
                     pbuf0_tx[i-n-2] = (pbuf0_tx[i-n-2] | 0x60);
-                }
-                else {
+                } else {
                     pbuf0_tx[i-n-2] = (pbuf0_tx[i-n-2] | 0x70);
                 }
-            }
+            }     
             break;
             case 6:
             {
                 if (code == 0x00) {
                     pbuf0_tx[i-n-3] = (pbuf0_tx[i-n-3] | 0x03);
                     pbuf0_tx[i-n-2] = 0x00;
-                }
-                else {
+                } else {
                     pbuf0_tx[i-n-3] = (pbuf0_tx[i-n-3] | 0x03);
                     pbuf0_tx[i-n-2] = 0x80;
                 }
-            }
+            }     
             break;
             case 7:
             {
                 if (code == 0x00) {
                     pbuf0_tx[i-n-3] = (pbuf0_tx[i-n-3] | 0x18);
-                }
-                else {
+                } else {
                     pbuf0_tx[i-n-3] = (pbuf0_tx[i-n-3] | 0x1C);
                 }
-            }
+            }           
             break;
             default:
             {
@@ -311,7 +301,7 @@ static int ir_convert_ws2812b(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
     return 0;
 }
 
-static int ir_convert_usc1903(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
+static int ir_convert_usc1903(uint8_t *pbuf0_tx, uint8_t *data, uint32_t nbytes)
 {
     int i, status, n = 0;
     uint32_t nbits, code;
@@ -340,8 +330,7 @@ static int ir_convert_usc1903(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
                 if (code == 0x00) {
                     pbuf0_tx[i+n] = 0xC0;
                     pbuf0_tx[i+n+1] = 0x00;
-                }
-                else {
+                } else {
                     pbuf0_tx[i+n] = 0xFF;
                     pbuf0_tx[i+n+1] = 0x00;
                 }
@@ -352,24 +341,22 @@ static int ir_convert_usc1903(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
                 if (code == 0x00) {
                     pbuf0_tx[i+n] = (pbuf0_tx[i+n] | 0x30);
                     pbuf0_tx[i+n+1] = 0x00;
-                }
-                else {
-
+                } else {
+                    
                     pbuf0_tx[i+n] = (pbuf0_tx[i+n] | 0x3F);
                     pbuf0_tx[i+n+1] = 0xC0;
                 }
             }
             break;
             case 2:
-            {
+            {   
                 if (code == 0x00) {
                     pbuf0_tx[i+n] = (pbuf0_tx[i+n] | 0x0C);
                     pbuf0_tx[i+n+1] = 0x00;
-                }
-                else {
+                } else {
                     pbuf0_tx[i+n] = (pbuf0_tx[i+n] | 0x0F);
                     pbuf0_tx[i+n+1] = 0xF0;
-                }
+                }    
             }
             break;
             case 3:
@@ -377,8 +364,7 @@ static int ir_convert_usc1903(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
                 if (code == 0x00) {
                     pbuf0_tx[i+n] = (pbuf0_tx[i+n] | 0x03);
                     pbuf0_tx[i+n+1] = 0x00;
-                }
-                else {
+                } else {
                     pbuf0_tx[i+n] = (pbuf0_tx[i+n] | 0x03);
                     pbuf0_tx[i+n+1] = 0xFC;
                 }
@@ -395,13 +381,13 @@ static int ir_convert_usc1903(uint8_t* pbuf0_tx, uint8_t* data, uint32_t nbytes)
     return 0;
 }
 
-static void ir_data_convert(uint8_t* dst, uint32_t* src, uint32_t size, int type)
+static void ir_data_convert(uint8_t *dst, uint32_t *src, uint32_t size, int type)
 {
     uint8_t tmp_buf[300];
     uint32_t i;
     uint32_t count;
     uint32_t or_idx;
-
+   
     count = 0;
     or_idx = 0;
     for (i = 0; i < size; i++) {
@@ -411,49 +397,45 @@ static void ir_data_convert(uint8_t* dst, uint32_t* src, uint32_t size, int type
         count++;
         if (count == 100) {
             if (type == 0) {
-                ir_convert_ws2812b(dst + or_idx * WS2812B_CONVERT_SIZE, tmp_buf, 100 * 3);
-            }
-            else {
+                ir_convert_ws2812b(dst + or_idx * WS2812B_CONVERT_SIZE, tmp_buf, 100 * 3); 
+            } else {
                 ir_convert_usc1903(dst + or_idx * UCS1903_CONVERT_SIZE, tmp_buf, 100 * 3);
             }
             count = 0;
             or_idx = or_idx + 300;
-        }
-        else if (i == size - 1) {
+        } else if (i == size - 1){
             if (type == 0) {
-                ir_convert_ws2812b(dst + or_idx * WS2812B_CONVERT_SIZE, tmp_buf, (size - or_idx / 3) * 3);
-            }
-            else {
+                ir_convert_ws2812b(dst + or_idx * WS2812B_CONVERT_SIZE, tmp_buf, (size - or_idx / 3) * 3); 
+            } else {
                 ir_convert_usc1903(dst + or_idx * UCS1903_CONVERT_SIZE, tmp_buf, (size - or_idx / 3) * 3);
-            }
+            } 
         }
     }
-
+    
     return;
 }
 
-int bl_spi_hw_init(private_ir_data_t* pstctx)
+int bl_spi_hw_init(private_ir_data_t *pstctx)
 {
     GLB_GPIO_Type gpiopins[2];
-    spi_ir_hw_t* arg;
+    spi_ir_hw_t *arg;
 
     if (!pstctx) {
         blog_error("ctx err.\r\n");
         return -1;
     }
-
+    
     arg = &(pstctx->dev_spi);
     gpiopins[0] = arg->pin_clk;
     gpiopins[1] = arg->pin_mosi;
-
-    GLB_GPIO_Func_Init(GPIO_FUN_SPI, gpiopins, sizeof(gpiopins) / sizeof(gpiopins[0]));
+   
+    GLB_GPIO_Func_Init(GPIO_FUN_SPI,gpiopins, sizeof(gpiopins) / sizeof(gpiopins[0]));
     if (arg->mode == HAL_SPI_MODE_MASTER) {
         GLB_Set_SPI_0_ACT_MOD_Sel(GLB_SPI_PAD_ACT_AS_MASTER);
-    }
-    else {
+    } else {
         GLB_Set_SPI_0_ACT_MOD_Sel(GLB_SPI_PAD_ACT_AS_SLAVE);
     }
-
+    
     arg->spi_dma_ir_event_group = xEventGroupCreate();
     pstctx->end_flag = 0;
     pstctx->buf_flag = 0;
@@ -478,7 +460,7 @@ int bl_spi_hw_init(private_ir_data_t* pstctx)
     return 0;
 }
 
-static int lli_list_init(private_ir_data_t* pstctx, uint32_t* ptx_data, uint32_t length)
+static int lli_list_init(private_ir_data_t *pstctx, uint32_t *ptx_data, uint32_t length)
 {
     struct DMA_Control_Reg dmactrl;
     uint32_t size;
@@ -498,14 +480,13 @@ static int lli_list_init(private_ir_data_t* pstctx, uint32_t* ptx_data, uint32_t
     }
 
     dmactrl.SI = DMA_MINC_ENABLE;
-    dmactrl.DI = DMA_MINC_DISABLE;
+    dmactrl.DI = DMA_MINC_DISABLE; 
     dmactrl.I = 1;
 
     if (pstctx->chip_type == CHIP_WS2812B) {
         pstctx->chip_coe = WS2812B_COEFFICIENT;
         pstctx->reset_size = WS2812B_RESET_BYTES;
-    }
-    else {
+    } else {
         pstctx->chip_coe = UCS1903_COEFFICIENT;
         pstctx->reset_size = UCS1903_RESET_BYTES;
     }
@@ -515,60 +496,57 @@ static int lli_list_init(private_ir_data_t* pstctx, uint32_t* ptx_data, uint32_t
         ir_data_convert(pstctx->pp_buf0, ptx_data, length, pstctx->chip_type);
         memset(pstctx->pp_buf0 + size, 0, pstctx->reset_size);
         dmactrl.TransferSize = size + pstctx->reset_size;
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0].srcDmaAddr = (uint32_t)(pstctx->pp_buf0);
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0].destDmaAddr = (uint32_t)(SPI_BASE+SPI_FIFO_WDATA_OFFSET);
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0].dmaCtrl = dmactrl;
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0].nextLLI = 0;
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0].srcDmaAddr = (uint32_t)(pstctx->pp_buf0);
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0].destDmaAddr = (uint32_t)(SPI_BASE+SPI_FIFO_WDATA_OFFSET);
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0].dmaCtrl = dmactrl;
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0].nextLLI = 0;
         pstctx->left_size = 0;
         pstctx->end_flag = 0;
         pstctx->data_idx = 0;
-    }
-    else {
+    } else {
         ir_data_convert(pstctx->pp_buf0, ptx_data, PINGPONG_BUF_SIZE / pstctx->chip_coe, pstctx->chip_type);
-        dmactrl.TransferSize = PINGPONG_BUF_SIZE;
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0].srcDmaAddr = (uint32_t)(pstctx->pp_buf0);
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0].destDmaAddr = (uint32_t)(SPI_BASE+SPI_FIFO_WDATA_OFFSET);
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0].dmaCtrl = dmactrl;
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0].nextLLI = (uint32_t)&((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[1];
-
+        dmactrl.TransferSize = PINGPONG_BUF_SIZE; 
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0].srcDmaAddr = (uint32_t)(pstctx->pp_buf0);
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0].destDmaAddr = (uint32_t)(SPI_BASE+SPI_FIFO_WDATA_OFFSET);
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0].dmaCtrl = dmactrl;
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0].nextLLI = (uint32_t)&((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[1];
+        
         pstctx->left_size = length - PINGPONG_BUF_SIZE / pstctx->chip_coe;
         if (pstctx->left_size  * pstctx->chip_coe < PINGPONG_BUF_SIZE || pstctx->left_size  * pstctx->chip_coe == PINGPONG_BUF_SIZE) {
             dmactrl.TransferSize = pstctx->left_size * pstctx->chip_coe + pstctx->reset_size;
             ir_data_convert(pstctx->pp_buf1, &(ptx_data[PINGPONG_BUF_SIZE / pstctx->chip_coe]), pstctx->left_size, pstctx->chip_type);
             memset(pstctx->pp_buf1 + pstctx->left_size * pstctx->chip_coe, 0, pstctx->reset_size);
             pstctx->left_size = 0;
-        }
-        else {
+        } else {
             dmactrl.TransferSize = PINGPONG_BUF_SIZE;
             ir_data_convert(pstctx->pp_buf1, &(ptx_data[PINGPONG_BUF_SIZE / pstctx->chip_coe]), PINGPONG_BUF_SIZE / pstctx->chip_coe, pstctx->chip_type);
             pstctx->left_size = pstctx->left_size - PINGPONG_BUF_SIZE / pstctx->chip_coe;
             pstctx->data_idx = PINGPONG_BUF_SIZE / pstctx->chip_coe * 2;
         }
 
-        pstctx->end_flag = 1;
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[1].srcDmaAddr = (uint32_t)(pstctx->pp_buf1);
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[1].destDmaAddr = (uint32_t)(SPI_BASE+SPI_FIFO_WDATA_OFFSET);
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[1].dmaCtrl = dmactrl;
+        pstctx->end_flag = 1; 
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[1].srcDmaAddr = (uint32_t)(pstctx->pp_buf1);
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[1].destDmaAddr = (uint32_t)(SPI_BASE+SPI_FIFO_WDATA_OFFSET);
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[1].dmaCtrl = dmactrl;
         if (pstctx->left_size == 0) {
-            ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[1].nextLLI = 0;
-        }
-        else {
-            ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[1].nextLLI = (uint32_t)&((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[0];
+            ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[1].nextLLI = 0;
+        } else {
+            ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[1].nextLLI = (uint32_t)&((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[0];
         }
     }
 
     return 0;
 }
 
-void bl_spi_dma_init(private_ir_data_t* pstctx)
+void bl_spi_dma_init(private_ir_data_t *pstctx)
 {
-    spi_ir_hw_t* hw_arg = &(pstctx->dev_spi);
+    spi_ir_hw_t *hw_arg = &(pstctx->dev_spi);
     SPI_CFG_Type spicfg;
     SPI_ClockCfg_Type clockcfg;
     SPI_FifoCfg_Type fifocfg;
     SPI_ID_Type spi_id;
     uint8_t clk_div;
-
+    
     //spi_id = hw_arg->ssp_id;
     spi_id = 0;
     /* clock */
@@ -579,7 +557,7 @@ void bl_spi_dma_init(private_ir_data_t* pstctx)
      *10 --->  4 Mhz
      * */
     clk_div = (uint8_t)(BASE_FREQ / hw_arg->freq);
-    GLB_Set_SPI_CLK(ENABLE, 0);
+    GLB_Set_SPI_CLK(ENABLE,0);
     clockcfg.startLen = clk_div;
     clockcfg.stopLen = clk_div;
     clockcfg.dataPhase0Len = clk_div;
@@ -597,20 +575,16 @@ void bl_spi_dma_init(private_ir_data_t* pstctx)
     if (hw_arg->polar_phase == 0) {
         spicfg.clkPhaseInv = SPI_CLK_PHASE_INVERSE_0;
         spicfg.clkPolarity = SPI_CLK_POLARITY_LOW;
-    }
-    else if (hw_arg->polar_phase == 1) {
+    } else if (hw_arg->polar_phase == 1) {
         spicfg.clkPhaseInv = SPI_CLK_PHASE_INVERSE_1;
         spicfg.clkPolarity = SPI_CLK_POLARITY_LOW;
-    }
-    else if (hw_arg->polar_phase == 2) {
+    } else if (hw_arg->polar_phase == 2) {
         spicfg.clkPhaseInv = SPI_CLK_PHASE_INVERSE_0;
         spicfg.clkPolarity = SPI_CLK_POLARITY_HIGH;
-    }
-    else if (hw_arg->polar_phase == 3) {
+    } else if (hw_arg->polar_phase == 3) {
         spicfg.clkPhaseInv = SPI_CLK_PHASE_INVERSE_1;
         spicfg.clkPolarity = SPI_CLK_POLARITY_HIGH;
-    }
-    else {
+    } else {
         blog_error("node support polar_phase \r\n");
     }
     SPI_Init(0, &spicfg);
@@ -618,40 +592,39 @@ void bl_spi_dma_init(private_ir_data_t* pstctx)
     if (hw_arg->mode == HAL_SPI_MODE_MASTER)
     {
         SPI_Disable(0, SPI_WORK_MODE_MASTER);
-    }
-    else {
+    } else {
         SPI_Disable(0, SPI_WORK_MODE_SLAVE);
     }
 
-    SPI_IntMask(spi_id, SPI_INT_ALL, MASK);
+    SPI_IntMask(spi_id,SPI_INT_ALL,MASK);
 
     /* fifo */
     fifocfg.txFifoThreshold = 1;
     fifocfg.rxFifoThreshold = 1;
     fifocfg.txFifoDmaEnable = ENABLE;
     fifocfg.rxFifoDmaEnable = ENABLE;
-    SPI_FifoConfig(spi_id, &fifocfg);
+    SPI_FifoConfig(spi_id,&fifocfg);
 
     DMA_Disable();
     DMA_IntMask(hw_arg->tx_dma_ch, DMA_INT_ALL, MASK);
     DMA_IntMask(hw_arg->tx_dma_ch, DMA_INT_TCOMPLETED, UNMASK);
     DMA_IntMask(hw_arg->tx_dma_ch, DMA_INT_ERR, UNMASK);
-
+   
     bl_irq_enable(DMA_ALL_IRQn);
     bl_dma_irq_register(hw_arg->tx_dma_ch, bl_spi_ir_dma_int_handler_tx, NULL, pstctx);
 
     return;
 }
 
-int bl_spi_dma_trans(private_ir_data_t* pstctx, uint32_t* TxData, uint32_t Len)
+int bl_spi_dma_trans(private_ir_data_t *pstctx, uint32_t *TxData, uint32_t Len)
 {
     DMA_LLI_Cfg_Type txllicfg;
-    spi_ir_hw_t* arg = &(pstctx->dev_spi);
+    spi_ir_hw_t *arg = &(pstctx->dev_spi);
     int ret = 0;
     EventBits_t uxBits;
 
     txllicfg.dir = DMA_TRNS_M2P;
-    txllicfg.srcPeriph = DMA_REQ_NONE;
+    txllicfg.srcPeriph = DMA_REQ_NONE; 
     txllicfg.dstPeriph = DMA_REQ_SPI_TX;
     DMA_Channel_Disable(arg->tx_dma_ch);
     bl_dma_int_clear(arg->tx_dma_ch);
@@ -659,8 +632,7 @@ int bl_spi_dma_trans(private_ir_data_t* pstctx, uint32_t* TxData, uint32_t Len)
 
     if (arg->mode == HAL_SPI_MODE_MASTER) {
         SPI_Enable(0, SPI_WORK_MODE_MASTER);
-    }
-    else {
+    } else {
         SPI_Enable(0, SPI_WORK_MODE_SLAVE);
     }
 
@@ -674,16 +646,16 @@ int bl_spi_dma_trans(private_ir_data_t* pstctx, uint32_t* TxData, uint32_t Len)
 
         return -1;
     }
-
+    
     xEventGroupClearBits(arg->spi_dma_ir_event_group, EVT_GROUP_SPI_DMA_TX);
 
     DMA_LLI_Init(arg->tx_dma_ch, &txllicfg);
-    DMA_LLI_Update(arg->tx_dma_ch, (uint32_t)((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli)));
+    DMA_LLI_Update(arg->tx_dma_ch,(uint32_t)((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli)));
     DMA_Channel_Enable(arg->tx_dma_ch);
-
+    
     uxBits = xEventGroupWaitBits(arg->spi_dma_ir_event_group, EVT_GROUP_SPI_DMA_TX, pdTRUE, pdTRUE, portMAX_DELAY);
     if ((uxBits & EVT_GROUP_SPI_DMA_TX) == EVT_GROUP_SPI_DMA_TX) {
-        // blog_info("recv all event group.\r\n");
+        blog_info("recv all event group.\r\n");
     }
 
     vPortFree(pstctx->ptxlli);
@@ -691,34 +663,31 @@ int bl_spi_dma_trans(private_ir_data_t* pstctx, uint32_t* TxData, uint32_t Len)
     return ret;
 }
 
-static int update_pingpong_buf(private_ir_data_t* pstctx)
+static int update_pingpong_buf(private_ir_data_t *pstctx)
 {
     uint32_t len;
 
     if (pstctx->left_size * pstctx->chip_coe < PINGPONG_BUF_SIZE || pstctx->left_size * pstctx->chip_coe == PINGPONG_BUF_SIZE) {
         len = pstctx->left_size * pstctx->chip_coe;
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[pstctx->buf_flag].nextLLI = 0;
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[pstctx->buf_flag].dmaCtrl.TransferSize = len + pstctx->reset_size;
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[pstctx->buf_flag].nextLLI = 0;
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[pstctx->buf_flag].dmaCtrl.TransferSize = len + pstctx->reset_size;
         if (pstctx->buf_flag == 0) {
             ir_data_convert(pstctx->pp_buf0, &((pstctx->p_data)[pstctx->data_idx]), pstctx->left_size, pstctx->chip_type);
             memset(pstctx->pp_buf0 + len, 0, pstctx->reset_size);
-        }
-        else {
+        } else {
             ir_data_convert(pstctx->pp_buf1, &((pstctx->p_data)[pstctx->data_idx]), pstctx->left_size, pstctx->chip_type);
             memset(pstctx->pp_buf1 + len, 0, pstctx->reset_size);
         }
 
         pstctx->left_size = 0;
         pstctx->data_idx = 0;
-    }
-    else {
+    } else {
         pstctx->left_size = pstctx->left_size - PINGPONG_BUF_SIZE / pstctx->chip_coe;
         len = PINGPONG_BUF_SIZE;
-        ((DMA_LLI_Ctrl_Type*)(pstctx->ptxlli))[pstctx->buf_flag].dmaCtrl.TransferSize = len;
+        ((DMA_LLI_Ctrl_Type *)(pstctx->ptxlli))[pstctx->buf_flag].dmaCtrl.TransferSize = len;
         if (pstctx->buf_flag == 0) {
             ir_data_convert(pstctx->pp_buf0, &(pstctx->p_data[pstctx->data_idx]), PINGPONG_BUF_SIZE / pstctx->chip_coe, pstctx->chip_type);
-        }
-        else {
+        } else {
             ir_data_convert(pstctx->pp_buf1, &(pstctx->p_data[pstctx->data_idx]), PINGPONG_BUF_SIZE / pstctx->chip_coe, pstctx->chip_type);
         }
 
@@ -732,15 +701,15 @@ static void bl_spi_ir_dma_int_handler_tx(void)
 {
     BaseType_t xResult = pdFAIL;
     BaseType_t xHigherPriorityTaskWoken = pdFALSE;
-    private_ir_data_t* pstctx;
+    private_ir_data_t *pstctx;
 
-    pstctx = bl_dma_find_ctx_by_channel(IR_DMA_CHANNEL);
+    pstctx =  bl_dma_find_ctx_by_channel(IR_DMA_CHANNEL);
     if (pstctx == NULL) {
         blog_error("get ctx by dma channel failed. \r\n");
 
         return;
     }
-
+ 
     if (pstctx->end_flag == 0) {
         bl_dma_int_clear((pstctx->dev_spi).rx_dma_ch);
         if ((pstctx->dev_spi).spi_dma_ir_event_group != NULL) {
@@ -750,20 +719,17 @@ static void bl_spi_ir_dma_int_handler_tx(void)
         if (xResult != pdFAIL) {
             portYIELD_FROM_ISR(xHigherPriorityTaskWoken);
         }
-    }
-    else {
+    } else {
         if (pstctx->left_size == 0) {
-            pstctx->end_flag = 0;
-        }
-        else {
+            pstctx->end_flag = 0;   
+        } else {
             update_pingpong_buf(pstctx);
         }
     }
 
     if (pstctx->buf_flag == 0) {
         pstctx->buf_flag = 1;
-    }
-    else {
+    } else {
         pstctx->buf_flag = 0;
     }
 
