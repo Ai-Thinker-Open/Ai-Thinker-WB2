@@ -14,6 +14,8 @@
 
 MAKECMDGOALS ?= all
 all: all_binaries
+
+FLASH_TOOL_TYPE:= ./bflb_iot_tool-ubuntu
 # see below for recipe of 'all' target
 #
 # # other components will add dependencies to 'all_binaries'. The
@@ -60,6 +62,7 @@ ifeq ("$(OS)","Windows_NT")
 # On Windows MSYS2, make wildcard function returns empty string for paths of form /xyz
 # where /xyz is a directory inside the MSYS root - so we don't use it.
 SANITISED_BL60X_SDK_PATH:=$(realpath $(BL60X_SDK_PATH))
+FLASH_TOOL_TYPE:=./bflb_iot_tool.exe
 else
 SANITISED_BL60X_SDK_PATH:=$(realpath $(wildcard $(BL60X_SDK_PATH)))
 endif
@@ -202,7 +205,7 @@ endif
 endif
 	@echo "Building Finish. To flash build output. run 'make flash' or:"
 	@echo "c $(OS) ..."
-	@echo "cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool --chipname=BL602 --baudrate=921600 --port=/dev/ttyUSB0 --pt=$(PROJECT_PATH)/img_conf/partition_cfg_2M.toml --dts=$(PROJECT_PATH)/img_conf/bl_factory_params_IoTKitA_40M.dts --firmware=$(APP_BIN)"
+	@echo "cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) $(FLASH_TOOL_TYPE) --chipname=BL602 --baudrate=921600 --port=/dev/ttyUSB0 --pt=$(PROJECT_PATH)/img_conf/partition_cfg_2M.toml --dts=$(PROJECT_PATH)/img_conf/bl_factory_params_IoTKitA_40M.dts --firmware=$(APP_BIN)"
 
 bins: all
 	@cd $(BL60X_SDK_PATH)/image_conf; python3 flash_build.py $(PROJECT_NAME) $(CONFIG_CHIP_NAME)
@@ -583,19 +586,19 @@ app-clean: $(addprefix component-,$(addsuffix -clean,$(notdir $(COMPONENT_PATHS)
 
 #burn code to bl602 board, now only support BL602 IOT-DVK-3s platform, if you want to support older bl602 board you need change parameter port to /dev/ttyUSB0 
 flash: all
-	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool-ubuntu --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT) --pt=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/partition/partition_cfg_2M.toml --dts=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/device_tree/04-bl_factory_params_IoTKitA_40M-20220625.dts --boot2=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/builtin_imgs/boot2_isp_bl602_v6.5.1/boot2_iap_release.bin --firmware=$(APP_BIN)
+	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) $(FLASH_TOOL_TYPE) --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT) --pt=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/partition/partition_cfg_2M.toml --dts=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/device_tree/04-bl_factory_params_IoTKitA_40M-20220625.dts --boot2=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/builtin_imgs/boot2_isp_bl602_v6.5.1/boot2_iap_release.bin --firmware=$(APP_BIN)
 #cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT) --pt=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/partition/partition_cfg_2M.toml --dts=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/device_tree/bl_factory_params_IoTKitA_40M.dts --firmware=$(APP_BIN) 
 flash-only:
-	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool-ubuntu --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT) --pt=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/partition/partition_cfg_2M.toml --dts=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/device_tree/04-bl_factory_params_IoTKitA_40M-20220625.dts --boot2=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/builtin_imgs/boot2_isp_bl602_v6.5.1/boot2_iap_release.bin --firmware=$(APP_BIN)
+	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) $(FLASH_TOOL_TYPE) --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT) --pt=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/partition/partition_cfg_2M.toml --dts=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/device_tree/04-bl_factory_params_IoTKitA_40M-20220625.dts --boot2=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/builtin_imgs/boot2_isp_bl602_v6.5.1/boot2_iap_release.bin --firmware=$(APP_BIN)
 
 eflash:
-	cd $(BL60X_SDK_PATH)/tools/flash_tool/blflash_tools && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool-ubuntu --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT)  --pt=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/partition/partition_cfg_2M.toml --dts=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/device_tree/04-bl_factory_params_IoTKitA_40M-20220625.dts  --boot2=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/builtin_imgs/boot2_isp_bl602_v6.5.1/boot2_iap_release.bin --firmware=$(APP_BIN)
+	cd $(BL60X_SDK_PATH)/tools/flash_tool/blflash_tools && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) $(FLASH_TOOL_TYPE) --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT)  --pt=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/partition/partition_cfg_2M.toml --dts=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/device_tree/04-bl_factory_params_IoTKitA_40M-20220625.dts  --boot2=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/builtin_imgs/boot2_isp_bl602_v6.5.1/boot2_iap_release.bin --firmware=$(APP_BIN)
 
 clean: app-clean
 
 
 erase_flash:
-	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool-ubuntu --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT) --firmware=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/eflash_loader/eflash_loader_40m.bin --erase
+	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) $(FLASH_TOOL_TYPE) --chipname=BL602 --baudrate=$(SERIAL_BAUDRATE) --port=$(SERIAL_PORT) --firmware=$(BL60X_SDK_PATH)/tools/flash_tool/chips/bl602/eflash_loader/eflash_loader_40m.bin --erase
 
 
 
