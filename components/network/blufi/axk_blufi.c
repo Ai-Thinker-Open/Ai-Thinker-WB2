@@ -11,21 +11,21 @@
 #include "ble_interface.h"
 #include "conn.h"
 #include "hci_core.h"
-
+#include "blog.h"
 
 
 #define MANUFACTURER_DATA_LEN 8
-static uint8_t test_manufacturer[MANUFACTURER_DATA_LEN] = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x88, 0x00};
+static uint8_t test_manufacturer[MANUFACTURER_DATA_LEN] = { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x88, 0x00 };
 
 extern blufi_config_t g_blufi_config;
 void axk_blufi_adv_start(void)
 {
     uint16_t offect = 0;
     uint16_t blufiname_len = 0;
-    uint8_t adv_data[37] = {0};
-    uint8_t rsp_data[37] = {0};
-    ble_adv_data_t data = {0};
-    ble_adv_param_t adv_param = {0};
+    uint8_t adv_data[37] = { 0 };
+    uint8_t rsp_data[37] = { 0 };
+    ble_adv_data_t data = { 0 };
+    ble_adv_param_t adv_param = { 0 };
     bt_addr_le_t bt_addr;
     bt_get_local_public_address(&bt_addr);
 
@@ -47,7 +47,7 @@ void axk_blufi_adv_start(void)
     }
     else
     {
-        char *name = calloc(1, sizeof(char) * 15);
+        char* name = calloc(1, sizeof(char) * 15);
         sprintf(name, "BLUFI_WB2_%02X%02X", bt_addr.a.val[1], bt_addr.a.val[0]);
         blufiname_len = strlen(name);
         rsp_data[0] = blufiname_len + 1;
@@ -115,16 +115,16 @@ void axk_blufi_disconnect()
     axk_hal_blufi_gap_disconnect();
 }
 
-void axk_blufi_send_notify(void *arg)
+void axk_blufi_send_notify(void* arg)
 {
-    struct pkt_info *pkts = (struct pkt_info *)arg;
+    struct pkt_info* pkts = (struct pkt_info*)arg;
     axk_hal_ble_gatt_blufi_notify_send(pkts->pkt, pkts->pkt_len);
 }
 
-void axk_blufi_send_encap(void *arg)
+void axk_blufi_send_encap(void* arg)
 {
 
-    struct blufi_hdr *hdr = (struct blufi_hdr *)arg;
+    struct blufi_hdr* hdr = (struct blufi_hdr*)arg;
 
     if (blufi_env.is_connected == false)
     {
@@ -134,7 +134,7 @@ void axk_blufi_send_encap(void *arg)
         return;
     }
 
-    btc_blufi_send_notify((uint8_t *)hdr,
+    btc_blufi_send_notify((uint8_t*)hdr,
                           ((hdr->fc & BLUFI_FC_CHECK) ? hdr->data_len + sizeof(struct blufi_hdr) + 2
-                                                      : hdr->data_len + sizeof(struct blufi_hdr)));
+        : hdr->data_len + sizeof(struct blufi_hdr)));
 }

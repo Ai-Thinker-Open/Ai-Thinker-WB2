@@ -14,11 +14,11 @@
 
 #include <FreeRTOS.h>
 #include <task.h>
-
-/*
-   The SEC_TYPE_xxx is for self-defined packet data type in the procedure of "BLUFI negotiate key"
-   If user use other negotiation procedure to exchange(or generate) key, should redefine the type by yourself.
- */
+#include "blog.h"
+ /*
+    The SEC_TYPE_xxx is for self-defined packet data type in the procedure of "BLUFI negotiate key"
+    If user use other negotiation procedure to exchange(or generate) key, should redefine the type by yourself.
+  */
 #define SEC_TYPE_DH_PARAM_LEN 0x00
 #define SEC_TYPE_DH_PARAM_DATA 0x01
 #define SEC_TYPE_DH_P 0x02
@@ -41,7 +41,7 @@ static const uint16_t crc16_be_table[256] = {
     0xd94c, 0xc96d, 0xf90e, 0xe92f, 0x99c8, 0x89e9, 0xb98a, 0xa9ab, 0x5844, 0x4865, 0x7806, 0x6827, 0x18c0, 0x08e1, 0x3882, 0x28a3,
     0xcb7d, 0xdb5c, 0xeb3f, 0xfb1e, 0x8bf9, 0x9bd8, 0xabbb, 0xbb9a, 0x4a75, 0x5a54, 0x6a37, 0x7a16, 0x0af1, 0x1ad0, 0x2ab3, 0x3a92,
     0xfd2e, 0xed0f, 0xdd6c, 0xcd4d, 0xbdaa, 0xad8b, 0x9de8, 0x8dc9, 0x7c26, 0x6c07, 0x5c64, 0x4c45, 0x3ca2, 0x2c83, 0x1ce0, 0x0cc1,
-    0xef1f, 0xff3e, 0xcf5d, 0xdf7c, 0xaf9b, 0xbfba, 0x8fd9, 0x9ff8, 0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0};
+    0xef1f, 0xff3e, 0xcf5d, 0xdf7c, 0xaf9b, 0xbfba, 0x8fd9, 0x9ff8, 0x6e17, 0x7e36, 0x4e55, 0x5e74, 0x2e93, 0x3eb2, 0x0ed1, 0x1ef0 };
 
 struct blufi_security
 {
@@ -54,7 +54,7 @@ struct blufi_security
     size_t share_len;
 #define PSK_LEN 16
     uint8_t psk[PSK_LEN];
-    uint8_t *dh_param;
+    uint8_t* dh_param;
     int dh_param_len;
     uint8_t iv[16];
     mbedtls_dhm_context dhm;
@@ -63,9 +63,9 @@ struct blufi_security
 
 #define MIN_UM(a, b) (((a) < (b)) ? (a) : (b))
 
-static struct blufi_security *blufi_sec;
+static struct blufi_security* blufi_sec;
 
-static uint16_t axk_rom_crc16_be(uint16_t crc, uint8_t const *buf, uint32_t len)
+static uint16_t axk_rom_crc16_be(uint16_t crc, uint8_t const* buf, uint32_t len)
 {
     unsigned int i;
     crc = ~crc;
@@ -76,21 +76,21 @@ static uint16_t axk_rom_crc16_be(uint16_t crc, uint8_t const *buf, uint32_t len)
     return ~crc;
 }
 
-static uint16_t esp_crc16_be(uint16_t crc, uint8_t const *buf, uint32_t len)
+static uint16_t esp_crc16_be(uint16_t crc, uint8_t const* buf, uint32_t len)
 {
     return axk_rom_crc16_be(crc, buf, len);
 }
 
-void axk_fill_random(void *buf, size_t len)
+void axk_fill_random(void* buf, size_t len)
 {
     assert(buf != NULL);
-    uint8_t *buf_bytes = (uint8_t *)buf;
+    uint8_t* buf_bytes = (uint8_t*)buf;
     while (len > 0)
     {
         // uint32_t word = random();
         uint32_t word = 0;
         hosal_random_num_read(&word, 1);
-        printf("word=%d \r\n", word);
+        blog_info("word=%d ", word);
         uint32_t to_copy = MIN_UM(sizeof(word), len);
         memcpy(buf_bytes, &word, to_copy);
         buf_bytes += to_copy;
@@ -98,103 +98,103 @@ void axk_fill_random(void *buf, size_t len)
     }
 }
 
-static int myrand(void *rng_state, unsigned char *output, size_t len)
+static int myrand(void* rng_state, unsigned char* output, size_t len)
 {
     axk_fill_random(output, len);
     return (0);
 }
 extern void btc_blufi_report_error(_blufi_error_state_t state);
 
-static void TaskAES(void *p)
+static void TaskAES(void* p)
 {
     mbedtls_aes_setkey_enc(&blufi_sec->aes, blufi_sec->psk, 128);
 
     vTaskDelete(NULL);
 }
-void blufi_dh_negotiate_data_handler(uint8_t *data, int len, uint8_t **output_data, int *output_len, bool *need_free)
+void blufi_dh_negotiate_data_handler(uint8_t* data, int len, uint8_t** output_data, int* output_len, bool* need_free)
 {
     int ret;
     uint8_t type = data[0];
 
     if (blufi_sec == NULL)
     {
-        printf("BLUFI Security is not initialized \r\n");
+        blog_info("BLUFI Security is not initialized ");
         btc_blufi_report_error(_BLUFI_INIT_SECURITY_ERROR); //
         return;
     }
 
-    printf("blufi_dh_negotiate_data_handler type = %d\r\n", type);
+    blog_info("blufi_dh_negotiate_data_handler type = %d", type);
 
     switch (type)
     {
-    case SEC_TYPE_DH_PARAM_LEN:
-        blufi_sec->dh_param_len = ((data[1] << 8) | data[2]);
-        if (blufi_sec->dh_param)
+        case SEC_TYPE_DH_PARAM_LEN:
+            blufi_sec->dh_param_len = ((data[1] << 8) | data[2]);
+            if (blufi_sec->dh_param)
+            {
+                free(blufi_sec->dh_param);
+                blufi_sec->dh_param = NULL;
+            }
+            blufi_sec->dh_param = (uint8_t*)malloc(blufi_sec->dh_param_len);
+            if (blufi_sec->dh_param == NULL)
+            {
+                btc_blufi_report_error(_BLUFI_DH_MALLOC_ERROR);
+                blog_info("%s, malloc failed ", __func__);
+                return;
+            }
+            break;
+        case SEC_TYPE_DH_PARAM_DATA:
         {
+            if (blufi_sec->dh_param == NULL)
+            {
+                blog_info("%s, blufi_sec->dh_param == NULL\n", __func__);
+                btc_blufi_report_error(_BLUFI_DH_PARAM_ERROR);
+                return;
+            }
+            uint8_t* param = blufi_sec->dh_param;
+            memcpy(blufi_sec->dh_param, &data[1], blufi_sec->dh_param_len);
+            ret = mbedtls_dhm_read_params(&blufi_sec->dhm, &param, &param[blufi_sec->dh_param_len]);
+            if (ret)
+            {
+                blog_info("%s read param failed %d\n", __func__, ret);
+                btc_blufi_report_error(_BLUFI_READ_PARAM_ERROR);
+                return;
+            }
             free(blufi_sec->dh_param);
             blufi_sec->dh_param = NULL;
-        }
-        blufi_sec->dh_param = (uint8_t *)malloc(blufi_sec->dh_param_len);
-        if (blufi_sec->dh_param == NULL)
-        {
-            btc_blufi_report_error(_BLUFI_DH_MALLOC_ERROR);
-            printf("%s, malloc failed \r\n", __func__);
-            return;
-        }
-        break;
-    case SEC_TYPE_DH_PARAM_DATA:
-    {
-        if (blufi_sec->dh_param == NULL)
-        {
-            printf("%s, blufi_sec->dh_param == NULL\n", __func__);
-            btc_blufi_report_error(_BLUFI_DH_PARAM_ERROR);
-            return;
-        }
-        uint8_t *param = blufi_sec->dh_param;
-        memcpy(blufi_sec->dh_param, &data[1], blufi_sec->dh_param_len);
-        ret = mbedtls_dhm_read_params(&blufi_sec->dhm, &param, &param[blufi_sec->dh_param_len]);
-        if (ret)
-        {
-            printf("%s read param failed %d\n", __func__, ret);
-            btc_blufi_report_error(_BLUFI_READ_PARAM_ERROR);
-            return;
-        }
-        free(blufi_sec->dh_param);
-        blufi_sec->dh_param = NULL;
-        ret = mbedtls_dhm_make_public(&blufi_sec->dhm, (int)mbedtls_mpi_size(&blufi_sec->dhm.P), blufi_sec->self_public_key, blufi_sec->dhm.len, myrand, NULL);
-        if (ret)
-        {
-            printf("%s make public failed %d\n", __func__, ret);
-            btc_blufi_report_error(_BLUFI_MAKE_PUBLIC_ERROR);
-            return;
-        }
+            ret = mbedtls_dhm_make_public(&blufi_sec->dhm, (int)mbedtls_mpi_size(&blufi_sec->dhm.P), blufi_sec->self_public_key, blufi_sec->dhm.len, myrand, NULL);
+            if (ret)
+            {
+                blog_info("%s make public failed %d\n", __func__, ret);
+                btc_blufi_report_error(_BLUFI_MAKE_PUBLIC_ERROR);
+                return;
+            }
 
-        mbedtls_dhm_calc_secret(&blufi_sec->dhm,
-                                blufi_sec->share_key,
-                                SHARE_KEY_BIT_LEN,
-                                &blufi_sec->share_len,
-                                NULL, NULL);
-        mbedtls_md5(blufi_sec->share_key, blufi_sec->share_len, blufi_sec->psk);
+            mbedtls_dhm_calc_secret(&blufi_sec->dhm,
+                                    blufi_sec->share_key,
+                                    SHARE_KEY_BIT_LEN,
+                                    &blufi_sec->share_len,
+                                    NULL, NULL);
+            mbedtls_md5(blufi_sec->share_key, blufi_sec->share_len, blufi_sec->psk);
 
-        xTaskCreate(TaskAES, (char *)"TaskAES", 1024 * 2, NULL, 13, NULL);
-        vTaskDelay(1000 / portTICK_RATE_MS);
+            xTaskCreate(TaskAES, (char*)"TaskAES", 1024 * 2, NULL, 13, NULL);
+            vTaskDelay(1000 / portTICK_RATE_MS);
 
-        /* alloc output data */
-        *output_data = &blufi_sec->self_public_key[0];
-        *output_len = blufi_sec->dhm.len;
-        *need_free = false;
-    }
-    break;
-    case SEC_TYPE_DH_P:
+            /* alloc output data */
+            *output_data = &blufi_sec->self_public_key[0];
+            *output_len = blufi_sec->dhm.len;
+            *need_free = false;
+        }
         break;
-    case SEC_TYPE_DH_G:
-        break;
-    case SEC_TYPE_DH_PUBLIC:
-        break;
+        case SEC_TYPE_DH_P:
+            break;
+        case SEC_TYPE_DH_G:
+            break;
+        case SEC_TYPE_DH_PUBLIC:
+            break;
     }
 }
 
-int blufi_aes_encrypt(uint8_t iv8, uint8_t *crypt_data, int crypt_len)
+int blufi_aes_encrypt(uint8_t iv8, uint8_t* crypt_data, int crypt_len)
 {
     int ret;
     size_t iv_offset = 0;
@@ -206,14 +206,14 @@ int blufi_aes_encrypt(uint8_t iv8, uint8_t *crypt_data, int crypt_len)
     ret = mbedtls_aes_crypt_cfb128(&blufi_sec->aes, MBEDTLS_AES_ENCRYPT, crypt_len, &iv_offset, iv0, crypt_data, crypt_data);
     if (ret)
     {
-        printf("%s mbedtls_aes_crypt_cfb128 failed %d\n", __func__, ret);
+        blog_info("%s mbedtls_aes_crypt_cfb128 failed %d\n", __func__, ret);
         return -1;
     }
 
     return crypt_len;
 }
 
-int blufi_aes_decrypt(uint8_t iv8, uint8_t *crypt_data, int crypt_len)
+int blufi_aes_decrypt(uint8_t iv8, uint8_t* crypt_data, int crypt_len)
 {
     int ret;
     size_t iv_offset = 0;
@@ -225,14 +225,14 @@ int blufi_aes_decrypt(uint8_t iv8, uint8_t *crypt_data, int crypt_len)
     ret = mbedtls_aes_crypt_cfb128(&blufi_sec->aes, MBEDTLS_AES_DECRYPT, crypt_len, &iv_offset, iv0, crypt_data, crypt_data);
     if (ret)
     {
-        printf("%s mbedtls_aes_crypt_cfb128 failed %d\n", __func__, ret);
+        blog_error("%s mbedtls_aes_crypt_cfb128 failed %d", __func__, ret);
         return -1;
     }
 
     return crypt_len;
 }
 
-uint16_t blufi_crc_checksum(uint8_t iv8, uint8_t *data, int len)
+uint16_t blufi_crc_checksum(uint8_t iv8, uint8_t* data, int len)
 {
     /* This iv8 ignore, not used */
     return esp_crc16_be(0, data, len);
@@ -240,20 +240,20 @@ uint16_t blufi_crc_checksum(uint8_t iv8, uint8_t *data, int len)
 
 int blufi_security_init(void)
 {
-    blufi_sec = (struct blufi_security *)malloc(sizeof(struct blufi_security));
+    blufi_sec = (struct blufi_security*)malloc(sizeof(struct blufi_security));
     if (blufi_sec == NULL)
     {
         return 1;
     }
 
-    printf("%s ok \r\n", __func__);
+    blog_info("%s ok ", __func__);
 
     memset(blufi_sec, 0x0, sizeof(struct blufi_security));
 
     mbedtls_dhm_init(&blufi_sec->dhm);
     mbedtls_aes_init(&blufi_sec->aes);
 
-    printf("%s mbedtls_aes_init ok \r\n", __func__);
+    blog_info("%s mbedtls_aes_init ok ", __func__);
 
     memset(blufi_sec->iv, 0x0, 16);
     return 0;

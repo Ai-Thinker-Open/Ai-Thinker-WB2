@@ -11,7 +11,7 @@
 #include <bl60x_fw_api.h>
 #include <aos/yloop.h>
 #include <aos/kernel.h>
-
+#include "blog.h"
 #define DHCP_MAX_HLEN 6
 #define AT_WIFI_MAX_STA_NUM 10
 
@@ -19,7 +19,7 @@ blufi_wifi_conn_event_cb_t sg_blufi_conn_cb = NULL;
 
 struct dhcp_client_node
 {
-    struct dhcp_client_node *next;
+    struct dhcp_client_node* next;
     u8_t chaddr[DHCP_MAX_HLEN];
     ip4_addr_t ipaddr;
     u32_t lease_end;
@@ -38,11 +38,11 @@ static char _wifi_pmk[68];
 static struct wifi_ap_sta_info g_wifi_ap_sta_info[AT_WIFI_MAX_STA_NUM];
 static wifi_interface_t wifi_sta_interface;
 static wifi_conf_t conf =
-    {
-        .country_code = "CN",
+{
+    .country_code = "CN",
 };
 
-int wifi_ap_get_sta_ip(uint8_t mac[6], uint32_t *ip)
+int wifi_ap_get_sta_ip(uint8_t mac[6], uint32_t* ip)
 {
     int i;
 
@@ -57,106 +57,106 @@ int wifi_ap_get_sta_ip(uint8_t mac[6], uint32_t *ip)
     return -1;
 }
 
-static void event_cb_wifi_event(input_event_t *event, void *private_data)
+static void event_cb_wifi_event(input_event_t* event, void* private_data)
 {
 
     switch (event->code)
     {
-    case CODE_WIFI_ON_INIT_DONE:
-    {
-        wifi_mgmr_start_background(&conf);
-        puts("[WIFI] [EVT] CODE_WIFI_ON_INIT_DONE\r\n");
-    }
-    break;
-    case CODE_WIFI_ON_MGMR_DONE:
-    {
-        g_wifi_mgmr_done = 1;
-        puts("[WIFI] [EVT] CODE_WIFI_ON_MGMR_DONE\r\n");
-    }
-    break;
-    case CODE_WIFI_ON_SCAN_DONE:
-    {
-        if (sg_blufi_conn_cb && WIFI_SCAN_DONE_EVENT_OK == event->value)
+        case CODE_WIFI_ON_INIT_DONE:
         {
-            sg_blufi_conn_cb(BLUFI_WIFI_SCAN_DONE, NULL);
+            wifi_mgmr_start_background(&conf);
+            puts("[WIFI] [EVT] CODE_WIFI_ON_INIT_DONE");
         }
-        printf("[WIFI] [EVT] SCAN Result: %s\r\n", WIFI_SCAN_DONE_EVENT_OK == event->value ? "OK" : "Busy now");
-    }
-    break;
-    case CODE_WIFI_ON_DISCONNECT:
-    {
-        printf("[WIFI] [EVT] CODE_WIFI_ON_DISCONNECT Reason: %s\r\n", wifi_mgmr_status_code_str(event->value));
+        break;
+        case CODE_WIFI_ON_MGMR_DONE:
+        {
+            g_wifi_mgmr_done = 1;
+            puts("[WIFI] [EVT] CODE_WIFI_ON_MGMR_DONE");
+        }
+        break;
+        case CODE_WIFI_ON_SCAN_DONE:
+        {
+            if (sg_blufi_conn_cb && WIFI_SCAN_DONE_EVENT_OK == event->value)
+            {
+                sg_blufi_conn_cb(BLUFI_WIFI_SCAN_DONE, NULL);
+            }
+            blog_info("[WIFI] [EVT] SCAN Result: %s", WIFI_SCAN_DONE_EVENT_OK == event->value ? "OK" : "Busy now");
+        }
+        break;
+        case CODE_WIFI_ON_DISCONNECT:
+        {
+            blog_info("[WIFI] [EVT] CODE_WIFI_ON_DISCONNECT Reason: %s", wifi_mgmr_status_code_str(event->value));
 
-        printf("event->value:%ld\r\n", event->value);
+            blog_info("event->value:%ld", event->value);
 
-        if (sg_blufi_conn_cb)
-        {
-            sg_blufi_conn_cb(BLUFI_STATION_DISCONNECTED, NULL);
-        }
+            if (sg_blufi_conn_cb)
+            {
+                sg_blufi_conn_cb(BLUFI_STATION_DISCONNECTED, NULL);
+            }
 
-        /* 以下情况过于复杂，注释掉 */
-        if (event->value == WLAN_FW_4WAY_HANDSHAKE_ERROR_PSK_TIMEOUT_FAILURE ||
-            event->value == WLAN_FW_AUTH_OR_ASSOC_RESPONSE_TIMEOUT_FAILURE)
-        {
+            /* 以下情况过于复杂，注释掉 */
+            if (event->value == WLAN_FW_4WAY_HANDSHAKE_ERROR_PSK_TIMEOUT_FAILURE ||
+                event->value == WLAN_FW_AUTH_OR_ASSOC_RESPONSE_TIMEOUT_FAILURE)
+            {
+            }
+            else if (event->value == WLAN_FW_4WAY_HANDSHAKE_TX_DEAUTH_FRAME_TRANSMIT_FAILURE ||
+                     event->value == WLAN_FW_4WAY_HANDSHAKE_TX_DEAUTH_FRAME_ALLOCATE_FAIILURE ||
+                     event->value == WLAN_FW_DEAUTH_BY_AP_WHEN_NOT_CONNECTION)
+            {
+            }
+            else if (event->value == WLAN_FW_SCAN_NO_BSSID_AND_CHANNEL)
+            {
+            }
+            else if ((event->value == WLAN_FW_DEAUTH_BY_AP_WHEN_CONNECTION) || (event->value == WLAN_FW_DISCONNECT_BY_USER_WITH_DEAUTH)) /* WiFi断开 */
+            {
+            }
+            else
+            {
+            }
         }
-        else if (event->value == WLAN_FW_4WAY_HANDSHAKE_TX_DEAUTH_FRAME_TRANSMIT_FAILURE ||
-                 event->value == WLAN_FW_4WAY_HANDSHAKE_TX_DEAUTH_FRAME_ALLOCATE_FAIILURE ||
-                 event->value == WLAN_FW_DEAUTH_BY_AP_WHEN_NOT_CONNECTION)
+        break;
+        case CODE_WIFI_ON_CONNECTING:
         {
+            blog_info("[WIFI] [EVT] CODE_WIFI_ON_CONNECTING ");
         }
-        else if (event->value == WLAN_FW_SCAN_NO_BSSID_AND_CHANNEL)
+        break;
+        case CODE_WIFI_CMD_RECONNECT:
         {
+            blog_info("[WIFI] [EVT] CODE_WIFI_CMD_RECONNECT ");
         }
-        else if ((event->value == WLAN_FW_DEAUTH_BY_AP_WHEN_CONNECTION) || (event->value == WLAN_FW_DISCONNECT_BY_USER_WITH_DEAUTH)) /* WiFi断开 */
+        break;
+        case CODE_WIFI_ON_CONNECTED:
         {
-        }
-        else
-        {
-        }
-    }
-    break;
-    case CODE_WIFI_ON_CONNECTING:
-    {
-        printf("[WIFI] [EVT] CODE_WIFI_ON_CONNECTING \r\n");
-    }
-    break;
-    case CODE_WIFI_CMD_RECONNECT:
-    {
-        printf("[WIFI] [EVT] CODE_WIFI_CMD_RECONNECT \r\n");
-    }
-    break;
-    case CODE_WIFI_ON_CONNECTED:
-    {
-        if (sg_blufi_conn_cb)
-        {
-            sg_blufi_conn_cb(BLUFI_STATION_CONNECTED, NULL);
-        }
-        printf("[WIFI] [EVT] CODE_WIFI_ON_CONNECTED \r\n");
+            if (sg_blufi_conn_cb)
+            {
+                sg_blufi_conn_cb(BLUFI_STATION_CONNECTED, NULL);
+            }
+            blog_info("[WIFI] [EVT] CODE_WIFI_ON_CONNECTED ");
 
-        aos_post_event(EV_WIFI, CODE_WIFI_ON_GOT_IP, 0);
-    }
-    break;
-
-    case CODE_WIFI_ON_GOT_IP:
-    {
-        printf("[WIFI] [EVT] CODE_WIFI_ON_GOT_IP \r\n");
-
-        if (sg_blufi_conn_cb)
-        {
-
-            sg_blufi_conn_cb(BLUFI_STATION_GOT_IP, NULL);
+            aos_post_event(EV_WIFI, CODE_WIFI_ON_GOT_IP, 0);
         }
-    }
-    break;
-    default:
-    {
-        printf("[WIFI] [EVT] Unknown code %u\r\n", event->code);
-        /*nothing*/
-    }
+        break;
+
+        case CODE_WIFI_ON_GOT_IP:
+        {
+            blog_info("[WIFI] [EVT] CODE_WIFI_ON_GOT_IP ");
+
+            if (sg_blufi_conn_cb)
+            {
+
+                sg_blufi_conn_cb(BLUFI_STATION_GOT_IP, NULL);
+            }
+        }
+        break;
+        default:
+        {
+            blog_info("[WIFI] [EVT] Unknown code %u", event->code);
+            /*nothing*/
+        }
     }
 }
 
-int wifi_conn_ap_info_get(sta_config_t *sta)
+int wifi_conn_ap_info_get(sta_config_t* sta)
 {
     wifi_mgmr_sta_connect_ind_stat_info_t wifi_info;
     wifi_mgmr_sta_connect_ind_stat_get(&wifi_info);
@@ -200,7 +200,7 @@ static void wifi_sta_disconnect(void)
     }
 }
 
-int axk_hal_conn_ap_info_set(cwjap_param_t *cwjap_param)
+int axk_hal_conn_ap_info_set(cwjap_param_t* cwjap_param)
 {
 
     if (strlen(cwjap_param->pwd) != 0)

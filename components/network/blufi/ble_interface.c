@@ -17,11 +17,11 @@
 #include "hci_driver.h"
 #include "ble_lib_api.h"
 #include "bl_port.h"
-
+#include "blog.h"
 #include <aos/yloop.h>
 #include <aos/kernel.h>
 
-void ble_reverse_byte(uint8_t *arr, uint32_t size)
+void ble_reverse_byte(uint8_t* arr, uint32_t size)
 {
     uint8_t i, tmp;
 
@@ -33,12 +33,12 @@ void ble_reverse_byte(uint8_t *arr, uint32_t size)
     }
 }
 
-static void _connected(struct bt_conn *conn, u8_t err)
+static void _connected(struct bt_conn* conn, u8_t err)
 {
     at_ble_conn_handle_t conn_handle;
     at_ble_addr_t peer_addr;
 
-    bt_addr_le_t *addr;
+    bt_addr_le_t* addr;
 
     if (conn->type != BT_CONN_TYPE_LE)
     {
@@ -53,18 +53,18 @@ static void _connected(struct bt_conn *conn, u8_t err)
     ble_reverse_byte(peer_addr.val, 6);
 
     conn_handle.type = AT_POINT_HANDLE;
-    conn_handle.p_handle = (void *)conn;
+    conn_handle.p_handle = (void*)conn;
 
-    extern struct bt_conn *g_blufi_conn;
+    extern struct bt_conn* g_blufi_conn;
     g_blufi_conn = conn;
     axk_ble_blufi_gap_connect_export(&conn_handle, &peer_addr);
 
-    printf("[BLE] connected \r\n");
+    blog_info("[BLE] connected ");
 
     return;
 }
 
-static void _disconnected(struct bt_conn *conn, u8_t reason)
+static void _disconnected(struct bt_conn* conn, u8_t reason)
 {
     at_ble_conn_handle_t conn_handle;
 
@@ -74,11 +74,11 @@ static void _disconnected(struct bt_conn *conn, u8_t reason)
     }
 
     conn_handle.type = AT_POINT_HANDLE;
-    conn_handle.p_handle = (void *)conn;
+    conn_handle.p_handle = (void*)conn;
 
-    extern struct bt_conn *g_blufi_conn;
+    extern struct bt_conn* g_blufi_conn;
     at_ble_addr_t peer_addr;
-    bt_addr_le_t *addr;
+    bt_addr_le_t* addr;
 
     /* get dest addr */
     addr = bt_conn_get_dst(conn);
@@ -90,13 +90,13 @@ static void _disconnected(struct bt_conn *conn, u8_t reason)
     g_blufi_conn = NULL;
     axk_ble_blufi_gap_disconnect_export(&peer_addr);
 
-    printf("[BLE] disconnected, reason:%d \r\n", reason);
+    blog_info("[BLE] disconnected, reason:%d ", reason);
 }
 
-static bool _le_param_req(struct bt_conn *conn,
-                          struct bt_le_conn_param *param)
+static bool _le_param_req(struct bt_conn* conn,
+                          struct bt_le_conn_param* param)
 {
-    printf("[BLE] conn param request: int 0x%04x-0x%04x lat %d to %d \r\n",
+    blog_info("[BLE] conn param request: int 0x%04x-0x%04x lat %d to %d ",
            param->interval_min,
            param->interval_max,
            param->latency,
@@ -105,34 +105,34 @@ static bool _le_param_req(struct bt_conn *conn,
     return true;
 }
 
-static void _le_param_updated(struct bt_conn *conn, u16_t interval,
+static void _le_param_updated(struct bt_conn* conn, u16_t interval,
                               u16_t latency, u16_t timeout)
 {
     at_ble_conn_handle_t conn_handle;
 
     conn_handle.type = AT_POINT_HANDLE;
-    conn_handle.p_handle = (void *)conn;
+    conn_handle.p_handle = (void*)conn;
 
-    printf("[BLE] conn param updated: int 0x%04x lat %d to %d \r\n", interval, latency, timeout);
+    blog_info("[BLE] conn param updated: int 0x%04x lat %d to %d ", interval, latency, timeout);
 }
 
-static void _le_phy_updated(struct bt_conn *conn, u8_t tx_phy, u8_t rx_phy)
+static void _le_phy_updated(struct bt_conn* conn, u8_t tx_phy, u8_t rx_phy)
 {
-    printf("[BLE] phy updated: rx_phy %d, rx_phy %d \r\n", tx_phy, rx_phy);
+    blog_info("[BLE] phy updated: rx_phy %d, rx_phy %d ", tx_phy, rx_phy);
 }
 
-static void _ble_mtu_changed_cb(struct bt_conn *conn, int mtu)
+static void _ble_mtu_changed_cb(struct bt_conn* conn, int mtu)
 {
     at_ble_conn_handle_t conn_handle;
 
     conn_handle.type = AT_POINT_HANDLE;
-    conn_handle.p_handle = (void *)conn;
+    conn_handle.p_handle = (void*)conn;
 
     /* normal/blufi interface */
 
     axk_ble_blufi_gap_mtu_change_export(mtu);
 
-    printf("[BLE] mtu updated:%d \r\n", mtu);
+    blog_info("[BLE] mtu updated:%d ", mtu);
 }
 
 static struct bt_conn_cb conn_callbacks = {
@@ -143,11 +143,11 @@ static struct bt_conn_cb conn_callbacks = {
     .le_phy_updated = _le_phy_updated,
 };
 
-static void ble_disconnect_all(struct bt_conn *conn, void *data)
+static void ble_disconnect_all(struct bt_conn* conn, void* data)
 {
     if (conn->state == BT_CONN_CONNECTED)
     {
-        printf("[BLE] disconn id:%d \r\n", conn->id);
+        blog_info("[BLE] disconn id:%d ", conn->id);
         bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
     }
 }
@@ -158,7 +158,7 @@ static void bt_enable_cb(int err)
     {
         bt_addr_le_t bt_addr;
         bt_get_local_public_address(&bt_addr);
-        printf("BD_ADDR:(MSB)%02x:%02x:%02x:%02x:%02x:%02x(LSB) \n",
+        blog_info("BD_ADDR:(MSB)%02x:%02x:%02x:%02x:%02x:%02x(LSB) ",
                bt_addr.a.val[5], bt_addr.a.val[4], bt_addr.a.val[3], bt_addr.a.val[2], bt_addr.a.val[1], bt_addr.a.val[0]);
     }
 }
@@ -176,7 +176,7 @@ int axk_hal_ble_role_set(ble_role_t role)
 {
     int ret;
 
-    printf("ble set role:%d \r\n", role);
+    blog_info("ble set role:%d ", role);
     if (role == BLE_ROLE_DEINIT)
     {
         bt_conn_foreach(BT_CONN_TYPE_ALL, ble_disconnect_all, NULL);
@@ -184,7 +184,7 @@ int axk_hal_ble_role_set(ble_role_t role)
         /* wait for all connection to be disconnected */
         int disconn_cnt = 0;
         while (le_check_valid_conn() && disconn_cnt++ < 10) {
-            printf("[BLE] wait for ble_disconnect_all\r\n");
+            blog_info("[BLE] wait for ble_disconnect_all");
             vTaskDelay(pdMS_TO_TICKS(500));
         }
 
@@ -206,11 +206,11 @@ int axk_hal_ble_role_set(ble_role_t role)
     return 0;
 }
 
-int axk_hal_ble_adv_start(ble_adv_param_t *adv_param, ble_adv_data_t *adv_data)
+int axk_hal_ble_adv_start(ble_adv_param_t* adv_param, ble_adv_data_t* adv_data)
 {
     int ret;
     struct bt_le_adv_param param;
-    const struct bt_data *ad = NULL;
+    const struct bt_data* ad = NULL;
 
     param.id = 0;
     param.interval_min = adv_param->adv_int_min;
@@ -218,27 +218,27 @@ int axk_hal_ble_adv_start(ble_adv_param_t *adv_param, ble_adv_data_t *adv_data)
     param.options = BT_LE_ADV_OPT_NONE;
     switch (adv_param->adv_type)
     {
-    case AXK_BLE_ADV_TYPE_IND:
-        param.options |= (BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_USE_NAME | BT_LE_ADV_OPT_ONE_TIME);
-        break;
-    case AXK_BLE_ADV_TYPE_DIRECT_IND_HIGH:
-        param.options |= BT_LE_ADV_OPT_DIR_ADDR_RPA;
-        break;
-    case AXK_BLE_DV_TYPE_SCAN_IND:
-        param.options |= BT_LE_ADV_OPT_USE_NAME;
-        break;
-    case AXK_BLE_ADV_TYPE_NONCONN_IND:
-        break;
-    case AXK_BLE_ADV_TYPE_DIRECT_IND_LOW:
-        param.options |= BT_LE_ADV_OPT_DIR_MODE_LOW_DUTY;
-        break;
-    default:
-        break;
+        case AXK_BLE_ADV_TYPE_IND:
+            param.options |= (BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_USE_NAME | BT_LE_ADV_OPT_ONE_TIME);
+            break;
+        case AXK_BLE_ADV_TYPE_DIRECT_IND_HIGH:
+            param.options |= BT_LE_ADV_OPT_DIR_ADDR_RPA;
+            break;
+        case AXK_BLE_DV_TYPE_SCAN_IND:
+            param.options |= BT_LE_ADV_OPT_USE_NAME;
+            break;
+        case AXK_BLE_ADV_TYPE_NONCONN_IND:
+            break;
+        case AXK_BLE_ADV_TYPE_DIRECT_IND_LOW:
+            param.options |= BT_LE_ADV_OPT_DIR_MODE_LOW_DUTY;
+            break;
+        default:
+            break;
     }
 
     set_adv_param(&param);
 
-    printf("[BLE] set adv\r\n");
+    blog_info("[BLE] set adv");
     ret = set_ad_and_rsp_d(BT_HCI_OP_LE_SET_ADV_DATA, adv_data->data, adv_data->data_len);
     ret = set_ad_and_rsp_d(BT_HCI_OP_LE_SET_SCAN_RSP_DATA, adv_data->rsp_data, adv_data->rsp_data_len);
 
@@ -247,7 +247,7 @@ int axk_hal_ble_adv_start(ble_adv_param_t *adv_param, ble_adv_data_t *adv_data)
         return -1;
     }
 
-    printf("[BLE] en adv\r\n");
+    blog_info("[BLE] en adv");
     if (set_adv_enable(1) != 0)
     {
         return -1;
