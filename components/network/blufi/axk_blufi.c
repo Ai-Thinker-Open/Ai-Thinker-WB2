@@ -82,7 +82,7 @@ void axk_blufi_adv_start(void)
     data.rsp_data_len = blufiname_len + 2;
     if (axk_hal_ble_adv_start(&adv_param, &data) != BLUFI_ERR_SUCCESS)
     {
-        printf("[BLUFI] axk_hal_ble_adv_start fail\r\n");
+        blog_error("[BLUFI] axk_hal_ble_adv_start fail");
     }
 }
 
@@ -128,7 +128,7 @@ void axk_blufi_send_encap(void* arg)
 
     if (blufi_env.is_connected == false)
     {
-        printf("[BLUFI] %s ble connection is broken\r\n", __func__);
+        blog_info("[BLUFI] %s ble connection is broken", __func__);
         free(hdr);
         hdr = NULL;
         return;
