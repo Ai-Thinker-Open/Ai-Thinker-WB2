@@ -75,8 +75,8 @@
 										"-----END RSA PRIVATE KEY-----\r\n"
 
 
-#define TEST_MQTT_HOST         "a2i4jqjtr9fl1t-ats.iot.us-east-1.amazonaws.com"
-// #define TEST_MQTT_HOST         "tbnn221tbgfpu.deviceadvisor.iot.us-east-1.amazonaws.com" 
+#define TEST_MQTT_HOST         "XXXXXXXXXX.iot.us-east-1.amazonaws.com"
+// #define TEST_MQTT_HOST         "XXXXXXXXXXXX.deviceadvisor.iot.us-east-1.amazonaws.com" 
 #define TEST_MQTT_PORT         8883 
 #define TEST_MQTT_CLIENT_ID    "Ai-WB2-M1" 
 #define TEST_MY_THING_NAME     "Ai-WB2-M1" 
