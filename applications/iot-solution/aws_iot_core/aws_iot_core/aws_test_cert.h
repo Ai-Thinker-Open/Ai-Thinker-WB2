@@ -28,7 +28,7 @@
     "N+gDS63pYaACbvXy8MWy7Vu33PqUXHeeE6V/Uq2V8viTO96LXFvKWlJbYK8U90vv\r\n" \
     "o/ufQJVtMVT8QtPHRh8jrdkPSHCa2XV4cdFyQzR1bldZwgJcJmApzyMZFo6IQ6XU\r\n" \
     "5MsI+yMRQ+hDKXJioaldXgjUkK642M4UwtBV8ob2xJNDd2ZhwLnoQdeXeGADbkpy\r\n" \
-    "rqXRfboQnoZsG4q5WTP468SQvvG5\r\n"                                     \
+    "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\r\n"                                     \
     "-----END CERTIFICATE-----\r\n"
 
 #define TEST_CERTIFICATE_FILENAME                                          \
@@ -79,15 +79,21 @@
     "FGmnASXJHxV/nbCYN/9OLcy9q0UrQaqxzC8oDce+QWdkKsj5S47L3HLlw2Nw+Jy/\r\n" \
     "DwHWHAECgYEAuck2AmWfaDURdIIsGQtXasdrXTV5vPVsjBuSKrjzwdnUmVCe557P\r\n" \
     "4xpS21PsM0peVwVrd6Ug4ZesdH8RQbNtoO+X3Q03TpILAvYz0u5nkhMcQ8aTkwdc\r\n" \
-    "1kiSB3uVFDNbN5VwHvcAl66HQnUj5NHc1ubx3j2q9do8vwRLsB0OLbg=\r\n"         \
+    "1kiSB3uVFDNbN5VwHvcAl66HQnUj5NHc1ubx3j2q9doXXXXXXXXXXXXXXXXXXXX=\r\n"         \
     "-----END RSA PRIVATE KEY-----\r\n"
 
-#define TEST_MQTT_HOST "a1r0zs8txbyccm-ats.iot.us-west-2.amazonaws.com"
+#define TEST_MQTT_HOST         "XXXXXXXXXX.iot.us-east-1.amazonaws.com"
+#define TEST_MQTT_PORT         8883 
+#define TEST_MQTT_CLIENT_ID    "Ai-WB2-M1" 
+#define TEST_MY_THING_NAME     "Ai-WB2-M1" 
+
+#define TEST_MYPUBTOPIC        "myTopic/pub"
+#define TEST_MYSUBTOPIC        "myTopic/sub"
 #define TEST_MQTT_PORT 443
 #define TEST_MQTT_CLIENT_ID "testmqttid"
 #define TEST_MY_THING_NAME "testThing"
 
-#define TEST_MYPUBTOPIC "$aws/things/AiThinker-Kat/shadow/update"
-#define TEST_MYSUBTOPIC "$aws/things/AiThinker-Kat/shadow/update/accepted"
+#define TEST_MYPUBTOPIC "$aws/things/AiThinker/shadow/update"
+#define TEST_MYSUBTOPIC "$aws/things/AiThinker/shadow/update/accepted"
 
 #endif
