@@ -10,13 +10,18 @@
 #define WIFI_MGMR_SCAN_ITEMS_MAX (50)
 #define WIFI_MGMR_PROFILES_MAX (2)
 #define WIFI_MGMR_MQ_MSG_SIZE (128 + 64 + 32)
+
+#ifdef BL602_MATTER_SUPPORT
+#define WIFI_MGMR_MQ_MSG_COUNT (6)
+#else
 #define WIFI_MGMR_MQ_MSG_COUNT (3)
+#endif
 
 #define MAC_ADDR_LIST(m) (m)[0], (m)[1], (m)[2], (m)[3], (m)[4], (m)[5]
 #define WIFI_MGMR_CONNECT_PMF_CAPABLE_BIT       (1 << 0)
 #define WIFI_MGMR_CONNECT_PMF_REQUIRED_BIT      (1 << 1)
 
-#define WIFI_MGMR_STA_DISCONNECT_DELAY          (1000) //ms
+#define WIFI_MGMR_STA_DISCONNECT_DELAY          (1000) //ms 
 
 /**
  ****************************************************************************************
@@ -140,7 +145,9 @@ typedef struct wifi_mgmr_ap_msg {
     uint32_t ssid_len;
     char psk[64];
     char psk_tail[1];
+    uint8_t use_dhcp_server;
     uint32_t psk_len;
+    int8_t max_sta_supported;
 } wifi_mgmr_ap_msg_t;
 
 #pragma pack(pop)
@@ -218,11 +225,12 @@ struct wlan_netif {
 
 #define MAX_FIXED_CHANNELS_LIMIT (14)
 typedef struct wifi_mgmr_scan_params {
+    uint8_t bssid[6];
     uint16_t channel_num;
     uint16_t channels[MAX_FIXED_CHANNELS_LIMIT];
     struct mac_ssid ssid;
     uint8_t scan_mode;
-    uint32_t duration_scan;
+    uint32_t duration_scan;  
 } wifi_mgmr_scan_params_t;
 
 typedef struct wifi_mgmr_connect_ind_stat_info {
@@ -237,6 +245,10 @@ typedef struct wifi_mgmr_connect_ind_stat_info {
     uint8_t bssid[6];
     uint8_t type_ind;
     uint8_t chan_band;
+    BL_Mutex_t diagnose_lock;
+    BL_Mutex_t diagnose_get_lock;
+    /// Pointer to the structure used for the diagnose module
+    struct sm_tlv_list connect_diagnose;
 } wifi_mgmr_connect_ind_stat_info_t;
 
 typedef struct wifi_mgmr_sta_basic_info {
@@ -304,13 +316,17 @@ typedef struct wifi_mgmr {
 #define MAX_HOSTNAME_LEN_CHECK 32
     char hostname[MAX_HOSTNAME_LEN_CHECK];
     void *dns_server;
-#ifdef DEBUG_CONNECT_UNLIMIT
+#ifdef DEBUG_CONNECT_ABORT
     unsigned long connect_time;
 #endif
 } wifi_mgmr_t;
 
+
+/// Constant value corresponding to the Broadcast MAC address
+extern const struct mac_addr mac_addr_bcst;
 int wifi_mgmr_pending_task_set(uint32_t bits);
 int wifi_mgmr_event_notify(wifi_mgmr_msg_t *msg, int use_block);
+int wifi_mgmr_detailed_state_get_internal(int *state, int *state_d);
 int wifi_mgmr_state_get_internal(int *state);
 int wifi_mgmr_status_code_clean_internal(void);
 int wifi_mgmr_status_code_get_internal(int *s_code);

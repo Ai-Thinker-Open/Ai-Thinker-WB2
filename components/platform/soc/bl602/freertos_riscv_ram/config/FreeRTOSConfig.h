@@ -177,4 +177,8 @@ extern void vApplicationSleep(TickType_t xExpectedIdleTime);
 #define portSUPPRESS_TICKS_AND_SLEEP(xExpectedIdleTime)    vApplicationSleep(xExpectedIdleTime)
 #endif
 
+/* Enable TLS */
+#define configNUM_THREAD_LOCAL_STORAGE_POINTERS 1
+#define configTHREAD_LOCAL_STORAGE_DELETE_CALLBACKS 1
+
 #endif /* FREERTOS_CONFIG_H */

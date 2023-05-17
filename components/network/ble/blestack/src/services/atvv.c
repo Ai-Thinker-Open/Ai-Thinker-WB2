@@ -8,7 +8,7 @@ DESCRIPTION
 
 ****************************************************************************/
 
-#include <errno.h>
+#include <sys/errno.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -93,7 +93,7 @@ int  audio_start(uint8_t reason, uint8_t stream)
 {
     int err = -1;
     uint8_t audio_cmd[4] = {
-            AUDIO_START,
+            AUDIO_START, 
             reason,
             codecs_used,
             stream
@@ -118,7 +118,7 @@ int audio_stop(uint8_t reason)
 {
     int err = -1;
     uint8_t audio_cmd[2] = {
-            AUDIO_STOP,
+            AUDIO_STOP, 
             reason
         };
 
@@ -218,7 +218,7 @@ static void atvv_connected(struct bt_conn *conn, u8_t err)
 NAME: atvv_disconnected
 */
 static void atvv_disconnected(struct bt_conn *conn, u8_t reason)
-{
+{ 
     if(conn->type != BT_CONN_TYPE_LE)
     {
         return;
@@ -265,7 +265,7 @@ static int atvv_tx(struct bt_conn *conn, const struct bt_gatt_attr *attr,
         case GET_CAPS:
         {
             uint8_t caps_rsp[9] = {
-                CAPS_RESP,
+                CAPS_RESP, 
                 0x01, 0x00,
                 0x03,
                 assis_mode,
@@ -299,7 +299,7 @@ static int atvv_tx(struct bt_conn *conn, const struct bt_gatt_attr *attr,
             k_delayed_work_submit(&audio_timeout_work, AUDIO_TRANSFER_TIMEOUT);
         }
         break;
-
+            
         default:
             break;
     }
@@ -309,7 +309,7 @@ static int atvv_tx(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 
 /*************************************************************************
 *  NAME: atvv_audio_ccc_changed
-*/
+*/ 
 static void atvv_audio_ccc_changed(const struct bt_gatt_attr *attr, u16_t value)
 {
     BT_INFO("ccc:value=[%d]", value);
@@ -326,7 +326,7 @@ static void atvv_audio_ccc_changed(const struct bt_gatt_attr *attr, u16_t value)
 
 /*************************************************************************
 *  NAME: atvv_ctl_ccc_changed
-*/
+*/ 
 static void atvv_ctl_ccc_changed(const struct bt_gatt_attr *attr, u16_t value)
 {
     BT_INFO("ccc:value=[%d]", value);
@@ -343,7 +343,7 @@ static void atvv_ctl_ccc_changed(const struct bt_gatt_attr *attr, u16_t value)
 
 
 /*************************************************************************
-*  DEFINE : attrs
+*  DEFINE : attrs 
 */
 static struct bt_gatt_attr attrs[]= {
         BT_GATT_PRIMARY_SERVICE(ATVV_SERVICE_UUID),
@@ -399,3 +399,4 @@ void atvv_init()
     bt_conn_cb_register(&atvv_conn_callbacks);
     bt_gatt_service_register(&atvv_server);
 }
+

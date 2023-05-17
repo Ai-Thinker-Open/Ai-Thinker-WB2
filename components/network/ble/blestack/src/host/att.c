@@ -8,7 +8,7 @@
 
 #include <zephyr.h>
 #include <string.h>
-#include <errno.h>
+#include <sys/errno.h>
 #include <stdbool.h>
 #include <atomic.h>
 #include <misc/byteorder.h>
@@ -2438,6 +2438,17 @@ int bt_att_req_send(struct bt_conn *conn, struct bt_att_req *req)
 	}
 
 	return att_send_req(att, req);
+}
+
+struct bt_att_req *bt_att_get_att_req(struct bt_conn *conn)
+{
+    struct bt_att *att;
+
+    att = att_chan_get(conn);
+    if(att)
+        return att->req;
+    else
+        return NULL;
 }
 
 void bt_att_req_cancel(struct bt_conn *conn, struct bt_att_req *req)

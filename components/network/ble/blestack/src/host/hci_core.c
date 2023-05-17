@@ -10,7 +10,7 @@
 #include <zephyr.h>
 #include <string.h>
 #include <stdio.h>
-#include <errno.h>
+#include <sys/errno.h>
 #include <atomic.h>
 #include <misc/util.h>
 #include <misc/slist.h>
@@ -51,7 +51,9 @@
 #elif defined(BL702)
 #include "bl702_hbn.h"
 #elif defined(BL606P) || defined(BL616)
+#if defined(CFG_SLEEP)
 #include "bl606p_hbn.h"
+#endif /* CFG_SLEEP */
 #elif defined(BL808)//no bl808_hbn.h currently, comment it out temporarily
 #include "bl808_hbn.h"
 #endif
@@ -434,7 +436,7 @@ struct k_thread *bt_get_co_thread(void)
 
 static void bt_hci_sync_check(struct net_buf *buf)
 {
-    static struct k_poll_event events[EV_COUNT] = {
+    static struct k_poll_event events[EV_COUNT] = { 
                 [0] = K_POLL_EVENT_STATIC_INITIALIZER(K_POLL_TYPE_FIFO_DATA_AVAILABLE,
                 K_POLL_MODE_NOTIFY_ONLY,
                 &g_work_queue_main.fifo,
@@ -450,7 +452,7 @@ static void bt_hci_sync_check(struct net_buf *buf)
                 BT_EVENT_RX_QUEUE),
                 #endif
     };
-
+                
     uint32_t time_start = k_uptime_get_32();
     send_cmd(buf);
 
@@ -458,20 +460,20 @@ static void bt_hci_sync_check(struct net_buf *buf)
     {
         int ev_count, err;
         u8_t to_process = 0;
-
+        
         events[0].state = K_POLL_STATE_NOT_READY;
         events[1].state = K_POLL_STATE_NOT_READY;
         events[EV_COUNT -1].state = K_POLL_STATE_NOT_READY;
         ev_count = 2;
-
+        
         if (IS_ENABLED(CONFIG_BT_CONN)) {
             ev_count += bt_conn_prepare_events(&events[2]);
         }
-        err = k_poll(events, ev_count, EV_COUNT, K_NO_WAIT, &to_process);
+        err = k_poll(events, ev_count, EV_COUNT, K_NO_WAIT, &to_process);  
         BT_ASSERT(err == 0);
         if(to_process)
             process_events(events, ev_count, EV_COUNT);
-
+        
         if ((cmd(buf)->sync_state == BT_CMD_SYNC_TX_DONE) ||
             (k_uptime_get_32() - time_start) >= HCI_CMD_TIMEOUT)
         {
@@ -502,7 +504,7 @@ int bt_hci_cmd_send_sync(u16_t opcode, struct net_buf *buf,
 	}
 
 	BT_DBG("buf %p opcode 0x%04x len %u", buf, opcode, buf->len);
-
+    
     #if (BFLB_BT_CO_THREAD)
     if(is_bt_co_thread)
     {
@@ -538,8 +540,8 @@ int bt_hci_cmd_send_sync(u16_t opcode, struct net_buf *buf,
          #ifdef BFLB_BLE_PATCH_FREE_ALLOCATED_BUFFER_IN_OS
          k_sem_delete(&sync_sem);
          #endif
-	    __ASSERT(err == 0, "k_sem_take failed with err %d", err);
-    }
+ 	    __ASSERT(err == 0, "k_sem_take failed with err %d", err);
+    }  
     #else
     net_buf_put(&bt_dev.cmd_tx_queue, buf);
     #if defined(BFLB_BLE)
@@ -551,7 +553,7 @@ int bt_hci_cmd_send_sync(u16_t opcode, struct net_buf *buf,
     #endif
 	__ASSERT(err == 0, "k_sem_take failed with err %d", err);
     #endif//#if (BFLB_BT_CO_THREAD)
-
+    
 	BT_DBG("opcode 0x%04x status 0x%02x", opcode, cmd(buf)->status);
 
 	if (cmd(buf)->status) {
@@ -2461,6 +2463,11 @@ static void conn_complete(struct net_buf *buf)
 
 	if (evt->status) {
 		conn->err = evt->status;
+		if(conn->err==BT_HCI_ERR_AUTH_FAIL){
+			if(conn->type == BT_CONN_TYPE_BR){
+				bt_keys_link_key_clear_addr(&conn->br.dst);
+			}
+		}
 		bt_conn_set_state(conn, BT_CONN_DISCONNECTED);
 		bt_conn_unref(conn);
 		return;
@@ -2582,6 +2589,12 @@ static void link_key_notify(struct net_buf *buf)
 			     sizeof(conn->br.link_key->val));
 		break;
 	}
+
+	#if defined(BFLB_BT_LINK_KEYS_STORE)
+	if(conn->br.link_key){
+		bt_keys_link_key_store(conn->br.link_key);
+	}
+	#endif
 
 	bt_conn_unref(conn);
 }
@@ -3882,7 +3895,7 @@ static void hci_cmd_done(u16_t opcode, u8_t status, struct net_buf *buf)
         if(cmd(buf)->sync_state)
             cmd(buf)->sync_state = BT_CMD_SYNC_TX_DONE;
         else
-            k_sem_give(cmd(buf)->sync);
+            k_sem_give(cmd(buf)->sync);    
 	}
     #else
     if (cmd(buf)->sync) {
@@ -4479,7 +4492,7 @@ static void process_events(struct k_poll_event *ev, int count)
     #else
 	for (; count; ev++, count--) {
     #endif
-		BT_DBG("ev->state %u", ev->state);
+		BT_DBG("ev->state %u", ev->state); 
 		switch (ev->state) {
 		case K_POLL_STATE_SIGNALED:
 			break;
@@ -4493,7 +4506,7 @@ static void process_events(struct k_poll_event *ev, int count)
 			}
             #if (BFLB_BT_CO_THREAD)
             else if(ev->tag == BT_EVENT_RX_QUEUE ){
-                handle_rx_queue();
+                handle_rx_queue();     
             }else if(ev->tag == BT_EVENT_WORK_QUEUE ){
                 extern void handle_work_queue(void);
                 handle_work_queue();
@@ -4528,7 +4541,7 @@ static void process_events(struct k_poll_event *ev, int count)
 static void bt_co_thread(void *p1, void *p2, void *p3)
 {
 	static struct k_poll_event events[EV_COUNT] = {
-
+        
         [0] = K_POLL_EVENT_STATIC_INITIALIZER(K_POLL_TYPE_FIFO_DATA_AVAILABLE,
                             K_POLL_MODE_NOTIFY_ONLY,
                             &g_work_queue_main.fifo,
@@ -4542,7 +4555,7 @@ static void bt_co_thread(void *p1, void *p2, void *p3)
 						&recv_fifo,
 						BT_EVENT_RX_QUEUE),
 	};
-
+    
 
 	BT_DBG("Started");
 
@@ -4559,9 +4572,9 @@ static void bt_co_thread(void *p1, void *p2, void *p3)
 		}
 
 		BT_DBG("Calling k_poll with %d events", ev_count);
-
+       
         err = k_poll(events, ev_count, EV_COUNT, K_FOREVER, NULL);
-
+       
 		BT_ASSERT(err == 0);
 
 		process_events(events, ev_count, EV_COUNT);
@@ -5831,6 +5844,12 @@ static int bt_init(void)
 	}
 
 	bt_finalize_init();
+	#if defined(CONFIG_BT_BREDR)
+	#if defined(BFLB_BT_LINK_KEYS_STORE)
+	extern int bt_keys_init(void);
+	bt_keys_init();
+	#endif
+	#endif
 	return 0;
 }
 
@@ -6044,6 +6063,11 @@ bool le_check_valid_scan(void)
 {
     return atomic_test_bit(bt_dev.flags, BT_DEV_EXPLICIT_SCAN);
 }
+
+bool le_check_valid_adv(void)
+{
+     return atomic_test_bit(bt_dev.flags, BT_DEV_ADVERTISING);
+}
 #endif
 
 
@@ -6152,7 +6176,10 @@ int bt_disable_action(void)
 }
 
 int bt_disable(void)
-{   
+{  
+    if (!atomic_test_bit(bt_dev.flags, BT_DEV_ENABLE))
+        return -EALREADY;
+        
     if(
         #if defined(CONFIG_BT_CONN)
         le_check_valid_conn() ||
@@ -6245,9 +6272,6 @@ int bt_set_name(const char *name)
 
 	if (IS_ENABLED(CONFIG_BT_SETTINGS)) {
 #if defined(BFLB_BLE)
-        #if defined(CFG_SLEEP)
-        if(HBN_Get_Status_Flag() == 0)
-        #endif
         bt_settings_save_name();
 #else
         err = settings_save_one("bt/name", bt_dev.name, len);
@@ -6256,6 +6280,11 @@ int bt_set_name(const char *name)
 		}
 #endif
 	}
+
+	#if defined(CONFIG_BT_BREDR)
+    if(atomic_test_bit(bt_dev.flags, BT_DEV_READY))
+	    bt_br_write_local_name(name);
+	#endif
 
 	return 0;
 #else
@@ -6920,7 +6949,7 @@ int set_adv_enable(bool enable)
     if (atomic_test_bit(bt_dev.flags, BT_DEV_ADVERTISING)) {
 		return -EALREADY;
 	}
-
+    
 	err = set_advertise_enable(enable);
 	if (err) {
 		return err;
@@ -7898,13 +7927,21 @@ int bt_br_set_connectable(bool enable)
 	if (enable) {
 		if (atomic_test_bit(bt_dev.flags, BT_DEV_PSCAN)) {
 			return -EALREADY;
-		} else {
+		}
+
+		if(atomic_test_bit(bt_dev.flags, BT_DEV_ISCAN)){
+			return write_scan_enable(BT_BREDR_SCAN_INQUIRY | BT_BREDR_SCAN_PAGE);
+		}else{
 			return write_scan_enable(BT_BREDR_SCAN_PAGE);
 		}
 	} else {
 		if (!atomic_test_bit(bt_dev.flags, BT_DEV_PSCAN)) {
 			return -EALREADY;
-		} else {
+		}
+
+		if(atomic_test_bit(bt_dev.flags, BT_DEV_ISCAN)){
+			return write_scan_enable(BT_BREDR_SCAN_INQUIRY);
+		}else{
 			return write_scan_enable(BT_BREDR_SCAN_DISABLED);
 		}
 	}
@@ -7918,17 +7955,22 @@ int bt_br_set_discoverable(bool enable)
 		}
 
 		if (!atomic_test_bit(bt_dev.flags, BT_DEV_PSCAN)) {
-			return -EPERM;
+			return write_scan_enable(BT_BREDR_SCAN_INQUIRY);
+		}else{
+			return write_scan_enable(BT_BREDR_SCAN_INQUIRY |
+					 BT_BREDR_SCAN_PAGE);
 		}
 
-		return write_scan_enable(BT_BREDR_SCAN_INQUIRY |
-					 BT_BREDR_SCAN_PAGE);
 	} else {
 		if (!atomic_test_bit(bt_dev.flags, BT_DEV_ISCAN)) {
 			return -EALREADY;
 		}
 
-		return write_scan_enable(BT_BREDR_SCAN_PAGE);
+		if (atomic_test_bit(bt_dev.flags, BT_DEV_PSCAN)) {
+			return write_scan_enable(BT_BREDR_SCAN_PAGE);
+		}else{
+			return write_scan_enable(BT_BREDR_SCAN_DISABLED);
+		}
 	}
 }
 

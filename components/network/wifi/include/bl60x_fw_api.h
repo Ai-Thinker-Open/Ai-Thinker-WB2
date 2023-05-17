@@ -237,6 +237,8 @@ typedef enum wifi_fw_event_id
     MM_FORCE_IDLE_REQ,
     /// Message indicating that the switch to the scan channel is done
     MM_SCAN_CHANNEL_START_IND,
+    /// Message indicating that the scan can end early
+    MM_SCAN_CHANNEL_END_EARLY,
     /// Message indicating that the scan on the channel is finished
     MM_SCAN_CHANNEL_END_IND,
 
@@ -384,6 +386,8 @@ typedef enum wifi_fw_event_id
     SM_CONNECT_ABORT_REQ,
     /// Confirmation of connect abort
     SM_CONNECT_ABORT_CFM,
+    /// Timeout message for requiring a SA Query Response from AP
+    SM_SA_QUERY_TIMEOUT_IND,
     /// MAX number of messages
     SM_MAX,
 } ke_msg_id_t;
@@ -416,10 +420,11 @@ typedef enum wifi_fw_event_id
 #define WLAN_FW_DISCONNECT_BY_USER_WITH_DEAUTH                   19
 #define WLAN_FW_DISCONNECT_BY_USER_NO_DEAUTH                     20
 #define WLAN_FW_DISCONNECT_BY_FW_PS_TX_NULLFRAME_FAILURE         21
-#define WLAN_FW_CONNECT_ABORT_BY_USER_WITH_DEAUTH                22
-#define WLAN_FW_CONNECT_ABORT_BY_USER_NO_DEAUTH                  23
-#define WLAN_FW_CONNECT_ABORT_WHEN_JOINING_NETWORK               24
-#define WLAN_FW_CONNECT_ABORT_WHEN_SCANNING                      25
+#define WLAN_FW_TRAFFIC_LOSS                                     22
+#define WLAN_FW_CONNECT_ABORT_BY_USER_WITH_DEAUTH                23
+#define WLAN_FW_CONNECT_ABORT_BY_USER_NO_DEAUTH                  24
+#define WLAN_FW_CONNECT_ABORT_WHEN_JOINING_NETWORK               25
+#define WLAN_FW_CONNECT_ABORT_WHEN_SCANNING                      26 
 
 
 /*--------------------------------------------------------------------*/
@@ -496,4 +501,79 @@ enum task_scan_cfg {
     TASK_SCAN_CFG_DURATION_SCAN_ACTIVE,
     TASK_SCAN_CFG_DURATION_SCAN_JOIN_ACTIVE,
 };
+
+typedef enum{
+    /**version part**/
+    SM_CONNECTION_DATA_TLV_ID_VERSION,
+    /**Status part**/
+    SM_CONNECTION_DATA_TLV_ID_STATUS_CODE,
+    SM_CONNECTION_DATA_TLV_ID_DHCPSTATUS,
+    /**frame part**/
+    SM_CONNECTION_DATA_TLV_ID_AUTH_1,
+    SM_CONNECTION_DATA_TLV_ID_AUTH_2,
+    SM_CONNECTION_DATA_TLV_ID_AUTH_3,
+    SM_CONNECTION_DATA_TLV_ID_AUTH_4,
+    SM_CONNECTION_DATA_TLV_ID_ASSOC_REQ,
+    SM_CONNECTION_DATA_TLV_ID_ASSOC_RSP,
+    SM_CONNECTION_DATA_TLV_ID_4WAY_1,
+    SM_CONNECTION_DATA_TLV_ID_4WAY_2,
+    SM_CONNECTION_DATA_TLV_ID_4WAY_3,
+    SM_CONNECTION_DATA_TLV_ID_4WAY_4,
+    SM_CONNECTION_DATA_TLV_ID_2WAY_1,
+    SM_CONNECTION_DATA_TLV_ID_2WAY_2,
+    SM_CONNECTION_DATA_TLV_ID_DEAUTH,
+    /**striped frame part**/
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_AUTH_1,
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_AUTH_2,
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_AUTH_3,
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_AUTH_4,
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_AUTH_UNVALID,
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_ASSOC_REQ,
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_ASSOC_RSP,
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_DEAUTH_FROM_REMOTE,
+    SM_CONNECTION_DATA_TLV_ID_STRIPED_DEASSOC_FROM_REMOTE,
+    SM_CONNECTION_DATA_TLV_ID_RESERVED,
+} sm_connection_data_tlv_id_t;
+
+/* structure of a list element header */
+struct sm_tlv_list_hdr
+{
+    struct sm_tlv_list_hdr *next;
+};
+
+/* structure of a list */
+struct sm_tlv_list
+{
+    struct sm_tlv_list_hdr *first;
+    struct sm_tlv_list_hdr *last;
+};
+
+/*
+ * TLV ID数据以链表的形式存储在struct sm_connect_tlv_desc中，
+ * callback需要遍历这个链表来获取所有的数据
+ */
+struct sm_connect_tlv_desc {
+    struct sm_tlv_list_hdr list_hdr;
+    sm_connection_data_tlv_id_t id;
+    uint16_t len;
+    uint8_t data[0];
+};
+
+#ifdef TD_DIAGNOSIS_STA
+typedef struct wifi_diagnosis_info
+{
+    uint32_t beacon_recv;
+    uint32_t beacon_loss;
+    uint32_t beacon_total;
+    uint64_t unicast_recv;
+    uint64_t unicast_send;
+    uint64_t multicast_recv;
+    uint64_t multicast_send;
+}wifi_diagnosis_info_t;
+
+wifi_diagnosis_info_t *bl_diagnosis_get(void);
+int wifi_td_diagnosis_init(void);
+int wifi_td_diagnosis_deinit(void);
+#endif
+
 #endif /*__BL60x_FW_API_H__*/

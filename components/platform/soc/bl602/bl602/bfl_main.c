@@ -1,32 +1,3 @@
-/*
- * Copyright (c) 2020 Bouffalolab.
- *
- * This file is part of
- *     *** Bouffalolab Software Dev Kit ***
- *      (see www.bouffalolab.com).
- *
- * Redistribution and use in source and binary forms, with or without modification,
- * are permitted provided that the following conditions are met:
- *   1. Redistributions of source code must retain the above copyright notice,
- *      this list of conditions and the following disclaimer.
- *   2. Redistributions in binary form must reproduce the above copyright notice,
- *      this list of conditions and the following disclaimer in the documentation
- *      and/or other materials provided with the distribution.
- *   3. Neither the name of Bouffalo Lab nor the names of its contributors
- *      may be used to endorse or promote products derived from this software
- *      without specific prior written permission.
- *
- * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
- * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
- * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
- * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
- * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
- * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
- * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 #include <FreeRTOS.h>
 #include <task.h>
 #include <timers.h>
@@ -166,6 +137,14 @@ void __attribute__((weak)) vAssertCalled(void)
     abort();
 }
 
+#ifdef BL602_MATTER_SUPPORT
+void setup_heap(void)
+{
+    // Invoked during system boot via start.S
+    vPortDefineHeapRegions(xHeapRegions);
+}
+#endif
+
 #ifdef SYS_VFS_UART_ENABLE
 static int get_dts_addr(const char *name, uint32_t *start, uint32_t *off)
 {
@@ -300,16 +279,6 @@ static void system_early_init(void)
 
     /* board config is set after system is init*/
     hal_board_cfg(0);
-
-#ifdef CFG_COMPONENT_BUGKILLER_ENABLE
-    /* add for bugkiller code compile，avoid compile-time optimization bugkiller_fun()*/
-extern int bugkiller_enable __attribute__((weak));
-extern int bugkiller_fun(void);
-
-    if (&bugkiller_enable) {
-        bugkiller_fun();
-    }
-#endif
 }
 
 #include "bl602_glb.h"
@@ -347,7 +316,9 @@ void bfl_main()
 
     _dump_boot_info();
 
+#ifndef BL602_MATTER_SUPPORT
     vPortDefineHeapRegions(xHeapRegions);
+#endif
 
     system_early_init();
 

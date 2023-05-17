@@ -7,7 +7,7 @@ DESCRIPTION
 
 ****************************************************************************/
 
-#include <errno.h>
+#include <sys/errno.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -37,7 +37,7 @@ static int ias_recv_wr(struct bt_conn *conn, const struct bt_gatt_attr *attr,
 
 
 /*************************************************************************
-*  DEFINE : attrs
+*  DEFINE : attrs 
 */
 static struct bt_gatt_attr attrs[]= {
 	BT_GATT_PRIMARY_SERVICE(BT_UUID_IAS),
@@ -62,3 +62,5 @@ void ias_init()
 {
     bt_gatt_service_register(&ias_server);
 }
+
+

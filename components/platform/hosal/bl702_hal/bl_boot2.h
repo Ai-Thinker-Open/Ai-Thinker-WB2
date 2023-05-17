@@ -33,8 +33,8 @@
   *
   ******************************************************************************
   */
-#ifndef __BL606_PARTITION_H__
-#define __BL606_PARTITION_H__
+#ifndef __BL_BOOT2_H__
+#define __BL_BOOT2_H__
 
 #include "stdint.h"
 #include "bl702_sflash.h"
@@ -190,4 +190,4 @@ PtTable_Error_Type PtTable_Get_Active_Entries_By_Name(PtTable_Stuff_Config *ptSt
 
 /*@} end of group BL606_Common_Driver */
 
-#endif /* __BL606_PARTITION_H__ */
+#endif /* __BL_BOOT2_H__ */

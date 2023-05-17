@@ -24,6 +24,10 @@
 #include <supplicant_api.h>
 #include <bl_wpa.h>
 
+#ifdef BL602_MATTER_SUPPORT
+#include <lwip/dhcp6.h>
+#endif
+
 #include <bl_os_private.h>
 #define USER_UNUSED(a) ((void)(a))
 
@@ -36,6 +40,7 @@ static void* cb_beacon_ind_env;
 static wifi_event_probe_resp_ind_cb_t cb_probe_resp_ind;
 static void* cb_probe_resp_ind_env;
 static wifi_event_pkt_cb_t cb_pkt;
+static wifi_event_pkt_cb_adv_t cb_pkt_adv;
 static void* cb_pkt_env;
 static wifi_event_rssi_cb_t cb_rssi;
 static void* cb_rssi_env;
@@ -66,9 +71,10 @@ static const struct reason_code sm_reason_list[] = {
     {WLAN_FW_DISCONNECT_BY_USER_WITH_DEAUTH, "user disconnect and send deauth"},
     {WLAN_FW_DISCONNECT_BY_USER_NO_DEAUTH, "user disconnect but no send deauth"},
     {WLAN_FW_DISCONNECT_BY_FW_PS_TX_NULLFRAME_FAILURE, "fw disconnect(tx nullframe failures)"},
+    {WLAN_FW_TRAFFIC_LOSS, "fw disconnect(traffic loss)"},
     {WLAN_FW_CONNECT_ABORT_BY_USER_WITH_DEAUTH, "user connect abort and send deauth"},
     {WLAN_FW_CONNECT_ABORT_BY_USER_NO_DEAUTH, "user connect abort without sending deauth"},
-    {WLAN_FW_CONNECT_ABORT_WHEN_JOINING_NETWORK, "user connect abort when joining network"},
+    {WLAN_FW_CONNECT_ABORT_WHEN_JOINING_NETWORK, "user connect abort when joining network"}, 
     {WLAN_FW_CONNECT_ABORT_WHEN_SCANNING, "user connect abort when scanning"},
 };
 
@@ -161,6 +167,22 @@ int bl_rx_pkt_cb_register(void *env, wifi_event_pkt_cb_t cb)
 int bl_rx_pkt_cb_unregister(void *env)
 {
     cb_pkt = NULL;
+    cb_pkt_env = NULL;
+
+    return 0;
+}
+
+int bl_rx_pkt_adv_cb_register(void *env, wifi_event_pkt_cb_adv_t cb)
+{
+    cb_pkt_adv = cb;
+    cb_pkt_env = env;
+
+    return 0;
+}
+
+int bl_rx_pkt_adv_cb_unregister(void *env)
+{
+    cb_pkt_adv = NULL;
     cb_pkt_env = NULL;
 
     return 0;
@@ -400,7 +422,7 @@ static void _rx_handle_beacon(struct scanu_result_ind *ind, struct ieee80211_mgm
         ind_new.wps = 0;
     }
 
-    /* TODO: Only consider 2.4G and bgn mode
+    /* TODO: Only consider 2.4G and bgn mode 
      * (NO 5G and a/ac/ax) / (NO g-only and n-only difference)
      */
     #define MAC_ELTID_HT_CAPA                45
@@ -618,6 +640,7 @@ static int bl_rx_sm_connect_ind(struct bl_hw *bl_hw,
     bl_os_printf("[RX]   width %u\r\n", ind->width);
     bl_os_printf("[RX]   center_freq1 %u\r\n", (unsigned int)ind->center_freq1);
     bl_os_printf("[RX]   center_freq2 %u\r\n", (unsigned int)ind->center_freq2);
+    bl_os_printf("[RX]   tlv_ptr first %p\r\n", ind->connect_diagnose.first);
 
     if (0 == ind->status_code) {
         bl_hw->sta_idx = ind->ap_idx;
@@ -648,6 +671,7 @@ static int bl_rx_sm_connect_ind(struct bl_hw *bl_hw,
     ind_new.width = ind->width;
     ind_new.center_freq1 = ind->center_freq1;
     ind_new.center_freq2 = ind->center_freq2;
+    ind_new.connect_diagnose = ind->connect_diagnose;
 
     if (cb_sm_connect_ind) {
         cb_sm_connect_ind(cb_sm_connect_ind_env, &ind_new);
@@ -661,6 +685,10 @@ static int bl_rx_sm_connect_ind(struct bl_hw *bl_hw,
         if (bl_vif && bl_vif->dev) {
             netifapi_netif_set_link_up(bl_vif->dev);
             netifapi_netif_set_default(bl_vif->dev);
+#ifdef BL602_MATTER_SUPPORT
+            netif_create_ip6_linklocal_address(bl_vif->dev, 1);
+            bl_vif->dev->ip6_autoconfig_enabled = 1;
+#endif
         } else {
             bl_os_printf("[RX]  -------- CRITICAL when check netif. ptr is %p:%p\r\n",
                     bl_vif,
@@ -689,6 +717,7 @@ static int bl_rx_sm_disconnect_ind(struct bl_hw *bl_hw,
     bl_os_printf("[RX]   disconnect reason: %s\r\n", wifi_mgmr_get_sm_status_code_str(ind->status_code));
     bl_os_printf("[RX]   vif_idx %u\r\n", ind->vif_idx);
     bl_os_printf("[RX]   ft_over_ds %u\r\n", ind->ft_over_ds);
+    bl_os_printf("[RX]   tlv_ptr first %p\r\n", ind->connect_diagnose.first);
 
     if (cb_sm_disconnect_ind) {
         memset(&ind_new, 0, sizeof(ind_new));
@@ -696,6 +725,7 @@ static int bl_rx_sm_disconnect_ind(struct bl_hw *bl_hw,
         ind_new.reason_code = ind->reason_code;
         ind_new.vif_idx = ind->vif_idx;
         ind_new.ft_over_ds = ind->ft_over_ds;
+        ind_new.connect_diagnose = ind->connect_diagnose;
         cb_sm_disconnect_ind(cb_sm_disconnect_ind_env, &ind_new);
     }
 
@@ -812,9 +842,12 @@ void bl_rx_e2a_handler(void *arg)
     wifi_hw.cmd_mgr.msgind(&wifi_hw.cmd_mgr, msg, msg_hdlrs[MSG_T(msg->id)][MSG_I(msg->id)]);
 }
 
-void bl_rx_pkt_cb(uint8_t *pkt, int len)
+void bl_rx_pkt_cb(uint8_t *pkt, int len, void *pkt_wrap, bl_rx_info_t *info)
 {
     if (cb_pkt) {
-        cb_pkt(cb_pkt_env, pkt, len);
+        cb_pkt(cb_pkt_env, pkt, len, info);
+    }
+    if (cb_pkt_adv) {
+        cb_pkt_adv(cb_pkt_env, pkt_wrap, info);
     }
 }

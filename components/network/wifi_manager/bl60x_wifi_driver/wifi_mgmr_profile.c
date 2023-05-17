@@ -27,8 +27,7 @@ int wifi_mgmr_profile_add(wifi_mgmr_t *mgmr, wifi_mgmr_profile_msg_t *profile_ms
         for (i = 0; i < sizeof(mgmr->profiles)/sizeof(mgmr->profiles[0]); i++) {
             if (0 == mgmr->profiles[i].isUsed) {
                 profile = &(mgmr->profiles[i]);
-                
-                if (isActive) {
+                if (isActive) {                 
                     mgmr->profile_active_index = i;
                     bl_os_printf("[WF][PF] Adding and Using profile, idx is @%d\r\n", i);
                 } else {
@@ -72,7 +71,7 @@ int wifi_mgmr_profile_add_by_idx(wifi_mgmr_t *mgmr, wifi_mgmr_profile_msg_t *pro
         profile = &(mgmr->profiles[0]);
     } else if (index < WIFI_MGMR_PROFILES_MAX) {
         profile = &(mgmr->profiles[index]);
-        if (isActive) {
+        if (isActive) {                 
             mgmr->profile_active_index = index;
             bl_os_printf("[WF][PF] Adding and Using profile, idx is @%d\r\n", index);
         } else {
@@ -228,7 +227,7 @@ int wifi_mgmr_profile_get(wifi_mgmr_t *mgmr, wifi_mgmr_profile_msg_t *profile_ms
     memcpy(profile_msg->passphr, profile->passphr, sizeof(profile->passphr));
     memcpy(profile_msg->bssid, profile->bssid, sizeof(profile->bssid));
 
-    return 1;
+    return i;
 }
 
 wifi_mgmr_profile_t* __lookup_profile(wifi_mgmr_t *mgmr, int index)

@@ -1,5 +1,5 @@
 #include <string.h>
-#include <bl702_romdriver.h>
+#include <bl702_aon.h>
 
 #include "bl_sys.h"
 #include "hal_sys.h"
@@ -46,19 +46,6 @@ struct romapi_freertos_map* hal_sys_romapi_get(void)
     return romapi_freertos;
 }
 
-void hal_sys_capcode_update(uint8_t capin, uint8_t capout)
-{
-    static uint8_t capin_static, capout_static;
-
-    if (255 != capin && 255 != capout) {
-        RomDriver_AON_Set_Xtal_CapCode(capin, capout);
-        capin_static = capin;
-        capout_static = capout;
-    } else {
-        RomDriver_AON_Set_Xtal_CapCode(capin_static, capout_static);
-    }
-}
-
 void hal_sys_romapi_update(struct romapi_freertos_map *romapi_freertos)
 {
     extern void interrupt_entry(uint32_t mcause);
@@ -75,4 +62,22 @@ void hal_sys_romapi_update(struct romapi_freertos_map *romapi_freertos)
     romapi_freertos->interrupt_entry_ptr = interrupt_entry;
     romapi_freertos->xISRStackTop = &__freertos_irq_stack_top;
 
+}
+
+void hal_sys_capcode_update(uint8_t capin, uint8_t capout)
+{
+    static uint8_t capin_static, capout_static;
+
+    if (255 != capin && 255 != capout) {
+        AON_Set_Xtal_CapCode(capin, capout);
+        capin_static = capin;
+        capout_static = capout;
+    } else {
+        AON_Set_Xtal_CapCode(capin_static, capout_static);
+    }
+}
+
+uint8_t hal_sys_capcode_get(void)
+{
+    return AON_Get_Xtal_CapCode();
 }

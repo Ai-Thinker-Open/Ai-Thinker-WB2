@@ -202,8 +202,14 @@ void I2C_Enable(I2C_ID_Type i2cNo)
     /* Check the parameters */
     CHECK_PARAM(IS_I2C_ID_TYPE(i2cNo));
 
+    tmpVal = BL_RD_REG(I2Cx, I2C_FIFO_CONFIG_0);
+    tmpVal = BL_SET_REG_BIT(tmpVal, I2C_TX_FIFO_CLR);
+    tmpVal = BL_SET_REG_BIT(tmpVal, I2C_RX_FIFO_CLR);
+    BL_WR_REG(I2Cx, I2C_FIFO_CONFIG_0, tmpVal);
+
     tmpVal = BL_RD_REG(I2Cx, I2C_CONFIG);
     tmpVal = BL_SET_REG_BIT(tmpVal, I2C_CR_I2C_M_EN);
+    
     BL_WR_REG(I2Cx, I2C_CONFIG, tmpVal);
 }
 
@@ -296,45 +302,9 @@ void I2C_Init(I2C_ID_Type i2cNo, I2C_Direction_Type direct, I2C_Transfer_Cfg *cf
     /* Set sub address */
     BL_WR_REG(I2Cx, I2C_SUB_ADDR, cfg->subAddr);
 
-#ifndef BFLB_USE_HAL_DRIVER
-    //Interrupt_Handler_Register(I2C_IRQn,I2C_IRQHandler);
+#ifndef BL602_USE_HAL_DRIVER
+    Interrupt_Handler_Register(I2C_IRQn,I2C_IRQHandler);
 #endif
-}
-
-/****************************************************************************/ /**
- * @brief  Set de-glitch function cycle count value
- *
- * @param  i2cNo: I2C ID type
- * @param  cnt: De-glitch function cycle count
- *
- * @return SUCCESS
- *
-*******************************************************************************/
-BL_Err_Type I2C_SetDeglitchCount(I2C_ID_Type i2cNo, uint8_t cnt)
-{
-    uint32_t tmpVal;
-    uint32_t I2Cx = I2C_BASE;
-
-    /* Check the parameters */
-    CHECK_PARAM(IS_I2C_ID_TYPE(i2cNo));
-
-    tmpVal = BL_RD_REG(I2Cx, I2C_CONFIG);
-
-    if(cnt > 0){
-        /* enable de-glitch function */
-        tmpVal = BL_SET_REG_BIT(tmpVal, I2C_CR_I2C_DEG_EN);
-    }else if(cnt == 0){
-        /* disable de-glitch function */
-        tmpVal = BL_CLR_REG_BIT(tmpVal, I2C_CR_I2C_DEG_EN);
-    }else{
-        return ERROR;
-    }
-
-    /* Set count value */
-    tmpVal = BL_SET_REG_BITS_VAL(tmpVal, I2C_CR_I2C_DEG_CNT, cnt);
-    BL_WR_REG(I2Cx, I2C_CONFIG, tmpVal);
-
-    return SUCCESS;
 }
 
 /****************************************************************************//**
@@ -405,6 +375,9 @@ void I2C_ClockSet(I2C_ID_Type i2cNo, uint32_t clk)
         GLB_Set_I2C_CLK(1, 255);
         I2C_SetPrd(i2cNo, ((SystemCoreClockGet()/(bclkDiv+1))/256) / (clk*4)-1);
     }
+
+    /* Disable i2c scl sync to get current i2c clock */
+    I2C_SetSclSync(i2cNo, 0);
 }
 
 /****************************************************************************//**
@@ -449,8 +422,8 @@ BL_Sts_Type I2C_IsBusy(I2C_ID_Type i2cNo)
     /* Check the parameters */
     CHECK_PARAM(IS_I2C_ID_TYPE(i2cNo));
 
-    tmpVal = BL_RD_REG(I2Cx, I2C_BUS_BUSY);
-    return ((BL_IS_REG_BIT_SET(tmpVal, I2C_STS_I2C_BUS_BUSY)) ? SET: RESET);
+    tmpVal = BL_RD_REG(I2Cx, I2C_INT_STS);
+    return ((BL_IS_REG_BIT_SET(tmpVal, I2C_END_INT)) ? RESET: SET);
 }
 
 /****************************************************************************//**

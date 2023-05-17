@@ -1,0 +1,1 @@
+CSRCS += $(shell find -L $(NMISIS_DIR)/dsp/src -name \*.c)

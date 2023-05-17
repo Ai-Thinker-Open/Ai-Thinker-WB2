@@ -17,7 +17,14 @@ int log_buf_out(const char *file, int line, const void *inbuf, int len, LOG_BUF_
     char *buf = (char *)inbuf;
     char *pbuffer = NULL;
 
+#if defined(BL702) || defined(BL702L)
+    pbuffer = (char *)pvPortMalloc(sizeof(log_buf));
+    if(pbuffer == NULL){
+        return -1;
+    }
+#else
     pbuffer = (char *)log_buf;
+#endif
     int m = 0, n = 0;
     int j = 0, k = 0, tmp = 0;
 
@@ -115,6 +122,10 @@ int log_buf_out(const char *file, int line, const void *inbuf, int len, LOG_BUF_
     }
 
     MODULE_LOG_LOCK_UNLOCK;
+
+#if defined(BL702) || defined(BL702L)
+    vPortFree(pbuffer);
+#endif
 
     return 0;
 }

@@ -470,3 +470,76 @@ u32_t sys_now(void)
     //FIXME any idea about efficiency
     return xTaskGetTickCount() / portTICK_PERIOD_MS;
 }
+
+#if LWIP_NETCONN_SEM_PER_THREAD
+#define PTHREAD_TLS_INDEX 0
+
+static void sys_thread_sem_free(void *data)
+{
+	sys_sem_t *sem = (sys_sem_t *)(data);
+
+	if (sem)
+	{
+		sys_sem_free(sem);
+		free(sem);
+	}
+}
+
+static void pthread_local_storage_thread_deleted_callback(int index, void *value)
+{
+	sys_sem_t *sem = (sys_sem_t *)value;
+
+	if (sem) {
+		sys_thread_sem_free(sem);
+	}
+
+	vTaskSetThreadLocalStoragePointerAndDelCallback(NULL, PTHREAD_TLS_INDEX, NULL, NULL);
+}
+
+static sys_sem_t *sys_thread_sem_alloc(void)
+{
+	sys_sem_t *sem;
+	err_t err;
+	int ret;
+
+	sem = (sys_sem_t *)malloc(sizeof(sys_sem_t));
+	LWIP_ASSERT("failed to allocate memory for TLS semaphore", sem != NULL);
+	err = sys_sem_new(sem, 0);
+	LWIP_ASSERT("failed to initialise TLS semaphore", err == ERR_OK);
+	ret = vTaskSetThreadLocalStoragePointerAndDelCallback(NULL, PTHREAD_TLS_INDEX, (void *)sem,
+														  pthread_local_storage_thread_deleted_callback);
+	LWIP_ASSERT("failed to initialise TLS semaphore storage", ret == pdTRUE);
+
+#if SYS_STATS
+	++lwip_stats.sys.sem.used;
+	if (lwip_stats.sys.sem.max < lwip_stats.sys.sem.used)
+	{
+		lwip_stats.sys.sem.max = lwip_stats.sys.sem.used;
+	}
+#endif /* SYS_STATS */
+	return sem;
+}
+
+void *sys_thread_sem_get(void)
+{
+	sys_sem_t *sem = (sys_sem_t *)pvTaskGetThreadLocalStoragePointer(NULL, PTHREAD_TLS_INDEX);
+	if (sem == NULL)
+	{
+		return sys_thread_sem_alloc();
+	}
+
+	return sem;
+}
+
+void sys_thread_sem_init(void)
+{
+	__attribute__((unused)) sys_sem_t *sem = sys_thread_sem_alloc();
+}
+
+void sys_thread_sem_deinit(void)
+{
+	sys_sem_t *sem = (sys_sem_t *)pvTaskGetThreadLocalStoragePointer(NULL, PTHREAD_TLS_INDEX);
+	sys_thread_sem_free(sem);
+	vTaskSetThreadLocalStoragePointerAndDelCallback(NULL, PTHREAD_TLS_INDEX, NULL, NULL);
+}
+#endif

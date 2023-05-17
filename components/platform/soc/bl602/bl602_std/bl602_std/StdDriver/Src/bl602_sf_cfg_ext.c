@@ -680,6 +680,16 @@ static const ATTR_TCM_CONST_SECTION Flash_Info_t flashInfos[]={
         //.name="W25Q128JV_128_33",
         .cfg=&flashCfg_XM25QH16,
     },
+    {
+        .jedecID=0x184020,
+        //.name="XM25QH128_128_33",
+        .cfg=&flashCfg_XM25QH16,
+    },
+    {
+        .jedecID=0x18405E,
+        //.name="ZB25VQ128A_128_33",
+        .cfg=&flashCfg_XM25QH16,
+    },
 };
 
 /*@} end of group SF_CFG_EXT_Private_Variables */

@@ -3,11 +3,14 @@ OUTPUT_ARCH( "riscv" )
 ENTRY( bl702_start )
 
 __EM_SIZE = DEFINED(ble_controller_init) ? 8K : 0K;
+__CACHE_SIZE = DEFINED(__CACHE_SIZE) ? __CACHE_SIZE : 16K;
+__stack_size = DEFINED(__stack_size) ? __stack_size : 2K;
 
 MEMORY
 {
   flash  (rxai!w) : ORIGIN = 0x23000000, LENGTH = (2M)
-  tcm_ocram (wxa) : ORIGIN = 0x42014000, LENGTH = (48K + 64K - __EM_SIZE)
+  tcm_ocram (wxa) : ORIGIN = 0x42010000 + __CACHE_SIZE, LENGTH = (64K - __CACHE_SIZE + 64K - __EM_SIZE - __stack_size)
+  sys_stack (wxa) : ORIGIN = ORIGIN(tcm_ocram) + LENGTH(tcm_ocram), LENGTH = __stack_size
   hbnram    (wxa) : ORIGIN = 0x40010000, LENGTH = (4K)
   psram     (wxa) : ORIGIN = 0x26000000, LENGTH = (2M)
 }
@@ -98,6 +101,28 @@ SECTIONS
     PROVIDE( _hbn_run = ADDR(.hbn) );
     PROVIDE( _hbn_run_end = ADDR(.hbn) + SIZEOF(.hbn));
 
+    /* put bl702_rf_private.o in hbnram to avoid ocram conflict during rf calibration */
+    *libbl702_rf.a:bl702_rf_private.o(.retention .retention_noinit)
+    *libbl702_rf.a:bl702_rf_private.o(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    PROVIDE ( _rf_data_end = . );
+
+    /* tcm code that should be retentive after hbn wakeup */
+    *libbl702_std.a:bl702_romapi.o(.tcm_code.* .sclock_rlt_code.*)
+    *libbl702_std.a:bl702_glb.o(.tcm_code.* .sclock_rlt_code.*)
+    *libbl702_std.a:bl702_aon.o(.tcm_code.* .sclock_rlt_code.*)
+    PROVIDE ( _hbn_restore_tcm_run_end = . );
+
+    /* data that should be retentive after hbn wakeup */
+    *liblmac154.a:*(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    *libbl702_std.a:*(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    *libhosal.a:bl_adc.o(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    *libhosal.a:bl_gpio.o(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    *libhosal.a:bl_sys.o(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    *libhosal.a:bl_timer.o(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    *libhosal.a:bl_uart.o(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    *libhosal.a:hosal_uart.o(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
+    PROVIDE ( _hbn_restore_data_run_end = . );
+
     *(.hbn_code.*)
     *(.hbn_data)
     *(.retention)
@@ -111,7 +136,7 @@ SECTIONS
     /* PDS backup address */
     . = ALIGN(4);
     PROVIDE ( __ld_pds_bak_addr = . );
-    . = . + 256;
+    . = . + 116;
   } >hbnram
 
   .rsvd (NOLOAD) :
@@ -137,12 +162,6 @@ SECTIONS
     PROVIDE( _data_load = LOADADDR(.data) );
     PROVIDE( _data_run = ADDR(.data) );
     PROVIDE( _data_run_end = ADDR(.data) + SIZEOF(.data));
-
-    /* put bl702_rf_private.o at the top to avoid ocram conflict during rf calibration */
-    *libbl702_rf.a:bl702_rf_private.o(.retention .retention_noinit)
-    *libbl702_rf.a:bl702_rf_private.o(.sdata.* .srodata.* .sbss.* .bss.* COMMON)
-    PROVIDE ( _rf_data_end = . );
-    ASSERT ((_rf_data_end <= 0x42024000), "Error: _rf_data_end > 0x42024000");
 
     *(.pds_code.*)
     *(.data .data.*)
@@ -202,28 +221,28 @@ SECTIONS
 
   . = ALIGN(8);
   PROVIDE( _heap_start = . );
-  PROVIDE( _heap_size = ADDR(.stack) - _heap_start );
+  PROVIDE( _heap_size = ORIGIN(tcm_ocram) + LENGTH(tcm_ocram) - _heap_start );
 
   PROVIDE( _heap2_start = 0 );
   PROVIDE( _heap2_size = 0 );
 
-  .psram   (NOLOAD) :
+  .psram (NOLOAD) :
   {
     *(.wifi_ram*)
     . = ALIGN(16);
   } > psram
 
   . = ALIGN(8);
-  PROVIDE( _heap3_start = .);
+  PROVIDE( _heap3_start = . );
   PROVIDE( _heap3_size = ORIGIN(psram) + LENGTH(psram) - _heap3_start );
 
-  .stack ORIGIN(tcm_ocram) + LENGTH(tcm_ocram) - __stack_size (NOLOAD) :
+  .stack (NOLOAD) :
   {
     PROVIDE ( _sp_base = . );
     . = . + __stack_size;
     PROVIDE( _sp_main = . );
     __freertos_irq_stack_top = .;
-  } >tcm_ocram
+  } > sys_stack
 
 
   /* camera driver */
@@ -245,7 +264,7 @@ SECTIONS
   /* ram information */
   PROVIDE( _ld_ram_size0 = LENGTH(flash) );
   PROVIDE( _ld_ram_addr0 = ORIGIN(flash) );
-  PROVIDE( _ld_ram_size1 = LENGTH(tcm_ocram) - SIZEOF(.stack) );
+  PROVIDE( _ld_ram_size1 = LENGTH(tcm_ocram) );
   PROVIDE( _ld_ram_addr1 = ORIGIN(tcm_ocram) );
   PROVIDE( _ld_ram_size2 = LENGTH(hbnram) );
   PROVIDE( _ld_ram_addr2 = ORIGIN(hbnram) );
