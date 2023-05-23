@@ -30,5 +30,5 @@ CONFIG_SYS_USER_VFS_ROMFS_ENABLE:=1
 CONFIG_BL602_USE_ROM_DRIVER:=1
 CONFIG_WIFI:=1
 CONF_ENABLE_COREDUMP:=1
-LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop http_client_tcp blestack iperf
+LOG_ENABLED_COMPONENTS:=blog_testc hosal loopset looprt bloop blestack iperf
 

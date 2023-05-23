@@ -4,13 +4,11 @@
 #include <cli.h>
 #include <netutils/netutils.h>
 #include <lwip/tcpip.h>
-#include "wifi_execute.h"
 #include "demo.h"
 
 static void _cli_init()
 {
     /*Put CLI which needs to be init here*/
-    xTaskCreate(wifi_execute, (char *)"wifi execute", 1024 * 3, NULL, 15, NULL);
     network_netutils_iperf_cli_register();
     test_cli_init();
 }

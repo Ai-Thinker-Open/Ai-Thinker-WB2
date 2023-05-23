@@ -21,6 +21,7 @@ COMPONENTS_VFS     := romfs
 COMPONENTS_LVGL    := lvgl lv_device lv_srcs draw  extra extra_themes extra_layouts extra_libs extra_others extra_widgets 
 
 INCLUDE_COMPONENTS += freertos_riscv_ram bl602 bl602_std newlibc hosal mbedtls_lts lwip vfs yloop utils cli blog blog_testc coredump disp_device
+INCLUDE_COMPONENTS += rfparam_adapter_tmp
 INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
 INCLUDE_COMPONENTS += $(COMPONENTS_BLSYS)
 INCLUDE_COMPONENTS += $(COMPONENTS_VFS)

@@ -31,15 +31,14 @@ COMPONENTS_NETWORK := dns_server
 COMPONENTS_BLSYS   := bltime blfdt blmtd blota bloop loopadc looprt loopset
 COMPONENTS_VFS     := romfs
 
-INCLUDE_COMPONENTS += freertos_riscv_ram bl602 bl602_std newlibc wifi blcrypto_suite wifi_manager wpa_supplicant bl602_os_adapter wifi_hosal hosal lwip lwip_dhcpd mbedtls_lts vfs yloop utils cli aws-iot httpc netutils blog blog_testc
-
+INCLUDE_COMPONENTS += wifi wifi_manager wifi_hosal bl_os_adapter blcrypto_suite wpa_supplicant freertos_riscv_ram bl602 bl602_std newlibc hosal mbedtls_lts lwip vfs yloop utils cli blog blog_testc lwip netutils lwip_dhcpd
+INCLUDE_COMPONENTS += rfparam_adapter_tmp
 INCLUDE_COMPONENTS += easyflash4 coredump
 # endif
 
-INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
 INCLUDE_COMPONENTS += $(COMPONENTS_BLSYS)
 INCLUDE_COMPONENTS += $(COMPONENTS_VFS)
-
+INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
 INCLUDE_COMPONENTS += $(PROJECT_NAME)
 
 include $(BL60X_SDK_PATH)/make_scripts_riscv/project.mk

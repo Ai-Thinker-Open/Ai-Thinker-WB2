@@ -42,16 +42,17 @@ else
 COMPONENTS_BLE     := $(COMPONENTS_BLECONTROLLER) blestack
 endif
 
-INCLUDE_COMPONENTS += freertos_riscv_ram newlibc bl602 bl602_std newlibc wifi blcrypto_suite wifi_manager wpa_supplicant bl602_os_adapter wifi_hosal hosal lwip lwip_dhcpd mbedtls_lts vfs yloop utils cli aws-iot httpc netutils blog blog_testc
+INCLUDE_COMPONENTS += freertos_riscv_ram newlibc bl602 bl602_std newlibc wifi blcrypto_suite wifi_manager wpa_supplicant bl602_os_adapter wifi_hosal hosal lwip lwip_dhcpd mbedtls_lts vfs yloop utils cli aws-iot httpc netutils bl_os_adapter  blog blog_testc
 INCLUDE_COMPONENTS += easyflash4 lwip_altcp_tls_mbedtls coredump
 INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
 INCLUDE_COMPONENTS += $(COMPONENTS_BLSYS)
 INCLUDE_COMPONENTS += $(COMPONENTS_VFS)
 INCLUDE_COMPONENTS += $(PROJECT_NAME)
+INCLUDE_COMPONENTS += rfparam_adapter_tmp
 INCLUDE_COMPONENTS += blufi
 INCLUDE_COMPONENTS += main
 
-EXTRA_COMPONENT_DIRS += $(PROJECT_PATH)/blufi
+# EXTRA_COMPONENT_DIRS += $(PROJECT_PATH)/blufi
 
 ifeq ($(CONFIG_COMPONENT_BUGKILLER_ENABLE),1)
 INCLUDE_COMPONENTS += bugkiller_freertos

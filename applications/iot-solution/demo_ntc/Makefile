@@ -24,6 +24,7 @@ COMPONENTS_VFS     := romfs
 INCLUDE_COMPONENTS += freertos_riscv_ram
 INCLUDE_COMPONENTS += bl602 bl602_std
 INCLUDE_COMPONENTS += hosal mbedtls_lts lwip cli vfs yloop utils blog blog_testc newlibc
+INCLUDE_COMPONENTS += rfparam_adapter_tmp
 INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
 INCLUDE_COMPONENTS += $(COMPONENTS_BLSYS)
 INCLUDE_COMPONENTS += $(COMPONENTS_VFS)

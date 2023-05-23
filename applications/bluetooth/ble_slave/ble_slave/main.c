@@ -18,7 +18,6 @@
 #include "bluetooth.h"
 #include "ble_interface.h"
 
-
 hosal_uart_dev_t uart_dev_log = {
     .config = {
         .uart_id = 0,
@@ -30,15 +29,15 @@ hosal_uart_dev_t uart_dev_log = {
         .data_width = HOSAL_DATA_WIDTH_8BIT,
         .parity = HOSAL_NO_PARITY,
         .stop_bits = HOSAL_STOP_BITS_1,
-        .mode = HOSAL_UART_MODE_POLL, 
+        .mode = HOSAL_UART_MODE_POLL,
     },
 };
 
 void TaskUart(void *param)
 {
-    uint8_t data[32]={0};
+    uint8_t data[32] = {0};
     int ret;
-    
+
     hosal_uart_init(&uart_dev_log);
 
     while (1)
@@ -47,7 +46,7 @@ void TaskUart(void *param)
         ret = hosal_uart_receive(&uart_dev_log, data, sizeof(data));
         if (ret > 0)
         {
-            UUID1_SendNotify(strlen((char *)data),data);
+            UUID1_SendNotify(strlen((char *)data), data);
         }
         vTaskDelay(50);
     }
@@ -64,5 +63,5 @@ void main()
     bl_sys_init();
     puts("[OS] proc_main_entry task...\r\n");
     xTaskCreate(TaskUart, "TaskUart", 2048, NULL, 15, NULL);
-    xTaskCreate(proc_main_entry, (char*)"main_entry", 1024, NULL, 15, NULL);
+    xTaskCreate(proc_main_entry, (char *)"main_entry", 1024, NULL, 15, NULL);
 }
