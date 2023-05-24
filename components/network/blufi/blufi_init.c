@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include "ble_interface.h"
 #include "blufi_hal.h"
-#include "blog.h"
+
 
 int _blufi_host_init(void)
 {
@@ -20,28 +20,28 @@ int _blufi_gap_register_callback(void)
     return axk_blufi_profile_init();
 }
 
-int _blufi_host_and_cb_init(_blufi_callbacks_t* example_callbacks)
+int _blufi_host_and_cb_init(_blufi_callbacks_t *example_callbacks)
 {
     int ret = 0;
 
     ret = axk_blufi_register_callbacks(example_callbacks);
     if (ret)
     {
-        blog_info("[BLUFI] %s blufi register failed, error code = %x", __func__, ret);
+        printf("[BLUFI] %s blufi register failed, error code = %x\n", __func__, ret);
         return ret;
     }
 
     ret = _blufi_host_init();
     if (ret)
     {
-        blog_info("[BLUFI] %s initialise host failed: %d", __func__, ret);
+        printf("[BLUFI] %s initialise host failed: %d\n", __func__, ret);
         return ret;
     }
 
     ret = _blufi_gap_register_callback();
     if (ret)
     {
-        blog_info("[BLUFI] %s gap register failed, error code = %x", __func__, ret);
+        printf("[BLUFI] %s gap register failed, error code = %x\n", __func__, ret);
         return ret;
     }
 

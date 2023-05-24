@@ -3,21 +3,18 @@
 
 #include <string.h>
 
+
 void btc_blufi_protocol_handler(uint8_t type, uint8_t *data, int len)
 {
     btc_msg_t msg;
     _blufi_cb_param_t param;
     uint8_t *output_data = NULL;
-    int output_len = 0, blufi_type = BLUFI_GET_TYPE(type), blufi_sub_type = BLUFI_GET_SUBTYPE(type);
+    int output_len = 0;
     bool need_free = false;
 
-    printf("%s blufi_type=[%d], blufi_sub_type=[%d] \r\n", __func__, blufi_type, blufi_sub_type);
-
-    switch (blufi_type)
-    {
+    switch (BLUFI_GET_TYPE(type)) {
     case BLUFI_TYPE_CTRL:
-        switch (blufi_sub_type)
-        {
+        switch (BLUFI_GET_SUBTYPE(type)) {
         case BLUFI_TYPE_CTRL_SUBTYPE_ACK:
             /* TODO: check sequence */
             break;
@@ -55,8 +52,7 @@ void btc_blufi_protocol_handler(uint8_t type, uint8_t *data, int len)
 
             btc_transfer_context(&msg, NULL, 0, NULL);
             break;
-        case BLUFI_TYPE_CTRL_SUBTYPE_GET_VERSION:
-        {
+        case BLUFI_TYPE_CTRL_SUBTYPE_GET_VERSION: {
             uint8_t type = BLUFI_BUILD_TYPE(BLUFI_TYPE_DATA, BLUFI_TYPE_DATA_SUBTYPE_REPLY_VERSION);
             uint8_t data[2];
 
@@ -81,23 +77,22 @@ void btc_blufi_protocol_handler(uint8_t type, uint8_t *data, int len)
         }
         break;
     case BLUFI_TYPE_DATA:
-        switch (blufi_sub_type)
-        {
+        switch (BLUFI_GET_SUBTYPE(type)) {
         case BLUFI_TYPE_DATA_SUBTYPE_NEG:
-            if (blufi_env.cbs && blufi_env.cbs->negotiate_data_handler)
-            {
+            if (blufi_env.cbs && blufi_env.cbs->negotiate_data_handler) {
                 blufi_env.cbs->negotiate_data_handler(data, len, &output_data, &output_len, &need_free);
             }
-            if (output_data && output_len > 0)
-            {
+
+            if (output_data && output_len > 0) {
                 btc_blufi_send_encap(BLUFI_BUILD_TYPE(BLUFI_TYPE_DATA, BLUFI_TYPE_DATA_SUBTYPE_NEG),
-                                     output_data, output_len);
+                             output_data, output_len);
             }
             break;
         case BLUFI_TYPE_DATA_SUBTYPE_STA_BSSID:
             msg.sig = BTC_SIG_API_CB;
             msg.act = AXK_BLUFI_EVENT_RECV_STA_BSSID;
             memcpy(param.sta_bssid.bssid, &data[0], 6);
+
             btc_transfer_context(&msg, &param, sizeof(_blufi_cb_param_t), NULL);
             break;
         case BLUFI_TYPE_DATA_SUBTYPE_STA_SSID:

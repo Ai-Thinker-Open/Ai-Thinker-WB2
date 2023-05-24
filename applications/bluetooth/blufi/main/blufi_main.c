@@ -16,9 +16,8 @@
 #include <cli.h>
 
 //////////////////////////////////
-#include <wifi_mgmr_ext.h>
-#include "../wifi_mgmr.h"
 #include "wifi_interface.h"
+#include <../wifi_mgmr.h>
 #include "blufi.h"
 #include "blufi_api.h"
 #include "blufi_hal.h"
@@ -28,21 +27,60 @@
 #include "blufi_security.h"
 //////////////////////////////////
 
-#define WIFI_MGMR_SCAN_ITEMS_MAX (50)
-
+static int scan_counter;
 static bool ble_is_connected = false;
 static bool gl_sta_connected = false;
 blufi_config_t g_blufi_config = {0};
 
+static void cb_scan_item_parse(wifi_mgmr_ap_item_t *env, uint32_t *param1, wifi_mgmr_ap_item_t *item)
+{
+    _blufi_ap_record_t *ap_list;
+
+    ap_list = (_blufi_ap_record_t *)env;
+    ap_list[scan_counter].rssi = item->rssi;
+    memset(ap_list[scan_counter].ssid, 0, sizeof ap_list[scan_counter].ssid);
+    memcpy(ap_list[scan_counter].ssid, item->ssid, item->ssid_len);
+
+    scan_counter++;
+}
+
+static void cb_scan_complete(void *data, void *param)
+{
+    _blufi_ap_record_t *ap_list;
+
+    ap_list = (_blufi_ap_record_t *)malloc(WIFI_MGMR_SCAN_ITEMS_MAX * sizeof(_blufi_ap_record_t));
+    if (!ap_list)
+    {
+        printf("ap_list malloc fail");
+        return;
+    }
+
+    scan_counter = 0;
+    wifi_mgmr_scan_ap_all(ap_list, NULL, cb_scan_item_parse);
+    printf("scan complete:%ld \r\n", scan_counter);
+
+    if (ble_is_connected == true)
+    {
+        axk_blufi_send_wifi_list(scan_counter, ap_list);
+    }
+    else
+    {
+        printf("BLUFI BLE is not connected yet\n");
+    }
+
+    free(ap_list);
+}
+
+int wifi_scan_start(void)
+{
+    return wifi_mgmr_scan(NULL, cb_scan_complete);
+}
+
 static void blufi_wifi_event(int event, void *param)
 {
-    extern wifi_mgmr_t wifiMgmr;
-    int i;
-    uint8_t ap_count = 0;
-    _blufi_ap_record_t *ap_record = (_blufi_ap_record_t *)calloc(1, sizeof(_blufi_ap_record_t) * WIFI_MGMR_SCAN_ITEMS_MAX);
-    printf("BLUFI BLEblufi_wifi_event= %d \r\n", event);
     switch (event)
     {
+
     case BLUFI_STATION_CONNECTED:
         gl_sta_connected = true;
         break;
@@ -72,33 +110,6 @@ static void blufi_wifi_event(int event, void *param)
         g_blufi_config.wifi.cwmode = WIFIMODE_STA;
     }
     break;
-    case BLUFI_WIFI_SCAN_DONE:
-        printf("BLUFI SCAN DONE DETECTED\n");
-        printf("****************************************************************************************************\r\n");
-        for (i = 0; i < sizeof(wifiMgmr.scan_items) / sizeof(wifiMgmr.scan_items[0]); i++)
-        {
-            if (wifiMgmr.scan_items[i].is_used && (!wifi_mgmr_scan_item_is_timeout(&wifiMgmr, &wifiMgmr.scan_items[i])))
-            {
-                ap_record[ap_count].rssi = wifiMgmr.scan_items[i].rssi;
-                memcpy(ap_record[ap_count].ssid, wifiMgmr.scan_items[i].ssid, sizeof(wifiMgmr.scan_items[i].ssid));
-                printf("index[%02d]: rssi: %3d, SSID: %s\r\n", i, ap_record[ap_count].rssi, ap_record[ap_count].ssid);
-                ap_count++;
-            }
-            else
-            {
-                printf("index[%02d]: empty\r\n", i);
-            }
-        }
-        if (ble_is_connected == true)
-        {
-            axk_blufi_send_wifi_list(ap_count, ap_record);
-        }
-        else
-        {
-            printf("BLUFI BLE is not connected yet\n");
-        }
-        printf("----------------------------------------------------------------------------------------------------\r\n");
-        break;
     default:
         break;
     }
@@ -108,13 +119,11 @@ static void example_event_callback(_blufi_cb_event_t event, _blufi_cb_param_t *p
 {
     /* actually, should post to blufi_task handle the procedure,
      * now, as a example, we do it more simply */
-
-    printf("BLUFI example_event_callback event= ]%d] \r\n", event);
-
     switch (event)
     {
     case AXK_BLUFI_EVENT_INIT_FINISH:
         printf("BLUFI init finish\n");
+
         axk_blufi_adv_start();
         break;
     case AXK_BLUFI_EVENT_DEINIT_FINISH:
@@ -130,10 +139,7 @@ static void example_event_callback(_blufi_cb_event_t event, _blufi_cb_param_t *p
         printf("BLUFI ble disconnect\n");
         ble_is_connected = false;
         blufi_security_deinit();
-        // axk_blufi_adv_start();
-        axk_blufi_profile_deinit();
-        axk_hal_blufi_deinit();
-        axk_blufi_adv_stop();
+        axk_blufi_adv_start();
         break;
     case AXK_BLUFI_EVENT_SET_WIFI_OPMODE:
         printf("BLUFI Set WIFI opmode %d\n", param->wifi_mode.op_mode);
@@ -226,8 +232,7 @@ static void example_event_callback(_blufi_cb_event_t event, _blufi_cb_param_t *p
     case AXK_BLUFI_EVENT_RECV_SOFTAP_CHANNEL:
         break;
     case AXK_BLUFI_EVENT_GET_WIFI_LIST:
-        printf("Rev WiFi Scan Request\r\n");
-        wifi_mgmr_scan(NULL, NULL);
+        wifi_scan_start();
         break;
     case AXK_BLUFI_EVENT_RECV_CUSTOM_DATA:
         printf("Recv Custom Data len:%d\r\n", param->custom_data.data_len);
@@ -287,7 +292,27 @@ static void cmd_blufi_init(char *buf, int len, int argc, char **argv)
 
 static void cmd_blufi_deinit(char *buf, int len, int argc, char **argv)
 {
+    axk_blufi_profile_deinit();
+    axk_hal_blufi_deinit();
+    axk_blufi_adv_stop();
     axk_hal_ble_role_set(BLE_ROLE_DEINIT);
+}
+
+const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
+    {"blufi_init", "blufi deinit", cmd_blufi_init},
+    {"blufi_deinit", "blufi deinit", cmd_blufi_deinit},
+};
+
+void free_task(void *param)
+{
+    uint8_t pcWriteBuffer[500];
+    while (1)
+    {
+        printf("=================================================\r\n");
+        printf("\r\nremaining memory = %ld,minimum memory = %ld\r\n", xPortGetFreeHeapSize(), xPortGetMinimumEverFreeHeapSize());
+        vTaskDelay(3 * 1000);
+    }
+    vTaskDelete(NULL);
 }
 
 static void proc_main_entry(void *pvParameters)
@@ -301,7 +326,8 @@ void main()
 {
     static TaskHandle_t proc_main_task;
     bl_sys_init();
-    xTaskCreate(proc_main_entry, (char *)"main_entry", 1024 * 14, NULL, 11, &proc_main_task);
+    xTaskCreate(proc_main_entry, (char *)"main_entry", 1024, NULL, 15, &proc_main_task);
+    xTaskCreate(free_task, (char *)"free_task", 750, NULL, 1, NULL);
     tcpip_init(NULL, NULL);
     printf("blufi demo test\r\n");
 }

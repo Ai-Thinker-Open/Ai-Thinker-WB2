@@ -95,7 +95,4 @@ void btc_blufi_call_deep_free(btc_msg_t *msg);
 
 uint16_t btcaxk_blufi_get_version(void);
 
-void btc_blufi_report_error(_blufi_error_state_t state);
-
-
 #endif /* __BTC_BLUFI_PRF_H__ */

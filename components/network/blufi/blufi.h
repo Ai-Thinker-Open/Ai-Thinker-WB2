@@ -13,7 +13,6 @@ typedef enum
     BLUFI_STATION_DISCONNECTED = -1,
     BLUFI_STATION_CONNECTED = 1,
     BLUFI_STATION_GOT_IP = 0,
-    BLUFI_WIFI_SCAN_DONE = 2
 } blufi_jap_state_t;
 
 typedef enum
@@ -35,6 +34,7 @@ typedef enum
 
 typedef void (*blufi_wifi_conn_event_cb_t)(int event, void *param);
 
+
 typedef struct
 {
     char ssid[32 + 1]; /**< the SSID of the target AP. */
@@ -47,6 +47,7 @@ typedef struct
     uint8_t state; /**< current Wi-Fi state.  */
     cwjap_param_t cwjap_param;
 } sta_config_t;
+
 
 typedef struct
 {
