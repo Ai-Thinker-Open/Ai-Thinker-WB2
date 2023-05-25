@@ -14,6 +14,8 @@
 
 MAKECMDGOALS ?= all
 all: all_binaries
+
+FLASH_TOOL_TYPE:= ./bflb_iot_tool-ubuntu
 # see below for recipe of 'all' target
 #
 # # other components will add dependencies to 'all_binaries'. The
@@ -212,7 +214,9 @@ EXTRA_CPPFLAGS += -D BL_SDK_VER=\"$(BL_SDK_VER)\"
 $(info use git describe to generate Version Define)
 else
 include $(BL60X_SDK_PATH)/version.mk
-$(info use existing version.mk file)
+ifeq ("$(CONFIG_CHIP_NAME)", "BL602")
+$(info Your configuration chipname is Ai-Thinker Ai-WB2 Wi-Fi&BLE Module)
+endif
 endif
 BL_CHIP_NAME := ${CONFIG_CHIP_NAME}
 
@@ -492,7 +496,7 @@ ifeq ($(CONFIG_ENABLE_ACP),1)
 	cp $(@:.bin=.cpu0.bin) $(@:.bin=.acp.bin)
 	dd if=$(@:.bin=.cpu1.bin) of=$(@:.bin=.acp.bin) bs=512 seek=2 conv=notrunc
 	cp $(@:.bin=.acp.bin) $@
-else
+else  
 ifeq ($(CONFIG_LINK_ROM),1)
 	$(OBJCOPY) -S -O binary -R .romdata -R .rom -R .bugkiller_command -R .bugkiller $< $@
 	$(OBJCOPY) -S -O binary -j .rom $< $(@:.bin=.rom.bin)
@@ -572,11 +576,11 @@ app-clean: $(addprefix component-,$(addsuffix -clean,$(notdir $(COMPONENT_PATHS)
 	rm -f $(APP_ELF) $(APP_BIN) $(APP_MAP)
 
 flash: all
-	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool --chipname=BL602 --baudrate=2000000 --port=/dev/ttyUSB1 --pt=$(PROJECT_PATH)/img_conf/partition_cfg_2M.toml --dts=$(PROJECT_PATH)/img_conf/bl_factory_params_IoTKitA_40M.dts --firmware=$(APP_BIN) 
+	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool-ubuntu --chipname=BL602 --baudrate=2000000 --port=$(SERIAL_PORT) --pt=$(PROJECT_PATH)/img_conf/partition_cfg_2M.toml --dts=$(PROJECT_PATH)/img_conf/bl_factory_params_IoTKitA_40M.dts --firmware=$(APP_BIN) 
 
 #burn code to bl602 board, now only support BL602 IOT-DVK-3s platform, if you want to support older bl602 board you need change parameter port to /dev/ttyUSB0 
 flash_only:
-	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool --chipname=BL602 --baudrate=2000000 --port=/dev/ttyUSB1 --pt=$(PROJECT_PATH)/img_conf/partition_cfg_2M.toml --dts=$(PROJECT_PATH)/img_conf/bl_factory_params_IoTKitA_40M.dts --firmware=$(APP_BIN) 
+	cd $(BL60X_SDK_PATH)/tools/flash_tool && env SDK_APP_BIN=$(APP_BIN) SDK_BOARD=$(PROJECT_BOARD) SDK_NAME=$(PROJECT_NAME) SDK_MEDIA_BIN=$(APP_MEDIA_BIN) SDK_ROMFS_DIR=$(APP_ROMFS_DIR) SDK_DTS=$(PROJECT_DTS) SDK_XTAL=$(PROJECT_BOARD_XTAL) BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=$(APP_BIN) ./bflb_iot_tool-ubuntu --chipname=BL602 --baudrate=2000000 --port=$(SERIAL_PORT) --pt=$(PROJECT_PATH)/img_conf/partition_cfg_2M.toml --dts=$(PROJECT_PATH)/img_conf/bl_factory_params_IoTKitA_40M.dts --firmware=$(APP_BIN) 
 
 clean: app-clean
 
