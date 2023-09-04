@@ -23,12 +23,10 @@ char* str_unfm = NULL;
  */
 static void TaskCreateJSON(void* pvParameters)
 {
-
+    printf("\r\nremaining memory = %ld,minimum memory = %ld\r\n", xPortGetFreeHeapSize(), xPortGetMinimumEverFreeHeapSize());
     cJSON* cjson_test = NULL;
     cJSON* cjson_address = NULL;
-    cJSON* cjson_skill = NULL;
-    char* str = NULL;
-
+    cJSON *cjson_skill = NULL;
 
     cjson_test = cJSON_CreateObject();
 
@@ -49,21 +47,19 @@ static void TaskCreateJSON(void* pvParameters)
 
     cJSON_AddFalseToObject(cjson_test, "KOL");
 
-    str = cJSON_Print(cjson_test);
+    char *str = cJSON_Print(cjson_test);
     str_unfm = cJSON_PrintUnformatted(cjson_test);
 
     if (str != NULL)
     {
         blog_info("%s", str);
         blog_info("%s", str_unfm);
-        cJSON_free(str);
-
-        str = NULL;
+        free(str);
     }
 
     if (cjson_test != NULL)
         cJSON_Delete(cjson_test);
-
+    printf("\r\nremaining memory = %ld,minimum memory = %ld\r\n", xPortGetFreeHeapSize(), xPortGetMinimumEverFreeHeapSize());
     vTaskDelete(NULL);
 }
 /**
@@ -73,6 +69,7 @@ static void TaskCreateJSON(void* pvParameters)
  */
 static void TaskParseJSON(void* pvParameters)
 {
+    printf("\r\nremaining memory = %ld,minimum memory = %ld\r\n", xPortGetFreeHeapSize(), xPortGetMinimumEverFreeHeapSize());
     char* str_json = str_unfm;
     cJSON* root = cJSON_Parse(str_json);
     if (root==NULL) goto __err;
@@ -106,13 +103,13 @@ static void TaskParseJSON(void* pvParameters)
         blog_info("id:%d, skills=%s", i, item->valuestring);
     }
 __err:
-    cJSON_free(str_unfm);
-
     if (root != NULL)
     {
         cJSON_Delete(root);
         root = NULL;
     }
+    free(str_unfm);
+    printf("\r\nremaining memory = %ld,minimum memory = %ld\r\n", xPortGetFreeHeapSize(), xPortGetMinimumEverFreeHeapSize());
     vTaskDelete(NULL);
 }
 
