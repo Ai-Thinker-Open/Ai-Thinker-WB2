@@ -38,6 +38,20 @@ int bl_sha_mutex_give()
     return 0;
 }
 
+#if defined (BL602)
+static bool is_tcm_addr(void *addr)
+{
+    uintptr_t addr_masked = (uintptr_t)addr & 0x0FFFFFFFUL;
+
+    // Checking upper boundary ought to be enough
+    #define BL602_END_OF_DTCM 0x02020000UL
+    if (addr_masked < BL602_END_OF_DTCM) {
+        return true;
+    }
+    return false;
+}
+#endif
+
 static int bl_to_drv_type(bl_sha_type_t type)
 {
     const uint8_t map[] = {
@@ -75,7 +89,13 @@ int bl_sha_init(bl_sha_ctx_t *ctx, const bl_sha_type_t type)
     lc->shaMode = sha_type;
     lc->shaIntSet = 1;
     lc->shaIntClr = 1;
-    Sec_Eng_SHA256_Link_Init((SEC_Eng_SHA256_Link_Ctx *)&ctx->ctx, BL_SHA_ID, (uint32_t)&working_link_cfg, ctx->tmp, ctx->pad);
+    bl_SEC_Eng_SHA_Link_Config_Type *link_cfg = &ctx->link_cfg;
+#if defined (BL602) || defined (BL702)
+    if (is_tcm_addr(ctx)) {
+        link_cfg = &working_link_cfg;
+    }
+#endif
+    Sec_Eng_SHA256_Link_Init((SEC_Eng_SHA256_Link_Ctx *)&ctx->ctx, BL_SHA_ID, (uint32_t)link_cfg, ctx->tmp, ctx->pad);
     return 0;
 }
 
@@ -88,20 +108,42 @@ int bl_sha_clone(bl_sha_ctx_t *dst, const bl_sha_ctx_t *src)
     *dst = *src;
     dst->ctx.shaBuf = dst->tmp;
     dst->ctx.shaPadding = dst->pad;
+    dst->ctx.linkAddr = (uint32_t)&dst->link_cfg;
+#if defined(BL602)
+    if (is_tcm_addr(dst))
+    {
+        dst->ctx.linkAddr = (uint32_t) &working_link_cfg;
+    }
+#endif
     return 0;
 }
 
 int bl_sha_update(bl_sha_ctx_t *ctx, const uint8_t *input, uint32_t len)
 {
-    ARCH_MemCpy_Fast(&working_link_cfg, &ctx->link_cfg, sizeof(working_link_cfg));
+#if defined(BL602)
+    if (is_tcm_addr(ctx))
+    {
+        ARCH_MemCpy_Fast(&working_link_cfg, &ctx->link_cfg, sizeof(working_link_cfg));
+    }
+#endif
     Sec_Eng_SHA256_Link_Update((SEC_Eng_SHA256_Link_Ctx *)&ctx->ctx, BL_SHA_ID, input, len);
-    ARCH_MemCpy_Fast(&ctx->link_cfg, &working_link_cfg, sizeof(working_link_cfg));
+#if defined(BL602)
+    if (is_tcm_addr(ctx))
+    {
+        ARCH_MemCpy_Fast(&ctx->link_cfg, &working_link_cfg, sizeof(working_link_cfg));
+    }
+#endif
     return 0;
 }
 
 int bl_sha_finish(bl_sha_ctx_t *ctx, uint8_t *hash)
 {
-    ARCH_MemCpy_Fast(&working_link_cfg, &ctx->link_cfg, sizeof(working_link_cfg));
+#if defined(BL602)
+    if (is_tcm_addr(ctx))
+    {
+        ARCH_MemCpy_Fast(&working_link_cfg, &ctx->link_cfg, sizeof(working_link_cfg));
+    }
+#endif
     Sec_Eng_SHA256_Link_Finish((SEC_Eng_SHA256_Link_Ctx *)&ctx->ctx, BL_SHA_ID, hash);
     return 0;
 }

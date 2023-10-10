@@ -44,6 +44,7 @@ int bl_main_apm_sta_info_get(struct wifi_apm_sta_info *apm_sta_info, uint8_t idx
 int bl_main_apm_sta_delete(uint8_t sta_idx);
 int bl_main_apm_remove_all_sta();
 int bl_main_conf_max_sta(uint8_t max_sta_supported);
+int bl_main_apm_chan_switch(uint8_t vif_idx, int channel, uint8_t cs_cnt);
 int bl_main_cfg_task_req(uint32_t ops, uint32_t task, uint32_t element, uint32_t type, void *arg1, void *arg2);
 int bl_main_scan(struct netif *netif, uint16_t *fixed_channels, uint16_t channel_num, struct mac_addr *bssid, struct mac_ssid *ssid, uint8_t scan_mode, uint32_t duration_scan);
 int bl_main_raw_send(uint8_t *pkt , int len);

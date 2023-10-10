@@ -41,6 +41,7 @@ int bl_send_apm_start_req(struct bl_hw *bl_hw, struct apm_start_cfm *cfm, char *
 int bl_send_apm_stop_req(struct bl_hw *bl_hw, uint8_t vif_idx);
 int bl_send_apm_sta_del_req(struct bl_hw *bl_hw, struct apm_sta_del_cfm *cfm, uint8_t sta_idx, uint8_t vif_idx);
 int bl_send_apm_conf_max_sta_req(struct bl_hw *bl_hw, uint8_t max_sta_supported);
+int bl_send_apm_chan_switch_req(struct bl_hw *bl_hw, uint8_t vif_index, int channel, uint8_t cs_count);
 int bl_send_cfg_task_req(struct bl_hw *bl_hw, uint32_t ops, uint32_t task, uint32_t element, uint32_t type, void *arg1, void *arg2);
 int bl_send_channel_set_req(struct bl_hw *bl_hw, int channel);
 void bl_msg_update_channel_cfg(const char *code);

@@ -42,9 +42,18 @@ typedef struct {
     bl_SEC_Eng_AES_Link_Config_Type link_cfg;
 } bl_sec_aes_t;
 
+// Correspond to HW. Do not change order.
+typedef enum {
+    BL_AES_ECB,
+    BL_AES_CTR,
+    BL_AES_CBC,
+} bl_sec_aes_mode_t;
+
 int bl_sec_aes_init();
 int bl_aes_acquire_hw();
 int bl_aes_release_hw();
 int bl_aes_init(bl_sec_aes_t *aes);
 int bl_aes_set_key(bl_sec_aes_t *aes, bl_sec_aes_op_t op, const uint8_t *key, size_t key_len);
+int bl_aes_set_mode(bl_sec_aes_t *aes, bl_sec_aes_mode_t mode, const uint8_t iv[16]);
+int bl_aes_transform_blocks(bl_sec_aes_t *aes, bl_sec_aes_op_t op, const uint8_t *input, uint16_t n_blk, uint8_t *output);
 int bl_aes_transform(bl_sec_aes_t *aes, bl_sec_aes_op_t op, const uint8_t *input, uint8_t *output);

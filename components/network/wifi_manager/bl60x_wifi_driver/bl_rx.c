@@ -24,7 +24,7 @@
 #include <supplicant_api.h>
 #include <bl_wpa.h>
 
-#ifdef BL602_MATTER_SUPPORT
+#if defined(BL602_MATTER_SUPPORT) || defined(CFG_IPV6)
 #include <lwip/dhcp6.h>
 #endif
 
@@ -685,7 +685,7 @@ static int bl_rx_sm_connect_ind(struct bl_hw *bl_hw,
         if (bl_vif && bl_vif->dev) {
             netifapi_netif_set_link_up(bl_vif->dev);
             netifapi_netif_set_default(bl_vif->dev);
-#ifdef BL602_MATTER_SUPPORT
+#if defined(BL602_MATTER_SUPPORT) || defined(CFG_IPV6)
             netif_create_ip6_linklocal_address(bl_vif->dev, 1);
             bl_vif->dev->ip6_autoconfig_enabled = 1;
 #endif

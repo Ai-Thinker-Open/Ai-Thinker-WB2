@@ -141,6 +141,11 @@ ifeq ($(CONFIG_MBEDTLS_AES_USE_HW),1)
 COMPONENT_SRCS += port/hw_acc/aes_alt.c
 endif
 
+# GCM HW
+ifeq ($(CONFIG_MBEDTLS_GCM_USE_HW),1)
+COMPONENT_SRCS += port/hw_acc/gcm_alt.c
+endif
+
 # ECC HW
 ifeq ($(CONFIG_MBEDTLS_ECC_USE_HW),1)
 MBEDTLS_USE_HW=1

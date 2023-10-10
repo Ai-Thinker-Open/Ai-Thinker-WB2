@@ -233,6 +233,7 @@ int wifi_mgmr_ap_dhcp_range_get(uint32_t *ip, uint32_t *mask, int *start, int *e
 int wifi_mgmr_ap_dhcp_range_set(uint32_t ip, uint32_t mask, int start,  int end);
 int wifi_mgmr_ap_stop(wifi_interface_t *interface);
 int wifi_mgmr_ap_start(wifi_interface_t *interface, char *ssid, int hidden_ssid, char *passwd, int channel);
+int wifi_mgmr_ap_chan_switch(wifi_interface_t *interface, int channel, uint8_t cs_count);
 int wifi_mgmr_ap_start_adv(wifi_interface_t *interface, char *ssid, int hidden_ssid, char *passwd, int channel, uint8_t use_dhcp);
 int wifi_mgmr_ap_start_atcmd(wifi_interface_t *interface, char *ssid, int hidden_ssid, char *passwd, int channel, int max_sta_supported);
 int wifi_mgmr_ap_sta_cnt_get(uint8_t *sta_cnt);

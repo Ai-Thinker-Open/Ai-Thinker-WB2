@@ -148,6 +148,11 @@
 #define MBEDTLS_AES_ALT
 #endif
 
+// GCM HW
+#if CONFIG_MBEDTLS_GCM_USE_HW
+#define MBEDTLS_GCM_ALT
+#endif
+
 // ECC HW
 #if CONFIG_MBEDTLS_ECC_USE_HW
 #define MBEDTLS_ECP_ALT

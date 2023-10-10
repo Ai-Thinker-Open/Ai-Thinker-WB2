@@ -22,6 +22,11 @@
 #define LWIP_AUTOIP             1
 #define LWIP_IPV6_MLD           1
 #define LWIP_ND6_RDNSS_MAX_DNS_SERVERS  1
+#elif defined(CFG_IPV6)
+#define LWIP_IPV6                       1
+#define LWIP_IPV6_MLD                   1
+#define LWIP_IPV6_DHCP6                 1
+#define LWIP_ND6_RDNSS_MAX_DNS_SERVERS  1
 #endif
 
 #define LWIP_NUM_NETIF_CLIENT_DATA      1

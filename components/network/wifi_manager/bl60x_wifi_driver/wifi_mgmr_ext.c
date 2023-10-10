@@ -253,6 +253,19 @@ int wifi_mgmr_sta_ip_get(uint32_t *ip, uint32_t *gw, uint32_t *mask)
     return 0;
 }
 
+#ifdef CFG_IPV6
+int wifi_mgmr_sta_ipv6_get(uint8_t index, ip6_addr_t *ip6addr, uint8_t *state)
+{
+    if ((index >= LWIP_IPV6_NUM_ADDRESSES) || !ip6addr || !state) {
+        return -1;
+    }
+
+    *ip6addr = *(const ip6_addr_t *)netif_ip6_addr(&wifiMgmr.wlan_sta.netif, index);
+    *state = netif_ip6_addr_state(&wifiMgmr.wlan_sta.netif, index);
+    return 0;
+}
+#endif
+
 int wifi_mgmr_sta_dns_get(uint32_t *dns1, uint32_t *dns2)
 {
     const ip_addr_t* dns;
@@ -660,6 +673,11 @@ int wifi_mgmr_ap_start(wifi_interface_t *interface, char *ssid, int hidden_ssid,
 
     wifi_mgmr_api_ap_start(ssid, passwd, channel, hidden_ssid, -1, 1);
     return 0;
+}
+
+int wifi_mgmr_ap_chan_switch(wifi_interface_t *interface, int channel, uint8_t cs_count)
+{
+    return wifi_mgmr_api_chan_switch(channel, cs_count);
 }
 
 int wifi_mgmr_ap_start_adv(wifi_interface_t *interface, char *ssid, int hidden_ssid, char *passwd, int channel, uint8_t use_dhcp)

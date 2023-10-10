@@ -9,6 +9,7 @@
 #include <bl_sec_common.h>
 #include <bl_sec_pka.h>
 #include <bl_sec_aes.h>
+#include <bl_sec_gmac.h>
 
 #if defined(__cplusplus)
 extern "C" {

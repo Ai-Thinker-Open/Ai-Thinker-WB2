@@ -13,7 +13,7 @@
 #include <lwip/netifapi.h>
 #include <lwip/dns.h>
 
-#ifdef BL602_MATTER_SUPPORT
+#if defined(BL602_MATTER_SUPPORT) || defined(CFG_IPV6)
 #include <lwip/dhcp6.h>
 #endif
 
@@ -467,7 +467,7 @@ static bool stateSnifferGuard_ChannelSet( void *ch, struct event *event )
     return false;
 }
 
-#ifdef BL602_MATTER_SUPPORT
+#if defined(BL602_MATTER_SUPPORT) || defined(CFG_IPV6)
 static struct dhcp6 bl_dhcp6;
 #endif
 static bool stateSnifferGuard_raw_send(void *ch, struct event *event)
@@ -488,7 +488,7 @@ static bool stateSnifferGuard_raw_send(void *ch, struct event *event)
         bl_os_log_info("------>>>>>> RAW Send CMD, pkt %p, len %d\r\n", pkt, len);
         bl_main_raw_send(pkt, len);
     }
-    #ifdef BL602_MATTER_SUPPORT
+    #if defined(BL602_MATTER_SUPPORT) || defined(CFG_IPV6)
     dhcp6_set_struct(&(wifiMgmr.wlan_sta.netif), &bl_dhcp6);
     netifapi_netif_common(&(wifiMgmr.wlan_sta.netif), dhcp6_enable_stateless, NULL);
     #endif
@@ -614,6 +614,24 @@ err_t dhcp_server_stop(struct netif *netif);
     if (g_wifi_ap_recover_timer) {
         bl_os_timer_start_once(g_wifi_ap_recover_timer, 2, 0);
     }
+    return false;
+}
+
+static bool stateGlobalGuard_ap_chan_switch(void *ev, struct event *event)
+{
+    wifi_mgmr_msg_t *msg;
+
+    msg = event->data;
+    if (ev != (void *)msg->ev) {
+        return false;
+    }
+
+    if (!wifiMgmr.inf_ap_enabled) {
+        return false;
+    }
+
+    bl_main_apm_chan_switch(wifiMgmr.wlan_ap.vif_index, (int)(intptr_t)msg->data1, (uint8_t)(uintptr_t)msg->data2);
+
     return false;
 }
 
@@ -785,6 +803,7 @@ const static struct state stateGlobal = {
       {EVENT_TYPE_GLB, (void*)WIFI_MGMR_EVENT_GLB_ENABLE_AUTORECONNECT, &stateGlobalGuard_enable_autoreconnect, &stateGlobalAction, &stateIdle},
       {EVENT_TYPE_APP, (void*)WIFI_MGMR_EVENT_APP_AP_START, &stateGlobalGuard_AP, &stateGlobalAction, &stateIdle},
       {EVENT_TYPE_APP, (void*)WIFI_MGMR_EVENT_APP_AP_STOP, &stateGlobalGuard_stop, &stateGlobalAction, &stateIdle},
+      {EVENT_TYPE_APP, (void*)WIFI_MGMR_EVENT_APP_AP_CHAN_SWITCH, &stateGlobalGuard_ap_chan_switch, &stateGlobalAction, &stateIdle},
       {EVENT_TYPE_APP, (void*)WIFI_MGMR_EVENT_APP_CONF_MAX_STA, &stateGlobalGuard_conf_max_sta, &stateGlobalAction, &stateIdle},
       {EVENT_TYPE_APP, (void*)WIFI_MGMR_EVENT_APP_DENOISE, &stateGlobalGuard_denoise, &stateGlobalAction, &stateIdle},
       {EVENT_TYPE_APP, (void*)WIFI_MGMR_EVENT_APP_CONNECT, &stateGlobalGuard_connect, &stateGlobalAction_connect, &stateConnecting},
@@ -794,7 +813,7 @@ const static struct state stateGlobal = {
       {EVENT_TYPE_FW,  (void*)WIFI_MGMR_EVENT_FW_DATA_RAW_SEND, &stateSnifferGuard_raw_send, &stateGlobalAction, &stateIdle},
       {EVENT_TYPE_FW,  (void*)WIFI_MGMR_EVENT_FW_CFG_REQ, &stateGlobal_cfg_req, &stateGlobalAction, &stateIdle},
    },
-   .numTransitions = 12,
+   .numTransitions = 13,
    .data = "group",
    .entryAction = &stateEnter,
    .exitAction = &stateExit,

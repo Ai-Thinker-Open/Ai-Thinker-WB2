@@ -203,6 +203,8 @@ typedef enum wifi_fw_event_id
     MM_SET_PS_OPTIONS_CFM,
     /// Indication of PS state change for a P2P VIF
     MM_P2P_VIF_PS_CHANGE_IND,
+    /// Indication that CSA counter has been updated
+    MM_CSA_COUNTER_IND,
     /// Message containing channel information
     MM_CHANNEL_SURVEY_IND,
     /// Message containing Beamformer information
@@ -219,6 +221,10 @@ typedef enum wifi_fw_event_id
     MM_P2P_NOA_UPD_IND,
     /// Indication that RSSI is below or above the threshold
     MM_RSSI_STATUS_IND,
+    /// Indication that CSA is done
+    MM_CSA_FINISH_IND,
+    /// Indication that CSA is in prorgess (resp. done) and traffic must be stopped (resp. restarted)
+    MM_CSA_TRAFFIC_IND,
     /// Request to update the group information of a station
     MM_MU_GROUP_UPDATE_REQ,
     /// Confirmation of the @ref MM_MU_GROUP_UPDATE_REQ message
@@ -296,6 +302,10 @@ typedef enum wifi_fw_event_id
     APM_CONF_MAX_STA_REQ,
     /// CONF MAX STA Confirm
     APM_CONF_MAX_STA_CFM,
+    /// Channel switch Request
+    APM_CHAN_SWITCH_REQ,
+    /// Channel switch Confirm
+    APM_CHAN_SWITCH_CFM,
     /// MAX number of messages
     APM_MAX,
 

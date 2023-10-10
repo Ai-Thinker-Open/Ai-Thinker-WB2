@@ -331,6 +331,20 @@ static void _scan_channels(int channel_input_num, uint8_t channel_input[MAX_FIXE
 
 }
 
+static int channel_cvt_validate(const char *chan)
+{
+    int ch;
+    if (!chan) {
+        return -1;
+    }
+
+    ch = atoi(chan);
+    if (ch <= 0 || ch > 11) {
+        return -1;
+    }
+    return ch;
+}
+
 static void wifi_scan_cmd(char *buf, int len, int argc, char **argv)
 {
     int opt;
@@ -340,7 +354,7 @@ static void wifi_scan_cmd(char *buf, int len, int argc, char **argv)
     int bssid_set_flag = 0;
     uint8_t mac[6] = {0xff, 0xff, 0xff, 0xff, 0xff, 0xff};
     getopt_env_t getopt_env;
-    /* 
+    /*
      * default: active scan
     */
     uint8_t scan_mode = SCAN_ACTIVE;
@@ -424,6 +438,16 @@ static void wifi_sta_ip_info(char *buf, int len, int argc, char **argv)
     bl_os_printf("GW  :   %s \r\n", ip4addr_ntoa(&gw));
     bl_os_printf("DNS1:   %s \r\n", ip4addr_ntoa(&dns1));
     bl_os_printf("DNS2:   %s \r\n", ip4addr_ntoa(&dns2));
+#ifdef CFG_IPV6
+    int wifi_mgmr_sta_ipv6_get(uint8_t index, ip6_addr_t *ip6addr, uint8_t *state);
+    ip6_addr_t ip6;
+    uint8_t state, index = 0;
+    while (!wifi_mgmr_sta_ipv6_get(index, &ip6, &state))
+    {
+        bl_os_printf("IP6 (%d):   %s, state: %d\r\n", index, ip6addr_ntoa(&ip6), state);
+        index++;
+    }
+#endif
     bl_os_puts(  "Power Table (dbm):\r\n");
     bl_os_puts(  "--------------------------------\r\n");
     bl_os_printf("  11b: %u %u %u %u             (1Mbps 2Mbps 5.5Mbps 11Mbps)\r\n",
@@ -492,7 +516,7 @@ static void wifi_sta_ip_set_cmd(char *buf, int len, int argc, char **argv)
     /* sample input
      *
      * cmd_ip_set 192.168.1.212 255.255.255.0 192.168.1.1 114.114.114.114 114.114.114.114
-     * 
+     *
      * */
     uint32_t ip, mask, gw, dns1, dns2;
     char addr_str[20];
@@ -563,7 +587,7 @@ static void wifi_connect_cmd(char *buf, int len, int argc, char **argv)
     open_bss_flag = 0;
     int pci_en = 0;
     int scan_mode = 0;
-    uint8_t pmf_flag = WIFI_MGMR_CONNECT_PMF_CAPABLE_BIT; 
+    uint8_t pmf_flag = WIFI_MGMR_CONNECT_PMF_CAPABLE_BIT;
     uint16_t itv = 0;
 
     if (2 > argc) {
@@ -588,7 +612,7 @@ static void wifi_connect_cmd(char *buf, int len, int argc, char **argv)
         case 'q':
             ++quick_connect;
             break;
-        
+
         case 't':
             itv = atoi(getopt_env.optarg);
             wifi_mgmr_set_listen_interval(itv);
@@ -892,8 +916,7 @@ static void cmd_wifi_ap_start(char *buf, int len, int argc, char **argv)
             hidden_ssid = 1;
         }
 
-        channel = atoi(argv[1]);
-        if (channel <= 0 || channel > 11) {
+        if ((channel = channel_cvt_validate(argv[1])) < 0) {
             return;
         }
 
@@ -914,6 +937,28 @@ static void cmd_wifi_ap_stop(char *buf, int len, int argc, char **argv)
 {
     wifi_mgmr_ap_stop(NULL);
     bl_os_printf("--->>> cmd_wifi_ap_stop\r\n");
+}
+
+static void cmd_wifi_ap_chan_switch(char *buf, int len, int argc, char **argv)
+{
+    const size_t min_args = 2;
+    uint8_t cs_count = 0; // 0: default
+    int ch;
+
+    if (argc < min_args) {
+        bl_os_printf("Usage: %s chan [cs_count]\r\n", *argv);
+        return;
+    }
+
+    if ((ch = channel_cvt_validate(argv[1])) < 0) {
+        bl_os_printf("invalid channel\r\n");
+        return;
+    }
+    if (argc > min_args) {
+        cs_count = atoi(argv[2]);
+    }
+
+    wifi_mgmr_ap_chan_switch(NULL, ch, cs_count);
 }
 
 static void cmd_wifi_ap_conf_max_sta(char *buf, int len, int argc, char **argv)
@@ -1170,6 +1215,7 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
         { "wifi_sniffer_off", "wifi sniffer mode off", wifi_sniffer_off_cmd},
         { "wifi_ap_start", "start Ap mode [channel] [max_sta_supported]", cmd_wifi_ap_start},
         { "wifi_ap_stop", "stop Ap mode", cmd_wifi_ap_stop},
+        { "wifi_ap_chan_switch", "switch AP channel", cmd_wifi_ap_chan_switch },
         { "wifi_ap_conf_max_sta", "config Ap max sta", cmd_wifi_ap_conf_max_sta},
         { "wifi_dump", "dump fw statistic", cmd_wifi_dump},
         { "wifi_cfg", "wifi cfg cmd", cmd_wifi_cfg},
@@ -1184,13 +1230,13 @@ const static struct cli_command cmds_user[] STATIC_CLI_CMD_ATTRIBUTE = {
         { "wifi_edca_dump", "dump EDCA data", wifi_edca_dump_cmd},
         { "wifi_state", "get wifi_state", cmd_wifi_state_get},
         { "wifi_update_power", "Power table test command", cmd_wifi_power_table_update},
-};                                                                                   
+};
 
 int wifi_mgmr_cli_init(void)
 {
     // static command(s) do NOT need to call aos_cli_register_command(s) to register.
     // However, calling aos_cli_register_command(s) here is OK but is of no effect as cmds_user are included in cmds list.
     // XXX NOTE: Calling this *empty* function is necessary to make cmds_user in this file to be kept in the final link.
-    //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));          
+    //return aos_cli_register_commands(cmds_user, sizeof(cmds_user)/sizeof(cmds_user[0]));
     return 0;
 }

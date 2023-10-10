@@ -56,14 +56,30 @@ int bl_aes_set_key(bl_sec_aes_t *aes, bl_sec_aes_op_t op, const uint8_t *key, si
     return 0;
 }
 
-int bl_aes_transform(bl_sec_aes_t *aes, bl_sec_aes_op_t op, const uint8_t *input, uint8_t *output)
+int bl_aes_set_mode(bl_sec_aes_t *aes, bl_sec_aes_mode_t mode, const uint8_t iv[16])
 {
-    const uint16_t n_blk = 1;
+    if (!aes) {
+        return -1;
+    }
+    aes->link_cfg.aesBlockMode = (uint8_t)mode;
+    if (iv) {
+        memcpy(&aes->link_cfg.aesIV0, iv, 16);
+        aes->link_cfg.aesIVSel = SEC_ENG_AES_USE_NEW;
+    }
+
+    return 0;
+}
+
+int bl_aes_transform_blocks(bl_sec_aes_t *aes, bl_sec_aes_op_t op, const uint8_t *input, uint16_t n_blk, uint8_t *output)
+{
+    int ret;
     if (!(aes && input && output)) {
         return -1;
     }
 
-    aes->link_cfg.aesMsgLen = n_blk;
+    if (n_blk == 0) {
+        return 0;
+    }
     if (op == BL_AES_ENCRYPT) {
         aes->link_cfg.aesDecEn = SEC_ENG_AES_ENCRYPTION;
     } else {
@@ -71,8 +87,13 @@ int bl_aes_transform(bl_sec_aes_t *aes, bl_sec_aes_op_t op, const uint8_t *input
     }
 
     Sec_Eng_AES_Enable_Link(AES_ID);
-    Sec_Eng_AES_Link_Work(AES_ID, (uint32_t)&aes->link_cfg, input, n_blk << 4, output);
+    ret = Sec_Eng_AES_Link_Work(AES_ID, (uint32_t)&aes->link_cfg, input, n_blk << 4, output);
     Sec_Eng_AES_Disable_Link(AES_ID);
 
-    return 0;
+    return !(ret == SUCCESS);
+}
+
+int bl_aes_transform(bl_sec_aes_t *aes, bl_sec_aes_op_t op, const uint8_t *input, uint8_t *output)
+{
+    return bl_aes_transform_blocks(aes, op, input, 1, output);
 }

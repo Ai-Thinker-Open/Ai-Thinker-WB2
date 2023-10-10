@@ -124,6 +124,30 @@ int hosal_adc_add_channel(hosal_adc_dev_t *adc, uint32_t channel);
 int hosal_adc_remove_channel(hosal_adc_dev_t *adc, uint32_t channel);
 
 /**
+ * @brief Add a channel to an ADC interface
+ *
+ * @param[in]   adc      the interface which should be sampled
+ * @param[in]   channel  adc channel
+ *
+ * @return
+ *	- 0    on success
+ *	- EIO  if an error occurred with any step
+ */
+int hosal_adc_add_reference_channel(hosal_adc_dev_t *adc, uint32_t refer_channel, float refer_voltage);
+
+/**
+ * @brief Remove a channel to an ADC interface
+ *
+ * @param[in]   adc      the interface which should be sampled
+ * @param[in]   channel  adc channel
+ *
+ * @return
+ *	- 0    on success
+ *	- EIO  if an error occurred with any step
+ */
+int hosal_adc_remove_reference_channel(hosal_adc_dev_t *adc);
+
+/**
  * @brief Takes adc device handle from an ADC interface
  *
  * @return  

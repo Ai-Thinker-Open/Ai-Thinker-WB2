@@ -1061,6 +1061,26 @@ int bl_send_apm_conf_max_sta_req(struct bl_hw *bl_hw, uint8_t max_sta_supported)
     return bl_send_msg(bl_hw, req, 1, APM_CONF_MAX_STA_CFM, NULL);
 }
 
+int bl_send_apm_chan_switch_req(struct bl_hw *bl_hw, uint8_t vif_index, int channel, uint8_t cs_count)
+{
+    struct apm_chan_switch_req *req;
+
+    req = bl_msg_zalloc(APM_CHAN_SWITCH_REQ, TASK_APM, DRV_TASK_ID, sizeof(struct apm_chan_switch_req));
+    if (!req) {
+        return -ENOMEM;
+    }
+
+    req->vif_idx = vif_index;
+    req->mode = 0;
+    req->chan.band = NL80211_BAND_2GHZ;
+    req->chan.freq = phy_channel_to_freq(req->chan.band, channel);
+    req->chan.flags = 0;
+    req->chan.tx_power = 0;
+    req->cs_count = cs_count;
+
+    return bl_send_msg(bl_hw, req, 1, APM_CHAN_SWITCH_CFM, NULL);
+}
+
 int bl_send_cfg_task_req(struct bl_hw *bl_hw, uint32_t ops, uint32_t task, uint32_t element, uint32_t type, void *arg1, void *arg2)
 {
     struct cfg_start_req *req;

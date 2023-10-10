@@ -6,6 +6,7 @@
 
 #include "bl_sec.h"
 #include "bl_irq.h"
+#include "bl_sec_gmac.h"
 
 #include <blog.h>
 
@@ -62,6 +63,7 @@ int bl_sec_init(void)
     bl_sec_sha_init();
     bl_sec_pka_init();
     bl_sec_aes_init();
+    bl_sec_gmac_init();
 
     Sec_Eng_Trng_Enable();
     feed_trng_buffer();

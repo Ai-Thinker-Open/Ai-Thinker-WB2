@@ -444,6 +444,11 @@ int bl_main_conf_max_sta(uint8_t max_sta_supported)
     return bl_send_apm_conf_max_sta_req(&wifi_hw, max_sta_supported);
 }
 
+int bl_main_apm_chan_switch(uint8_t vif_idx, int channel, uint8_t cs_cnt)
+{
+    return bl_send_apm_chan_switch_req(&wifi_hw, vif_idx, channel, cs_cnt);
+}
+
 int bl_main_cfg_task_req(uint32_t ops, uint32_t task, uint32_t element, uint32_t type, void *arg1, void *arg2)
 {
     return bl_send_cfg_task_req(&wifi_hw, ops, task, element, type, arg1, arg2);

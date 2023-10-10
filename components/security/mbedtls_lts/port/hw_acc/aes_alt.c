@@ -1,36 +1,15 @@
 /*
  *  Description: AES hardware acceleration
- *  Copyright (C) Bouffalo Lab 2016-2022
+ *  Copyright (C) Bouffalo Lab 2016-2023
  *  SPDX-License-Identifier: Apache-2.0
  *  File Name:   aes_alt.c
  *  Author:      Chien Wong(qwang@bouffalolab.com)
  *  Start Date:  Jun 13, 2022
- *  Last Update: Jun 13, 2022
- */
-
-/*
- *  FIPS-197 compliant AES implementation
+ *  Last Update: Jun 25, 2023
  *
- *  Copyright The Mbed TLS Contributors
- *  SPDX-License-Identifier: Apache-2.0
- *
- *  Licensed under the Apache License, Version 2.0 (the "License"); you may
- *  not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- *  Unless required by applicable law or agreed to in writing, software
- *  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- *  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *  See the License for the specific language governing permissions and
- *  limitations under the License.
- */
-/*
- *  The AES block cipher was designed by Vincent Rijmen and Joan Daemen.
- *
- *  http://csrc.nist.gov/encryption/aes/rijndael/Rijndael.pdf
- *  http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf
+ *  Change log:
+ *  Jun 25, 2023: qwang
+ *      Add CBC.
  */
 
 #include "common.h"
@@ -270,23 +249,6 @@ int mbedtls_aes_crypt_ecb( mbedtls_aes_context *ctx,
     AES_VALIDATE_RET( mode == MBEDTLS_AES_ENCRYPT ||
                       mode == MBEDTLS_AES_DECRYPT );
 
-#if defined(MBEDTLS_AESNI_C) && defined(MBEDTLS_HAVE_X86_64)
-    if( mbedtls_aesni_has_support( MBEDTLS_AESNI_AES ) )
-        return( mbedtls_aesni_crypt_ecb( ctx, mode, input, output ) );
-#endif
-
-#if defined(MBEDTLS_PADLOCK_C) && defined(MBEDTLS_HAVE_X86)
-    if( aes_padlock_ace )
-    {
-        if( mbedtls_padlock_xcryptecb( ctx, mode, input, output ) == 0 )
-            return( 0 );
-
-        // If padlock data misaligned, we just fall back to
-        // unaccelerated mode
-        //
-    }
-#endif
-
     if( mode == MBEDTLS_AES_ENCRYPT )
         return( mbedtls_internal_aes_encrypt( ctx, input, output ) );
     else
@@ -304,9 +266,9 @@ int mbedtls_aes_crypt_cbc( mbedtls_aes_context *ctx,
                     const unsigned char *input,
                     unsigned char *output )
 {
-    int i;
     int ret = MBEDTLS_ERR_ERROR_CORRUPTION_DETECTED;
-    unsigned char temp[16];
+    bl_sec_aes_op_t op;
+    uint16_t blks;
 
     AES_VALIDATE_RET( ctx != NULL );
     AES_VALIDATE_RET( mode == MBEDTLS_AES_ENCRYPT ||
@@ -318,57 +280,36 @@ int mbedtls_aes_crypt_cbc( mbedtls_aes_context *ctx,
     if( length % 16 )
         return( MBEDTLS_ERR_AES_INVALID_INPUT_LENGTH );
 
-#if defined(MBEDTLS_PADLOCK_C) && defined(MBEDTLS_HAVE_X86)
-    if( aes_padlock_ace )
-    {
-        if( mbedtls_padlock_xcryptcbc( ctx, mode, length, iv, input, output ) == 0 )
-            return( 0 );
+    if( length > 16 * 65535 )
+        return( MBEDTLS_ERR_PLATFORM_FEATURE_UNSUPPORTED );
 
-        // If padlock data misaligned, we just fall back to
-        // unaccelerated mode
-        //
-    }
-#endif
+    if( length == 0 )
+        return 0;
 
+    blks = length / 16;
+
+    bl_aes_set_mode( &ctx->ctx, BL_AES_CBC, iv );
     if( mode == MBEDTLS_AES_DECRYPT )
     {
-        while( length > 0 )
-        {
-            memcpy( temp, input, 16 );
-            ret = mbedtls_aes_crypt_ecb( ctx, mode, input, output );
-            if( ret != 0 )
-                goto exit;
-
-            for( i = 0; i < 16; i++ )
-                output[i] = (unsigned char)( output[i] ^ iv[i] );
-
-            memcpy( iv, temp, 16 );
-
-            input  += 16;
-            output += 16;
-            length -= 16;
-        }
+        memcpy( iv, input + ( blks - 1 ) * 16, 16 );
+        op = BL_AES_DECRYPT;
     }
     else
     {
-        while( length > 0 )
-        {
-            for( i = 0; i < 16; i++ )
-                output[i] = (unsigned char)( input[i] ^ iv[i] );
-
-            ret = mbedtls_aes_crypt_ecb( ctx, mode, output, output );
-            if( ret != 0 )
-                goto exit;
-            memcpy( iv, output, 16 );
-
-            input  += 16;
-            output += 16;
-            length -= 16;
-        }
+        op = BL_AES_ENCRYPT;
     }
-    ret = 0;
 
-exit:
+    bl_aes_acquire_hw();
+    ret = bl_aes_transform_blocks( &ctx->ctx, op, input, blks, output );
+    bl_aes_release_hw();
+
+    if( mode == MBEDTLS_AES_ENCRYPT )
+    {
+        memcpy( iv, output + ( blks - 1 ) * 16, 16 );
+    }
+
+    bl_aes_set_mode( &ctx->ctx, BL_AES_ECB, NULL );
+
     return( ret );
 }
 #endif /* MBEDTLS_CIPHER_MODE_CBC */

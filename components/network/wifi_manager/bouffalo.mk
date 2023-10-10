@@ -74,5 +74,9 @@ ifeq ($(CONFIG_WIFI_PKT_OUTPUT_HOOK),1)
 CPPFLAGS += -D PKT_OUTPUT_HOOK
 endif
 
+ifeq ($(CONFIG_IPV6), 1)
+CFLAGS += -DCFG_IPV6
+endif
+
 ##
 #CPPFLAGS +=

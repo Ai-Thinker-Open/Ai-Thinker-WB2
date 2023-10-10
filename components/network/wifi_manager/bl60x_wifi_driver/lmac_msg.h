@@ -1312,6 +1312,19 @@ struct apm_sta_del_cfm
     u8_l sta_idx;
 };
 
+/// Structure containing the parameters of the @ref APM_CHAN_SWITCH_REQ message.
+struct apm_chan_switch_req
+{
+    /// Index of the AP VIF
+    u8_l vif_idx;
+    /// Mode
+    u8_l mode;
+    /// Control channel to which we have to switch
+    struct scan_chan_tag chan;
+    /// CSA count
+    u8_l cs_count;
+};
+
 /// Structure containing the parameters of the @ref APM_STA_ADD_IND message.
 struct apm_sta_add_ind
 {
