@@ -36,7 +36,7 @@ void ali_linkkit_main(void)
     ali_mqtt_init();
 }
 
-#define ROUTER_SSID "WIFI SSID
+#define ROUTER_SSID "WIFI SSID"
 #define ROUTER_PWD "WIFI PWS"
 
 static wifi_conf_t conf =
