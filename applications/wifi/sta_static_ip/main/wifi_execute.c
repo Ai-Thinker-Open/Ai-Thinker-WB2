@@ -1,6 +1,6 @@
 #include "wifi_execute.h"
 #include "blog.h"
-#define STA_SSID "Ai-WB2-x"
+#define STA_SSID "123"
 #define STA_PASSWORD "12345678"
 #define STA_MAX_CONN_cCOUNT 15
 
@@ -60,10 +60,9 @@ int wifi_sta_connect(const char* sta_ip)
 {
     struct ap_connect_adv ext_param = { 0 };
     g_wifi_sta_interface = wifi_mgmr_sta_enable();
-    int freq;
-    uint8_t ip[4] = { 0 }, i = 0, j = 0;
-    char* temp_arg = (char*)calloc(1, 6);
-    int state = WIFI_STATE_IDLE;
+    uint32_t flags = 0;
+    uint8_t ip[4] = { 0 }, j = 0;
+    char* temp_arg = (char*)malloc(6);
 
     memset(ip, 0, sizeof(ip));
     memset(&sta_ip_params, 0, sizeof(sta_ip_params));
@@ -89,6 +88,8 @@ int wifi_sta_connect(const char* sta_ip)
     ext_param.ap_info.type = AP_INFO_TYPE_PRESIST;
     ext_param.ap_info.time_to_live = 5;
     ext_param.ap_info.band = 0;
+    flags |= WIFI_CONNECT_PMF_CAPABLE;
+    ext_param.flags = flags;
 
     if (g_wifi_sta_is_connected == 1)
     {
