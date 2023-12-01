@@ -65,6 +65,7 @@ EfErrCode ef_env_set_default(void);
 size_t ef_get_env_write_bytes(void);
 EfErrCode ef_set_and_save_env(const char *key, const char *value);
 EfErrCode ef_del_and_save_env(const char *key);
+EfErrCode ef_prefetch_cache_env(void);
 
 #ifdef EF_USING_ENVBUF
 int ef_envbuf_set(uint32_t pt, const uint32_t *buf, size_t size);
