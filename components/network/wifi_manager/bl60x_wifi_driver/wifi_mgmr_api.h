@@ -53,6 +53,9 @@ int wifi_mgmr_api_disable_autoreconnect(void);
 int wifi_mgmr_api_enable_autoreconnect(void);
 int wifi_mgmr_api_denoise_enable(void);
 int wifi_mgmr_api_denoise_disable(void);
+#ifdef CFG_IPV6
+int wifi_mgmr_ip6_is_got(struct netif *netif);
+#endif
 
 /*section for global event*/
 int wifi_mgmr_api_scan_item_beacon(uint8_t channel, int8_t rssi, uint8_t auth, uint8_t mac[], uint8_t ssid[], int len, int8_t ppm_abs, int8_t ppm_rel, uint8_t cipher, uint8_t wps, uint32_t mode, uint8_t group_cipher);

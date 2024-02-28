@@ -56,6 +56,7 @@ extern "C" {
 #define  CODE_WIFI_ON_AP_STA_DEL        22
 #define  CODE_WIFI_ON_EMERGENCY_MAC     23
 #define  CODE_WIFI_ON_AP_STA_GOT_IP     24
+#define  CODE_WIFI_ON_GOT_IP6           25
 
 /* Network Event */
 #define EV_NETWORK EV_WIFI

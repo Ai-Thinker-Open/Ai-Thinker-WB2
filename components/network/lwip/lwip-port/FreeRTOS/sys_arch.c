@@ -492,8 +492,6 @@ static void pthread_local_storage_thread_deleted_callback(int index, void *value
 	if (sem) {
 		sys_thread_sem_free(sem);
 	}
-
-	vTaskSetThreadLocalStoragePointerAndDelCallback(NULL, PTHREAD_TLS_INDEX, NULL, NULL);
 }
 
 static sys_sem_t *sys_thread_sem_alloc(void)

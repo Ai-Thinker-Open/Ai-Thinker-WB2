@@ -3,6 +3,7 @@
 
 #include "wifi_mgmr_api.h"
 #include "bl_defs.h"
+#include "bl_os_private.h"
 
 #define MAX_SSID_LEN_CHECK 32
 #define MAX_PSK_LEN_CHECK 64
@@ -369,4 +370,21 @@ int wifi_mgmr_api_set_country_code(char *country_code)
 
     return 0;
 }
+
+#ifdef CFG_IPV6
+int wifi_mgmr_ip6_is_got(struct netif *netif)
+{
+    int ret = 0;
+    for (int i = 0; i < LWIP_IPV6_NUM_ADDRESSES; i++) {
+        if (ip6_addr_isvalid(netif_ip6_addr_state(netif, i))) {
+            ret ++; 
+            break;
+        }
+    }
+    /*bl_os_printf("-------------------->hrf:ret;%d, ipv4:%d\r\n", 
+            ret, ip4_addr_isany(netif_ip4_addr(netif)));
+    */
+    return ret; 
+}
+#endif
 

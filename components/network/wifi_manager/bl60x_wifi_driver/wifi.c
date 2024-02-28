@@ -165,6 +165,11 @@ static void netif_status_callback(struct netif *netif)
     } else {
         wifi_mgmr_api_ip_got();
     }
+#ifdef CFG_IPV6
+    if (netif->ipv6_addr_cb != NULL) {
+        netif->ipv6_addr_cb(netif);
+    }
+#endif
 }
 
 err_t bl606a0_wifi_netif_init(struct netif *netif)

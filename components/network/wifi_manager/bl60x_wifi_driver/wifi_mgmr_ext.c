@@ -6,8 +6,9 @@
 #include <ethernetif.h>
 #include <bl_wifi.h>
 #include <utils_hex.h>
-// #include <semphr.h>
-// #include <aos/kernel.h>
+#include <semphr.h>
+#include <aos/kernel.h>
+#include <aos/yloop.h>
 
 #include <bl_os_private.h>
 #include "bl_main.h"
@@ -102,6 +103,26 @@ static int mac_is_unvalid(uint8_t mac[6])
     return 0;
 }
 
+#ifdef CFG_IPV6
+static void netif_ipv6_addr_callback(struct netif *netif)
+{
+    static int ip6_is_got = 0;
+    int new = 0;
+    new = wifi_mgmr_ip6_is_got(netif);
+    if (new && !ip6_is_got) {
+        aos_post_event(EV_WIFI, CODE_WIFI_ON_GOT_IP6, 0);
+    }
+    ip6_is_got = new;
+}
+
+void ipv6_set_cb(struct netif *netif, void (*cb)(struct netif *netif))
+{
+  if (netif != NULL) {
+      netif->ipv6_addr_cb = cb;
+  }
+}
+#endif
+
 static void wifi_eth_sta_enable(struct netif *netif, uint8_t mac[6])
 {
     ip4_addr_t ipaddr;
@@ -153,6 +174,10 @@ static void wifi_eth_sta_enable(struct netif *netif, uint8_t mac[6])
     netif->name[0] = 's';
     netif->name[1] = 't';
     netif->flags |=  NETIF_FLAG_LINK_UP | NETIF_FLAG_IGMP;
+
+#ifdef CFG_IPV6
+    ipv6_set_cb(netif, netif_ipv6_addr_callback);
+#endif
     netifapi_netif_set_default(netif);
     netifapi_netif_set_up(netif);
 }

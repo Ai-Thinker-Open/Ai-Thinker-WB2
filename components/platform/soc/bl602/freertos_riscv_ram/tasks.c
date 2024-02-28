@@ -1231,6 +1231,9 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
             {
                 pxTCB->pvThreadLocalStoragePointersDelCallback[ x ](x, pxTCB->pvThreadLocalStoragePointers[ x ]);
             }
+
+            pxTCB->pvThreadLocalStoragePointers[ x ] = NULL;
+            pxTCB->pvThreadLocalStoragePointersDelCallback[ x ] = NULL;
         }
     }
 
