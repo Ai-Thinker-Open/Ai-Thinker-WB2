@@ -56,7 +56,7 @@
 /**
  * BL_BLE_CO_THREAD: combine tx rx thread
  */
-#define BFLB_BT_CO_THREAD 1
+#define BFLB_BT_CO_THREAD 0
 
 #if (BFLB_BT_CO_THREAD)
 #define CONFIG_BT_CO_TASK_PRIO (configMAX_PRIORITIES - 3)
