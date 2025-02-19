@@ -22,12 +22,12 @@ int hosal_uart_abr_get(hosal_uart_dev_t *uart, uint8_t mode)
 
 Get auto baudrate on a UART interface.
 
-> > return
+> `return`
 >
 > - 0 : on success
 > - EIO if an error occurred with any step
 >
-> > Parameters
+> `Parameters`
 >
 > - uart: the UART interface
 > - mode: auto baudrate detection mode(codeword 0x55 or start bit)
@@ -40,12 +40,12 @@ int hosal_uart_init(hosal_uart_dev_t *uart)
 
 Initialises a UART interface.
 
-> > return
+> `return`
 >
 > - 0 : on success
 > - EIO if an error occurred with any step
 >
-> > Parameters
+> `Parameters`
 >
 > - uart: the interface which should be initialised
 
@@ -57,12 +57,12 @@ int hosal_uart_send(hosal_uart_dev_t *uart, const void *txbuf, uint32_t size)
 
 Poll transmit data on a UART interface.
 
-> > return
+> `return`
 >
 > - 0 : success
 > - EIO if an error occurred with any step
 >
-> > Parameters
+> `Parameters`
 >
 > - uart: the UART interface
 > - txbuf: pointer to the start of data
@@ -76,12 +76,12 @@ int hosal_uart_receive(hosal_uart_dev_t *uart, void *data, uint32_t expect_size)
 
 Poll receive data on a UART interface.
 
-> > return
+> `return`
 >
 > - 0 number of bytes to receive
 > - EIO if an error occurred with any step
 >
-> > Parameters
+> `Parameters`
 >
 > - uart: the UART interface
 > - rxbuf: pointer to the buffer which will store incoming data
@@ -95,12 +95,12 @@ int hosal_uart_ioctl(hosal_uart_dev_t *uart, int ctl, void *p_arg)
 
 hal uart ioctl
 
-> > return
+> `return`
 >
 > - 0 on success
 > - EIO if an error occurred with any step
 >
-> > Parameters
+> `Parameters`
 >
 > - uart: the UART interface
 > - ctl: Control request
@@ -132,12 +132,12 @@ int hosal_uart_callback_set(hosal_uart_dev_t *uart, int callback_type, hosal_uar
 
 hal uart callback set
 
-> > return
+> `return`
 >
 > - 0 on success
 > - EIO if an error occurred with any step
 >
-> > Parameters
+> `Parameters`
 >
 > - uart: the UART interface
 >
@@ -160,7 +160,7 @@ int hosal_uart_finalize(hosal_uart_dev_t *uart)
 
 Deinitialises a UART interface.
 
->  	`return`
+>  `return`
 >
 > - 0 on success
 >
@@ -388,13 +388,13 @@ UART flow state get.
 HOSAL_UART_PARITY_SET
 ```
 
-UART flow mode set.
+UART  parity mode set.
 
 ```c
 HOSAL_UART_PARITY_GET
 ```
 
-UART flow state get.
+UART parity state get.
 
 ```c
 HOSAL_UART_MODE_SET
@@ -516,7 +516,7 @@ Values:
 > ```c
 > HOSAL_STOP_BITS_1 = 1
 >     
-> HOSAL_STOP_BITS_2 = 3
+> HOSAL_STOP_BITS_2 = 2
 > ```
 
 ```c
