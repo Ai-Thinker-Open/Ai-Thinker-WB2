@@ -1,7 +1,7 @@
 * :shamrock: Quick start 
     * [Start](/en-us/README.md)
 * :orange_book: Guide Book 
-    * [Guide](/en-us/guide.md "The greatest guide in the world")
+
 * :clap: API 
     * :ghost: WIFI
       * [Wifi](/en-us/wifi.md)
