@@ -16,28 +16,26 @@
 int hosal_wdg_init(hosal_wdg_dev_t *wdg)
 ```
 
-> This function will initialize the on board CPU hardware watch dog.
+> 初始化看门狗定时器
 
-`return`
+`返回值`
 
-- 0 : success
-- other: fail
+- 0 : 成功
+- other: 失败
 
-`Parameters`
+`参数`
 
-- wdg: the watch dog device
-
-
+- wdg: 看门狗设备块
 
 ```c
 void hosal_wdg_reload(hosal_wdg_dev_t *wdg)
 ```
 
-> Reload watchdog counter.
+> 喂狗
 
-`Parameters`
+`参数`
 
-- wdg: the watch dog device
+- wdg: 看门狗设备块
 
 
 
@@ -45,49 +43,49 @@ void hosal_wdg_reload(hosal_wdg_dev_t *wdg)
 int hosal_wdg_finalize(hosal_wdg_dev_t *wdg)
 ```
 
-> This function performs any platform-specific cleanup needed for hardware watch dog.
+销毁看门狗定时器
 
-`return`
+`返回值`
 
-- 0 : success
-- other: fail
+- 0 : 成功
+- other: 失败
 
-`Parameters`
+`参数`
 
-- wdg: the watch dog device
+- wdg: 看门狗设备块
 
 
 
-#### Structures
+#### 结构体
 
 ```c
 struct hosal_wdg_config_t
 ```
 
->  wdg config struct
-
-Public Members
+> 看门狗配置结构体
 
 - `uint32_t timeout`
 
-​		Watchdag timeout in ms
+​		看门狗超时时间(以ms为单位)
+
+
 
 ```c
 struct hosal_wdg_dev_t
 ```
 
->  wdg dev struct
+> 看门狗设备块结构体
 
-Public Members
+公共成员
 
 - `uint8_t port`
 
-​		wdg port
+​		端口
 
--  `hosal_wdg_config_t config`
+- `hosal_wdg_config_t config`
 
-​		wdg config
+​		看门狗配置文件
 
 - `void *priv`
 
-​		priv data
+​		用户自定义数据
