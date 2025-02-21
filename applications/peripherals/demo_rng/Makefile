@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := demo_boardtemp
+PROJECT_NAME := demo_rng
 PROJECT_PATH := $(abspath .)
 PROJECT_BOARD := evb
 export PROJECT_PATH PROJECT_BOARD

@@ -5,6 +5,7 @@
 * API
   * [GPIO](/zh-cn/gpio.md)
   * [UART](/zh-cn/uart.md)
+  * [ADC](/zh-cn/adc.md)
   * [WDG](/zh-cn/wdg.md)
   * [RTC](/zh-cn/rtc.md)
   * [RNG](/zh-cn/rng.md)

@@ -35,7 +35,7 @@ int hosal_rng_init(void)
 int hosal_random_num_read(void *buf, uint32_t bytes)
 ```
 
-> 初始化RNG随机数
+> 生成随机数到指定buf
 
 `返回值`
 
