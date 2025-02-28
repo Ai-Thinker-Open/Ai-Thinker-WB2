@@ -92,6 +92,24 @@ spi send data and recv
 
 ```c
 int hosal_spi_irq_callback_set(hosal_spi_dev_t *spi, hosal_spi_irq_t pfn, void *p_arg)
+```
+
+SPI cb register.
+
+> `return`
+>
+> - 0 : success
+> - other : error
+>
+> `Parameters`
+>
+> - spi: the spi device
+> - pfn: callback handler
+> - p_arg: callback arg
+
+
+
+```c
 int hosal_spi_set_cs(uint8_t pin, uint8_t value)
 ```
 
