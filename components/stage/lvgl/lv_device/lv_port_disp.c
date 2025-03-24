@@ -162,7 +162,7 @@ void disp_disable_update(void)
  *'lv_disp_flush_ready()' has to be called when finished.*/
 static void disp_flush(lv_disp_drv_t* disp_drv, const lv_area_t* area, lv_color_t* color_p)
 {
-#if (defined LV_DISPLAY_ST7796S) && (defined LV_DISPLAY_SSD1306)
+#if (defined LV_DISPLAY_ST7796S) || (defined LV_DISPLAY_SSD1306)
     if (disp_flush_enabled) {
         /*The most simple case (but also the slowest) to put all pixels to the screen one-by-one*/
 

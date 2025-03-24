@@ -22,9 +22,9 @@
 /* ============================
  *  display driver
  * ===========================*/
- // #define LV_DISPLAY_SSD1306
+ #define LV_DISPLAY_SSD1306
   // #define LV_DISPLAY_ST7796S
-#define LV_DISPLAY_ST7789
+// #define LV_DISPLAY_ST7789
 /* ===================================================
 * input driver
 *=====================================================*/

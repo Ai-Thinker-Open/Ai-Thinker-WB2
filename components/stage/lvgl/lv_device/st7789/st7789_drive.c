@@ -14,6 +14,8 @@
 #include "hosal_spi.h"
 #include "hosal_gpio.h"
 #include "hosal_dma.h"
+
+#ifdef LV_DISPLAY_ST7789
  /*********************
   *      DEFINES
   *********************/
@@ -298,3 +300,5 @@ static void st7789_set_orientation(uint8_t orientation)
     st7789_send_cmd(ST7789_MADCTL);
     st7789_send_data((void*)&data[orientation], 1);
 }
+
+#endif
