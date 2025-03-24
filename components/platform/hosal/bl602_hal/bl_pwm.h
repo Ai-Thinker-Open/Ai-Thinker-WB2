@@ -1,7 +1,7 @@
 #ifndef __BL_PWM_H__
 #define __BL_PWM_H__
-#include <stdint.h>
 #include <bl602_pwm.h>
+#include <stdint.h>
 
 #define BL_PWM_XTAL_CLK 40000000
 #define BL_PWM_BUS_BCLK 80000000

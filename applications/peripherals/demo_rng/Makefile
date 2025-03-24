@@ -3,7 +3,7 @@
 # project subdirectory.
 #
 
-PROJECT_NAME := helloworld
+PROJECT_NAME := demo_rng
 PROJECT_PATH := $(abspath .)
 PROJECT_BOARD := evb
 export PROJECT_PATH PROJECT_BOARD
@@ -14,21 +14,19 @@ export PROJECT_PATH PROJECT_BOARD
 ifeq ($(origin BL60X_SDK_PATH), undefined)
 BL60X_SDK_PATH_GUESS ?= $(shell pwd)
 BL60X_SDK_PATH ?= $(BL60X_SDK_PATH_GUESS)/../../..
+$(info ****** Please SET BL60X_SDK_PATH ******)
+$(info ****** Trying SDK PATH [$(BL60X_SDK_PATH)])
 endif
 
-COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopadc looprt loopset
+COMPONENTS_BLSYS   := bltime blfdt blmtd bloop loopset looprt
 COMPONENTS_VFS     := romfs
 
-INCLUDE_COMPONENTS += freertos_riscv_ram bl602 bl602_std newlibc hosal mbedtls_lts lwip vfs yloop utils cli blog blog_testc coredump
+INCLUDE_COMPONENTS += freertos_riscv_ram
+INCLUDE_COMPONENTS += bl602 bl602_std
+INCLUDE_COMPONENTS += hosal mbedtls_lts lwip cli vfs yloop utils blog blog_testc newlibc
 INCLUDE_COMPONENTS += $(COMPONENTS_NETWORK)
 INCLUDE_COMPONENTS += $(COMPONENTS_BLSYS)
 INCLUDE_COMPONENTS += $(COMPONENTS_VFS)
 INCLUDE_COMPONENTS += $(PROJECT_NAME)
 
-
-# 添加自定义头文件目录
-CFLAGS += -I$(PROJECT_PATH)/include
-
-# 添加自定义源文件
-SRC += $(PROJECT_PATH)/OLED.c
 include $(BL60X_SDK_PATH)/make_scripts_riscv/project.mk

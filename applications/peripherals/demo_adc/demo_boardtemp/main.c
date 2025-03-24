@@ -28,7 +28,7 @@ void main(void) {
       .config =
           {
               .mode = HOSAL_ADC_ONE_SHOT,
-              .pin = GPIO_ADC_PIN,
+              .pin = 12,
               .sampling_freq = 340,
           },
       .dma_chan = 0,
