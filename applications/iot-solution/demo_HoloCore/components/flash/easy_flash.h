@@ -30,11 +30,13 @@ typedef enum
     FLASH_HA_RESET_NUM,
     FLASH_BILIBILI_USER_ID,
     FLASH_BILIBILI_FOLLOWER_COUNT,
+    FLASH_DEVICE_LOG_ENABLE,
+    FLASH_COLOR_MODE_TYPE,
 } flash_key_t;
 
 bool flash_save_wifi_info(void *value);
 int flash_get_wifi_info(void *value);
-bool ef_del_key(const char *key);
+bool ef_del_key(flash_key_t key);
 bool flash_save_new_temp(float temperature);
 float flash_get_temperature(void);
 
@@ -45,4 +47,9 @@ int flash_save_follower_count(int count);
 int flash_get_follower_count(void);
 int flash_save_bilibili_uid(char *uid);
 int flash_get_bilibili_uid(char *uid);
+int flash_set_blog_enable(bool enable);
+int flash_get_blog_enable(void);
+int flash_save_color_mode(unsigned char mode);
+
+unsigned char flash_get_color_mode(void);
 #endif

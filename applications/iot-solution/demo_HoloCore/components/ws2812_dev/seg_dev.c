@@ -21,7 +21,7 @@
 static TimerHandle_t seg_timer = NULL;
 static TimerHandle_t seg_timer_1 = NULL;
 static TimerHandle_t seg_timer_dot = NULL;
-color_t seg_wifi_dot_color = {0xff, 0, 0};
+color_t seg_wifi_dot_color = {0, 0x00, 0xff};
 static float seg_timer_dot_brightness = 0.1;
 static float direction = 0.05;
 extern color_t seg_color_FF00FF_to_0000FF[4][7][2]; // 生成渐变颜色数组紫色到蓝色
@@ -262,6 +262,7 @@ void seg_display_time_ex_color_mode(int hour, int minute, int color_mode, float 
 
 	uint8_t segments = digitSegments[hour / 10];
 	ws2812_strip.brightness = brightness;
+
 	color_t(*seg_color)[7][2] = NULL;
 	switch (color_mode)
 	{
@@ -278,11 +279,12 @@ void seg_display_time_ex_color_mode(int hour, int minute, int color_mode, float 
 		seg_color = seg_color_FF00FF_to_F06E82; // 紫色到粉色
 		break;
 	default:
+		seg_color = seg_color_FF00FF_to_0000FF; // 紫色到蓝色
 		break;
 	}
-	seg_wifi_dot_color = seg_color[4][2][0];
+	// seg_wifi_dot_color = seg_color[4][2][0];
 	// 设置小时的十位
-
+	// blog_warn("hour: %d, minute: %d", hour, minute);
 	for (int i = 0; i < NUM_SEGMENTS; i++)
 	{
 		int is_segment_on = (segments >> i) & 1;
@@ -357,6 +359,7 @@ void seg_display_fans_count_color_mode(int follow_cnt, int color_mode, float bri
 		seg_color = seg_color_FF00FF_to_F06E82; // 紫色到粉色
 		break;
 	default:
+		seg_color = seg_color_FF00FF_to_0000FF; // 紫色到蓝色
 		break;
 	}
 	// 计算需要显示的数字
@@ -364,6 +367,31 @@ void seg_display_fans_count_color_mode(int follow_cnt, int color_mode, float bri
 	// 关闭冒号灯珠
 	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], 0);
 	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], 0);
+	ws2812_set_pixel_color(SEG_FANS_W_LED_NUMBER, seg_color[4][6][0].r, seg_color[4][6][0].g, seg_color[4][6][0].b);
+	ws2812_set_pixel_brightness(SEG_FANS_W_LED_NUMBER, 0);
+	// 如果粉丝数为负数，显示四条横杠
+	if (follow_cnt < 0)
+	{
+		ws2812_set_pixel_color(seg_dev.seg_time.seg_hour_tens[6][0], seg_color[0][6][0].r, seg_color[0][6][0].g, seg_color[0][6][0].b);
+		ws2812_set_pixel_color(seg_dev.seg_time.seg_hour_tens[6][1], seg_color[0][6][1].r, seg_color[0][6][1].g, seg_color[0][6][1].b);
+		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_hour_tens[6][0], ws2812_strip.brightness);
+		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_hour_tens[6][1], ws2812_strip.brightness);
+		ws2812_set_pixel_color(seg_dev.seg_time.seg_hour_units[6][0], seg_color[1][6][0].r, seg_color[1][6][0].g, seg_color[1][6][0].b);
+		ws2812_set_pixel_color(seg_dev.seg_time.seg_hour_units[6][1], seg_color[1][6][1].r, seg_color[1][6][1].g, seg_color[1][6][1].b);
+		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_hour_units[6][0], ws2812_strip.brightness);
+		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_hour_units[6][1], ws2812_strip.brightness);
+		ws2812_set_pixel_color(seg_dev.seg_time.seg_minute_tens[6][0], seg_color[2][6][0].r, seg_color[2][6][0].g, seg_color[2][6][0].b);
+		ws2812_set_pixel_color(seg_dev.seg_time.seg_minute_tens[6][1], seg_color[2][6][1].r, seg_color[2][6][1].g, seg_color[2][6][1].b);
+		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_minute_tens[6][0], ws2812_strip.brightness);
+		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_minute_tens[6][1], ws2812_strip.brightness);
+		ws2812_set_pixel_color(seg_dev.seg_time.seg_minute_units[6][0], seg_color[3][6][0].r, seg_color[3][6][0].g, seg_color[3][6][0].b);
+		ws2812_set_pixel_color(seg_dev.seg_time.seg_minute_units[6][1], seg_color[3][6][1].r, seg_color[3][6][1].g, seg_color[3][6][1].b);
+		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_minute_units[6][1], ws2812_strip.brightness);
+		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_minute_units[6][0], ws2812_strip.brightness);
+
+		ws2812_show_leds();
+		return;
+	}
 	// 如果大于9999则显示为9999
 	if (follow_cnt > 0 && follow_cnt < 9999)
 	{
@@ -452,11 +480,30 @@ static void seg_display_timer_handle(TimerHandle_t Timer)
 	}
 	ws2812_show_leds();
 }
-void seg_display_loading(loading_t status)
+void seg_display_loading(loading_t status, unsigned char color_mode)
 {
 	// 状态显示
 
 	blog_info("seg_display_loading %d", status);
+	color_t(*seg_color)[7][2] = NULL;
+	switch (color_mode)
+	{
+	case 0:
+		seg_color = seg_color_FF00FF_to_0000FF; // 紫色到蓝色
+		break;
+	case 1:
+		seg_color = seg_color_0000FF_to_00FF00; // 蓝色到绿色
+		break;
+	case 2:
+		seg_color = seg_color_FF0000_to_FF00FF; // 绿色到紫色
+		break;
+	case 3:
+		seg_color = seg_color_FF00FF_to_F06E82; // 紫色到粉色
+		break;
+	default:
+		seg_color = seg_color_FF00FF_to_0000FF; // 紫色到蓝色
+		break;
+	}
 
 	switch (status)
 	{
@@ -485,8 +532,9 @@ void seg_display_loading(loading_t status)
 			seg_timer_1 = NULL;
 		}
 		// wifi连接成功，常亮蓝色
+		blog_info("wifi connect success");
 
-		ws2812_set_pixel_color(SEG_WIFI_LED_NUNBER, seg_wifi_dot_color.r, seg_wifi_dot_color.g, seg_wifi_dot_color.b);
+		ws2812_set_pixel_color(SEG_WIFI_LED_NUNBER, seg_color == NULL ? 0X00 : seg_color[1][6][0].r, seg_color == NULL ? 0XFF : seg_color[1][6][0].g, seg_color == NULL ? 0X00 : seg_color[1][6][0].b);
 		ws2812_set_pixel_brightness(SEG_WIFI_LED_NUNBER, ws2812_strip.brightness);
 		ws2812_show_leds();
 		break;

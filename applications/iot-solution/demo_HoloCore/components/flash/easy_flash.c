@@ -15,7 +15,7 @@
 #include <easyflash.h>
 #include "wifi_code.h"
 #include "device_state.h"
-static char *flash_key[] = {"ssid", "pass", "pmk", "band", "chan_id", "mqtt_host", "mqtt_port", "mqtt_clientID", "mqtt_username", "mqtt_password", "ha_name", "ha_manufacturer", "ac_type", "ac_gcode", "reset_num", "user_id", "follower"};
+static char *flash_key[] = {"ssid", "pass", "pmk", "band", "chan_id", "mqtt_host", "mqtt_port", "mqtt_clientID", "mqtt_username", "mqtt_password", "ha_name", "ha_manufacturer", "ac_type", "ac_gcode", "reset_num", "user_id", "follower", "blog_enable", "color_mode"};
 static char *ac_flash_key[] = {"temp", "mode"};
 
 static bool ef_set_bytes(const char *key, char *value, int len)
@@ -31,9 +31,9 @@ static int ef_get_bytes(const char *key, char *value, int len)
     return read_len;
 }
 
-bool ef_del_key(const char *key)
+bool ef_del_key(flash_key_t key)
 {
-    return ef_del_env(key);
+    return ef_del_env(flash_key[key]);
 }
 
 bool flash_save_wifi_info(void *value)
@@ -164,7 +164,6 @@ int flash_get_follower_count(void)
     int follower_count = 0;
     memset(count, 0, 10);
     ef_get_bytes(flash_key[FLASH_BILIBILI_FOLLOWER_COUNT], count, 10);
-    printf("follower count =%s\n", count);
     if ((count[0] >= '0' && count[0] <= '9'))
     {
         follower_count = atoi(count);
@@ -183,4 +182,54 @@ int flash_get_bilibili_uid(char *uidbuff)
 {
     memset(uidbuff, 0, 32);
     return ef_get_bytes(flash_key[FLASH_BILIBILI_USER_ID], uidbuff, 32);
+}
+
+int flash_set_blog_enable(bool enable)
+{
+    char *count_str = pvPortMalloc(1);
+    memset(count_str, 0, 10);
+    sprintf(count_str, "%d", enable);
+    bool ret = ef_set_bytes(flash_key[FLASH_DEVICE_LOG_ENABLE], count_str, strlen(count_str));
+    vPortFree(count_str);
+    return (int)ret;
+}
+
+int flash_get_blog_enable(void)
+{
+    char *count = pvPortMalloc(1);
+    memset(count, 0, 1);
+    bool ret = ef_get_bytes(flash_key[FLASH_DEVICE_LOG_ENABLE], count, 1);
+    if (ret == EF_NO_ERR)
+    {
+        vPortFree(count);
+        return 1;
+    }
+    int enable = atoi(count);
+    vPortFree(count);
+    return enable;
+}
+
+int flash_save_color_mode(unsigned char mode)
+{
+    char *count_str = pvPortMalloc(1);
+    memset(count_str, 0, 1);
+    sprintf(count_str, "%d", mode);
+    ef_del_key(FLASH_COLOR_MODE_TYPE);
+    bool ret = ef_set_bytes(flash_key[FLASH_COLOR_MODE_TYPE], count_str, 1);
+    vPortFree(count_str);
+    return (int)ret;
+}
+unsigned char flash_get_color_mode(void)
+{
+    char *count = pvPortMalloc(1);
+    memset(count, 0, 1);
+    bool ret = ef_get_bytes(flash_key[FLASH_COLOR_MODE_TYPE], count, 1);
+    if (ret == EF_NO_ERR)
+    {
+        vPortFree(count);
+        return 0;
+    }
+    int mode = atoi(count);
+    vPortFree(count);
+    return mode;
 }

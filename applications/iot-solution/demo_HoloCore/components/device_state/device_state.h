@@ -35,6 +35,7 @@ typedef enum
     DEVICE_STATE_CFG_STATE_LONG_PRESS,
     DEVICE_STATE_CFG_STATE_DOUBLE_CLICK,
     DEVICE_STATE_HTTP_REQUEST,
+    DEVICE_STATE_HTTP_RESPONSE,
 } device_state_t;
 
 typedef struct device_state_handle
@@ -43,7 +44,8 @@ typedef struct device_state_handle
     wifi_info_t wifi_info;
     int ac_type;
 } dev_msg_t;
-
+extern char flash_bilibili_uid[32];
+extern int fans_count;
 void device_state_init(void *arg);
 void device_state_update(int is_iqr, dev_msg_t *dev_msg);
 #endif

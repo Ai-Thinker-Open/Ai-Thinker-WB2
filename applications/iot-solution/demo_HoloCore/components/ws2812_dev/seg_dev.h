@@ -93,7 +93,7 @@ void seg_display_fans_count_color_mode(int follow_cnt, int color_mode, float bri
  * @param status
  */
 
-void seg_display_loading(loading_t status);
+void seg_display_loading(loading_t status, unsigned char color_mode);
 
-void seg_time_dot_blink(bool enable, color_t color, float brightness);
+// void seg_time_dot_blink(bool enable, color_t color, float brightness);
 #endif // SEG_DEV_H

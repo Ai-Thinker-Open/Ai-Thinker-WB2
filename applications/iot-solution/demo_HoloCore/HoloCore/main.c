@@ -18,11 +18,13 @@
 #include <lwip/sockets.h>
 #include <lwip/inet.h>
 #include "key_read.h"
+#include "user_cli.h"
 static ip4_addr_t dns_addr;
 
 void main(void)
 {
-    bl_sys_init();  // 初始化系统
+    bl_sys_init(); // 初始化系统
+    user_cli_init();
     seg_dev_init(); // 初始化数码管
     easyflash_init();
     device_state_init(NULL);
@@ -35,7 +37,7 @@ void main(void)
 
     while (1)
     {
-        blog_debug("HeapSize=%d ", xPortGetFreeHeapSize());
+        blog_warn("HeapSize=%d ", xPortGetFreeHeapSize());
 
         vTaskDelay(pdMS_TO_TICKS(1000));
     }

@@ -64,12 +64,15 @@ static const uint8_t TEST_CERTIFICATE_FILENAME[] = {"-----BEGIN CERTIFICATE-----
 													"PfZ+G6Z6h7mjem0Y+iWlkYcV4PIWL1iwBi8saCbGS5jN2p8M+X+Q7UNKEkROb3N6\r\n"
 													"KOqkqm57TH2H3eDJAkSnh6/DNFu0Qg==\r\n"
 													"-----END CERTIFICATE-----\r\n"};
+bool is_https_running = false;
 static const char *extract_json_from_http_response(const char *response);
 char *https_get_code(char *user_id)
 {
+	is_https_running = true;
 	if (user_id == NULL)
 	{
 		blog_error("user_id is NULL");
+		is_https_running = false;
 		return NULL;
 	}
 
@@ -259,8 +262,11 @@ char *https_get_code(char *user_id)
 	{
 		len = sizeof(buf) - 1;
 		bzero(buf, sizeof(buf));
+		if (!is_https_running)
+			goto exit;
 		ret = mbedtls_ssl_read(&ssl, (unsigned char *)buf, len);
-
+		if (!is_https_running)
+			goto exit;
 		if (ret == MBEDTLS_ERR_SSL_WANT_READ || ret == MBEDTLS_ERR_SSL_WANT_WRITE)
 			continue;
 
@@ -293,7 +299,7 @@ char *https_get_code(char *user_id)
 			ret = -1;
 			goto exit;
 		}
-	} while (1);
+	} while (is_https_running);
 
 	// 第二阶段：提取JSON（仅在成功读取响应后）
 	if (ret == 0)
@@ -363,6 +369,7 @@ exit:
 	}
 	static int request_count;
 	blog_info("Completed %d requests", ++request_count);
+	is_https_running = false;
 	return http_data;
 }
 
@@ -384,3 +391,5 @@ static const char *extract_json_from_http_response(const char *response)
 	json_start += strlen(separator);
 	return json_start;
 }
+
+
