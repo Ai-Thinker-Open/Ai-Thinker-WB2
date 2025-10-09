@@ -11,5 +11,9 @@
 #ifndef __BILIBILI_FOLLOWER_H__
 #define __BILIBILI_FOLLOWER_H__
 #include "https_code.h"
+
+
+
 int bilibili_get_fans_count(char *user_id);
+
 #endif // !__BILIBILI_FOLLOWER_H__

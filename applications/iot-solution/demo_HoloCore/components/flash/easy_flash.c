@@ -15,7 +15,30 @@
 #include <easyflash.h>
 #include "wifi_code.h"
 #include "device_state.h"
-static char *flash_key[] = {"ssid", "pass", "pmk", "band", "chan_id", "mqtt_host", "mqtt_port", "mqtt_clientID", "mqtt_username", "mqtt_password", "ha_name", "ha_manufacturer", "ac_type", "ac_gcode", "reset_num", "user_id", "follower", "blog_enable", "color_mode"};
+static char *flash_key[] = {
+    "ssid",
+    "password",
+    "pmk",
+    "band",
+    "chan_id",
+    "mqtt_host",
+    "mqtt_port",
+    "mqtt_clientID",
+    "mqtt_username",
+    "mqtt_password",
+    "ha_name",
+    "ha_manufacturer",
+    "ac_type",
+    "ac_gcode",
+    "reset_num",
+    "user_id",
+    "follower",
+    "jlc_puid",
+    "jlc_views",
+    "blog_enable",
+    "color_mode",
+    "display_msg",
+};
 static char *ac_flash_key[] = {"temp", "mode"};
 
 static bool ef_set_bytes(const char *key, char *value, int len)
@@ -184,6 +207,44 @@ int flash_get_bilibili_uid(char *uidbuff)
     return ef_get_bytes(flash_key[FLASH_BILIBILI_USER_ID], uidbuff, 32);
 }
 
+int flash_seve_jlc_puid(char *puid)
+{
+    return ef_set_bytes(flash_key[FLASH_JLC_PUID], puid, strlen(puid));
+}
+
+int flash_get_jlc_puid(char *puid)
+{
+    memset(puid, 0, 64);
+    return ef_get_bytes(flash_key[FLASH_JLC_PUID], puid, 64);
+}
+
+int flash_save_views_count(int count)
+{
+    char *count_str = pvPortMalloc(10);
+    memset(count_str, 0, 10);
+    sprintf(count_str, "%d", count);
+    bool ret = ef_set_bytes(flash_key[FLASH_JLC_VIEWS_COUNT], count_str, strlen(count_str));
+    vPortFree(count_str);
+    return ret;
+}
+
+int flash_get_views_count(void)
+{
+    char *count = pvPortMalloc(10);
+    int views_count = 0;
+    memset(count, 0, 10);
+    ef_get_bytes(flash_key[FLASH_JLC_VIEWS_COUNT], count, 10);
+    if ((count[0] >= '0' && count[0] <= '9'))
+    {
+        views_count = atoi(count);
+    }
+    else
+    {
+        views_count = 0;
+    }
+    vPortFree(count);
+    return views_count;
+}
 int flash_set_blog_enable(bool enable)
 {
     char *count_str = pvPortMalloc(1);
@@ -224,6 +285,32 @@ unsigned char flash_get_color_mode(void)
     char *count = pvPortMalloc(1);
     memset(count, 0, 1);
     bool ret = ef_get_bytes(flash_key[FLASH_COLOR_MODE_TYPE], count, 1);
+    if (ret == EF_NO_ERR)
+    {
+        vPortFree(count);
+        return 0;
+    }
+    int mode = atoi(count);
+    vPortFree(count);
+    return mode;
+}
+
+int flash_save_dispaly_msg(unsigned char msg_type)
+{
+    char *count_str = pvPortMalloc(1);
+    memset(count_str, 0, 1);
+    sprintf(count_str, "%d", msg_type);
+    ef_del_key(FLASH_DISPLAY_MSG_TYPE);
+    bool ret = ef_set_bytes(flash_key[FLASH_DISPLAY_MSG_TYPE], count_str, 1);
+    vPortFree(count_str);
+    return (int)ret;
+}
+
+unsigned char flash_get_dispaly_msg(void)
+{
+    char *count = pvPortMalloc(1);
+    memset(count, 0, 1);
+    bool ret = ef_get_bytes(flash_key[FLASH_DISPLAY_MSG_TYPE], count, 1);
     if (ret == EF_NO_ERR)
     {
         vPortFree(count);

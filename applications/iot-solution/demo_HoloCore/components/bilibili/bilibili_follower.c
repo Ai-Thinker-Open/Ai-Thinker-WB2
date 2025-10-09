@@ -29,7 +29,7 @@ static void https_get_fans_task(void *pvParameters)
 {
 	char *user_id = (char *)pvParameters;
 	blog_info("get bilibili fans user_id:%s\r\n", user_id);
-	char *http_data = https_get_code(user_id);
+	char *http_data = https_get_code(user_id, HTTP_REQUEST_TYPE_BILIBILI);
 	if (http_data == NULL)
 	{
 		free(http_data);

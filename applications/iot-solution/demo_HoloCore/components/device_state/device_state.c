@@ -23,7 +23,9 @@
 
 #include <utils_time.h>
 #include "bilibili_follower.h"
+#include "jlc_project_view.h"
 extern TaskHandle_t https_get_fans_task_handle;
+extern TaskHandle_t https_get_project_view_task_handle;
 // 设备消息队列
 static QueueHandle_t device_queue_handle;
 // 设备定时器标识符
@@ -44,9 +46,15 @@ static bool seg_is_timer_running = true;
 static bool is_flash_bilibili_uid = false;
 char flash_bilibili_uid[32] = {0};
 int fans_count = 0;
+// 嘉立创 工程浏览量
+static bool is_flash_jlc_pro_uid = false;
+char project_uid[64] = {0};
+int project_view_count = 0;
+
 // 颜色模式
 static unsigned char color_mode = 0;
-
+// 显示的内容,默认显示工程浏览量
+unsigned char display_msg = 0;
 /**
  * @brief 从 flash 读取设备信息
  *
@@ -64,14 +72,28 @@ static void device_read_msg_from_flash(void)
     {
         is_flash_bilibili_uid = false;
     }
+    memset(project_uid, 0, 32);
+    flash_get_jlc_puid(project_uid);
+    if (strlen(project_uid) != 0 && strlen(project_uid) == 32)
+    {
+        is_flash_jlc_pro_uid = true;
+    }
+    else
+    {
+        is_flash_jlc_pro_uid = false;
+    }
+
     // 读取B站粉丝数
     fans_count = flash_get_follower_count();
-    // 读取颜色模式
+    // 读取嘉立创工程浏览量
+    project_view_count = flash_get_views_count();
+    //  读取颜色模式
     color_mode = flash_get_color_mode();
 
     flash_save_color_mode(color_mode);
-
-    blog_info("bilibili uid=%s, bilibili fans numble=%d, color_mode=%d", flash_bilibili_uid, fans_count, color_mode);
+    // 读取显示的内容
+    display_msg = flash_get_dispaly_msg();
+    blog_info("bilibili uid=%s, bilibili fans numble=%d, color_mode=%d, display_msg=%d", flash_bilibili_uid, fans_count, color_mode, display_msg);
 }
 
 static void device_state_task(void *arg)
@@ -94,6 +116,7 @@ static void device_state_task(void *arg)
             }
             break;
             case DEVICE_STATE_WIFI_SCAN_FINISH:
+            {
                 blog_info("<<<<<<<<<<<<<<<  DEVICE_STATE_WIFI_SCAN_FINISH");
                 // 1:读取WiFi信息
                 flash_get_wifi_info(&dev_msg->wifi_info);
@@ -118,6 +141,7 @@ static void device_state_task(void *arg)
                     }
                     blog_warn("no wifi info")
                 }
+            }
             __EXIT:
                 break;
             case DEVICE_STATE_WIFI_CONNECTED:
@@ -153,6 +177,7 @@ static void device_state_task(void *arg)
             default:
                 break;
             case DEVIDE_STATE_CFG_STATE_SHORT_PRESS:
+            {
                 blog_info("<<<<<<<<<<<<<<<  DEVIDE_STATE_CFG_STATE_SHORT_PRESS");
                 // 切换显示
                 seg_is_timer_running = !seg_is_timer_running;
@@ -164,11 +189,19 @@ static void device_state_task(void *arg)
                 }
                 else
                 {
-                    seg_display_fans_count_color_mode(fans_count, color_mode, 0.05);
-                    if (is_flash_bilibili_uid && https_get_fans_task_handle == NULL)
+                    seg_display_fans_count_color_mode(display_msg ? fans_count : project_view_count, color_mode, 0.05);
+
+                    if (is_flash_bilibili_uid && https_get_fans_task_handle == NULL && display_msg)
+                    {
                         bilibili_get_fans_count(flash_bilibili_uid);
+                    }
+                    else if (is_flash_jlc_pro_uid && https_get_project_view_task_handle == NULL && !display_msg)
+                    {
+                        jlc_get_views_count(project_uid);
+                    }
                 }
-                break;
+            }
+            break;
 
             case DEVICE_STATE_CFG_STATE_LONG_PRESS:
                 blog_info("<<<<<<<<<<<<<<<  DEVICE_STATE_CFG_STATE_LONG_PRESS");
@@ -176,6 +209,8 @@ static void device_state_task(void *arg)
                 blufi_config_start();
                 break;
             case DEVICE_STATE_CFG_STATE_DOUBLE_CLICK:
+            {
+
                 blog_info("<<<<<<<<<<<<<<<  DEVICE_STATE_CFG_STATE_DOUBLE_CLICK");
                 // is_https_running = false;
                 color_mode++;
@@ -192,28 +227,47 @@ static void device_state_task(void *arg)
                 }
                 else
                 {
-                    seg_display_fans_count_color_mode(fans_count, (int)color_mode, 0.05);
+                    seg_display_fans_count_color_mode(display_msg ? fans_count : project_view_count, color_mode, 0.05);
                 }
-                break;
+            }
+            break;
             case DEVICE_STATE_HTTP_REQUEST:
                 blog_info("<<<<<<<<<<<<<<<  DEVICE_STATE_HTTP_REQUEST");
                 // seg_display_fans_count_color_mode(fans_count, (int)color_mode, 0.05);
-                if (is_flash_bilibili_uid)
+                if (is_flash_bilibili_uid && https_get_fans_task_handle == NULL && display_msg)
                     bilibili_get_fans_count(flash_bilibili_uid);
+                else if (is_flash_jlc_pro_uid && https_get_project_view_task_handle == NULL && !display_msg)
+                {
+                    jlc_get_views_count(project_uid);
+                }
 
                 break;
             case DEVICE_STATE_HTTP_RESPONSE:
             {
                 blog_info("<<<<<<<<<<<<<<<  DEVICE_STATE_HTTP_RESPONSE");
-                if (fans_count != -1)
+                if (display_msg == HTTP_REQUEST_TYPE_BILIBILI)
                 {
-                    int fans_count_flash = flash_get_follower_count();
-                    if (fans_count_flash != fans_count)
+                    if (fans_count != -1)
                     {
-                        flash_save_follower_count(fans_count);
+                        int fans_count_flash = flash_get_follower_count();
+                        if (fans_count_flash != fans_count)
+                        {
+                            flash_save_follower_count(fans_count);
+                        }
                     }
                 }
-                seg_display_fans_count_color_mode(fans_count, (int)color_mode, 0.05);
+                else
+                {
+                    if (project_view_count != -1)
+                    {
+                        int flash_views = flash_get_views_count();
+                        if (flash_views != project_view_count)
+                        {
+                            flash_save_views_count(project_view_count);
+                        }
+                    }
+                }
+                seg_display_fans_count_color_mode(display_msg ? fans_count : project_view_count, color_mode, 0.05);
             }
 
             break;
@@ -262,7 +316,7 @@ static void device_state_timer_callback(TimerHandle_t xTimer)
         }
         else
         {
-            seg_display_fans_count_color_mode(fans_count, (int)color_mode, 0.05);
+            seg_display_fans_count_color_mode(display_msg ? fans_count : project_view_count, color_mode, 0.05);
         }
     }
     else if (ret == 2)
