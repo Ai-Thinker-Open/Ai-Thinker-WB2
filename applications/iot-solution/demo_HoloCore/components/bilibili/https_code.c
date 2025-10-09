@@ -28,15 +28,23 @@
 #include "https_code.h"
 #define HTTP_RESPONSE_BUFFER_SIZE 4096 // 根据实际需求调整
 /* Constants that aren't configurable in menuconfig */
-#define WEB_SERVER "api.bilibili.com"
+#define WEB_SERVER_BILIBILI "api.bilibili.com"
 #define WEB_PORT "443"
-#define WEB_URL "https://api.bilibili.com/x/relation/stat?vmid=%s"
+#define WEB_URL_BILIBILI "https://api.bilibili.com/x/relation/stat?vmid=%s"
 
-static const char *REQUEST = "GET " WEB_URL " HTTP/1.1\r\n"
-							 "Host: " WEB_SERVER "\r\n"
-							 "User-Agent: Ai-WB2 HoloCore \r\n"
-							 "\r\n";
+#define WEB_SERVER_BILIBILI "api.bilibili.com"
+#define WEB_PORT "443"
+#define WEB_URL_BILIBILI "https://api.bilibili.com/x/relation/stat?vmid=%s"
 
+static const char *REQUEST_BILIBILI = "GET " WEB_URL_BILIBILI " HTTP/1.1\r\n"
+									  "Host: " WEB_SERVER_BILIBILI "\r\n"
+									  "User-Agent: Ai-WB2 HoloCore \r\n"
+									  "\r\n";
+
+static const char *REQUEST_JLC = "GET " WEB_URL_BILIBILI " HTTP/1.1\r\n"
+								 "Host: " WEB_SERVER_BILIBILI "\r\n"
+								 "User-Agent: Ai-WB2 HoloCore \r\n"
+								 "\r\n";
 static const uint8_t TEST_CERTIFICATE_FILENAME[] = {"-----BEGIN CERTIFICATE-----\r\n"
 													"MIIEkjCCA3qgAwIBAgIQCgFBQgAAAVOFc2oLheynCDANBgkqhkiG9w0BAQsFADA/\r\n"
 													"MSQwIgYDVQQKExtEaWdpdGFsIFNpZ25hdHVyZSBUcnVzdCBDby4xFzAVBgNVBAMT\r\n"
@@ -66,7 +74,7 @@ static const uint8_t TEST_CERTIFICATE_FILENAME[] = {"-----BEGIN CERTIFICATE-----
 													"-----END CERTIFICATE-----\r\n"};
 bool is_https_running = false;
 static const char *extract_json_from_http_response(const char *response);
-char *https_get_code(char *user_id)
+char *https_get_code(char *user_id, unsigned char uid_type)
 {
 	is_https_running = true;
 	if (user_id == NULL)
@@ -391,5 +399,3 @@ static const char *extract_json_from_http_response(const char *response)
 	json_start += strlen(separator);
 	return json_start;
 }
-
-

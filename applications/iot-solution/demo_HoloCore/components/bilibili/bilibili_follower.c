@@ -21,7 +21,7 @@
 TaskHandle_t https_get_fans_task_handle = NULL;
 /**
  * @brief 获取粉丝数
- *  {"code":0,"message":"0","ttl":1,"data":{"mid":355202584,"following":30,"whisper":0,"black":0,"follower":273}}
+ *
  * @param user_id
  * @return int
  */
@@ -66,6 +66,7 @@ static void https_get_fans_task(void *pvParameters)
 _exit:
 	vTaskDelete(https_get_fans_task_handle);
 }
+
 int bilibili_get_fans_count(char *user_id)
 {
 	if (user_id == NULL)
