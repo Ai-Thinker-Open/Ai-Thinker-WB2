@@ -72,6 +72,7 @@ static void user_clicmd_save_bilibili_uid(char *buf, int len, int argc, char **a
 	}
 
 	flash_save_bilibili_uid(argv[1]);
+	is_flash_bilibili_uid = true;
 	printf("Save bilibili uid:%s\r\n", argv[1]);
 	printf("OK \r\n");
 }
@@ -107,6 +108,8 @@ static void user_clicmd_delete_all_uid(char *buf, int len, int argc, char **argv
 	}
 	ef_del_key(FLASH_BILIBILI_USER_ID);
 	ef_del_key(FLASH_JLC_PUID);
+	is_flash_bilibili_uid = false;
+	is_flash_jlc_pro_uid = false;
 	printf("OK \r\n");
 }
 static void user_clicmd_save_jlc_project_uid(char *buf, int len, int argc, char **argv)
@@ -126,6 +129,7 @@ static void user_clicmd_save_jlc_project_uid(char *buf, int len, int argc, char 
 	flash_seve_jlc_puid(argv[1]);
 	memset(project_uid, 0, 32);
 	strcpy(project_uid, argv[1]);
+	is_flash_jlc_pro_uid = true;
 	printf("Save jlc puid:%s\r\n", argv[1]);
 	printf("OK \r\n");
 }

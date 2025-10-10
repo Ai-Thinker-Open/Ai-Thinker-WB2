@@ -24,6 +24,7 @@ static TimerHandle_t seg_timer_dot = NULL;
 color_t seg_wifi_dot_color = {0, 0x00, 0xff};
 static float seg_timer_dot_brightness = 0.1;
 static float direction = 0.05;
+static uint8_t seg_colo_mode = 0;
 extern color_t seg_color_FF00FF_to_0000FF[4][7][2]; // 生成渐变颜色数组紫色到蓝色
 extern color_t seg_color_0000FF_to_00FF00[4][7][2]; // 生成渐变颜色数组蓝色到绿色
 extern color_t seg_color_FF0000_to_FF00FF[4][7][2]; // 生成渐变颜色数组绿色到黄色
@@ -163,14 +164,43 @@ static void seg_disable_all(void)
 {
 	ws2812_set_all_pixels_color(0, 0, 0, 0.0);
 }
+
+static void seg_timer_dot_callback(TimerHandle_t xTimer)
+{
+	static int i = 0;
+	color_t(*seg_color)[7][2] = NULL;
+	switch (seg_colo_mode)
+	{
+	case 0:
+		seg_color = seg_color_FF00FF_to_0000FF; // 紫色到蓝色
+		break;
+	case 1:
+		seg_color = seg_color_0000FF_to_00FF00; // 蓝色到绿色
+		break;
+	case 2:
+		seg_color = seg_color_FF0000_to_FF00FF; // 绿色到紫色
+		break;
+	case 3:
+		seg_color = seg_color_FF00FF_to_F06E82; // 紫色到粉色
+		break;
+	default:
+		seg_color = seg_color_FF00FF_to_0000FF; // 紫色到蓝色
+		break;
+	}
+	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[0], seg_color[1][1][0].r, seg_color[1][1][0].g, seg_color[1][1][0].b);
+	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[1], seg_color[1][1][1].r, seg_color[1][1][1].g, seg_color[1][1][1].b);
+	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], i % 2 == 0 ? ws2812_strip.brightness : 0);
+	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], i % 2 == 0 ? ws2812_strip.brightness : 0);
+	ws2812_show_leds();
+	i++;
+	if (i >= 4)
+		i = 0;
+}
 void seg_dev_init(void)
 {
 
 	ws2812_init(&ws2812_strip);
-	// ws2812_set_all_pixels_color(0, 0, 0, 0.0);
-	// 初始化ws2812
-	// /*初始化数码管，关闭不使用的灯珠*/
-	// seg_disable_all();
+	
 	uint8_t no_user_seg[ws2812_strip.led_count];
 	uint8_t no_user_seg_num = find_no_used_seg(no_user_seg);
 
@@ -182,6 +212,8 @@ void seg_dev_init(void)
 			ws2812_set_pixel_color(no_user_seg[i], 0, 0, 0);
 		}
 	}
+	// 创建时间冒号闪烁定时器
+	seg_timer_dot = xTimerCreate("seg_timer_dot", pdMS_TO_TICKS(500), pdTRUE, (void *)0, seg_timer_dot_callback);
 }
 
 // 设置单个数码管显示特定数字
@@ -242,19 +274,21 @@ void seg_display_time(int hour, int minute, color_t color, float brightness)
 	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[1], color.r, color.g, color.b);
 	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], ws2812_strip.brightness);
 	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], ws2812_strip.brightness);
-	ws2812_show_leds();
-	vTaskDelay(pdMS_TO_TICKS(200));
-	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[0], color.r, color.g, color.b);
-	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[1], color.r, color.g, color.b);
-	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], 0);
-	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], 0);
-	ws2812_show_leds();
-	vTaskDelay(pdMS_TO_TICKS(200));
-	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[0], color.r, color.g, color.b);
-	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[1], color.r, color.g, color.b);
-	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], ws2812_strip.brightness);
-	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], ws2812_strip.brightness);
-	ws2812_show_leds();
+	// ws2812_show_leds();
+	// vTaskDelay(pdMS_TO_TICKS(200));
+	// ws2812_set_pixel_color(seg_dev.seg_time.seg_units[0], color.r, color.g, color.b);
+	// ws2812_set_pixel_color(seg_dev.seg_time.seg_units[1], color.r, color.g, color.b);
+	// ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], 0);
+	// ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], 0);
+	// ws2812_show_leds();
+	// vTaskDelay(pdMS_TO_TICKS(200));
+	// ws2812_set_pixel_color(seg_dev.seg_time.seg_units[0], color.r, color.g, color.b);
+	// ws2812_set_pixel_color(seg_dev.seg_time.seg_units[1], color.r, color.g, color.b);
+	// ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], ws2812_strip.brightness);
+	// ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], ws2812_strip.brightness);
+	// ws2812_show_leds();
+	if (xTimerIsTimerActive(seg_timer_dot) == pdFALSE)
+		xTimerStart(seg_timer_dot, pdMS_TO_TICKS(10));
 }
 
 void seg_display_time_ex_color_mode(int hour, int minute, int color_mode, float brightness)
@@ -264,6 +298,7 @@ void seg_display_time_ex_color_mode(int hour, int minute, int color_mode, float 
 	ws2812_strip.brightness = brightness;
 
 	color_t(*seg_color)[7][2] = NULL;
+	seg_colo_mode = color_mode;
 	switch (color_mode)
 	{
 	case 0:
@@ -324,26 +359,23 @@ void seg_display_time_ex_color_mode(int hour, int minute, int color_mode, float 
 		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_minute_units[i][1], is_segment_on ? ws2812_strip.brightness : 0);
 		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_minute_units[i][0], is_segment_on ? ws2812_strip.brightness : 0);
 	}
-	vTaskDelay(pdMS_TO_TICKS(200));
-	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[0], seg_color[1][1][0].r, seg_color[1][1][0].g, seg_color[1][1][0].b);
-	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[1], seg_color[1][1][1].r, seg_color[1][1][1].g, seg_color[1][1][1].b);
-	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], 0);
-	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], 0);
-	ws2812_show_leds();
-	vTaskDelay(pdMS_TO_TICKS(200));
-	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[0], seg_color[1][1][0].r, seg_color[1][1][0].g, seg_color[1][1][0].b);
-	ws2812_set_pixel_color(seg_dev.seg_time.seg_units[1], seg_color[1][1][1].r, seg_color[1][1][1].g, seg_color[1][1][1].b);
-	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[0], ws2812_strip.brightness);
-	ws2812_set_pixel_brightness(seg_dev.seg_time.seg_units[1], ws2812_strip.brightness);
-	ws2812_show_leds();
+	// vTaskDelay(pdMS_TO_TICKS(200));
+	// ws2812_show_leds();
+	// 判断定时器是否运行
+	if (xTimerIsTimerActive(seg_timer_dot) == pdFALSE)
+		xTimerStart(seg_timer_dot, pdMS_TO_TICKS(10));
 }
 
 void seg_display_fans_count_color_mode(int follow_cnt, int color_mode, float brightness)
 {
+	if (xTimerIsTimerActive(seg_timer_dot) == pdTRUE)
+		xTimerStop(seg_timer_dot, pdMS_TO_TICKS(10));
+
 	color_t(*seg_color)[7][2] = NULL;
-	// 设置小时的十位
+	// 设置小时的十
 	bool istenthousand = false;
 	ws2812_strip.brightness = brightness;
+	seg_colo_mode = color_mode;
 	switch (color_mode)
 	{
 	case 0:
@@ -486,6 +518,7 @@ void seg_display_loading(loading_t status, unsigned char color_mode)
 
 	blog_info("seg_display_loading %d", status);
 	color_t(*seg_color)[7][2] = NULL;
+	seg_colo_mode = color_mode;
 	switch (color_mode)
 	{
 	case 0:
@@ -558,4 +591,29 @@ void seg_display_loading(loading_t status, unsigned char color_mode)
 	default:
 		break;
 	}
+}
+
+void seg_set_wifi_dot_color(unsigned char color_mode, float brightness)
+{
+	color_t(*seg_color)[7][2] = NULL;
+	switch (color_mode)
+	{
+	case 0:
+		seg_color = seg_color_FF00FF_to_0000FF; // 紫色到蓝色
+		break;
+	case 1:
+		seg_color = seg_color_0000FF_to_00FF00; // 蓝色到绿色
+		break;
+	case 2:
+		seg_color = seg_color_FF0000_to_FF00FF; // 绿色到紫色
+		break;
+	case 3:
+		seg_color = seg_color_FF00FF_to_F06E82; // 紫色到粉色
+		break;
+	default:
+		seg_color = seg_color_FF00FF_to_0000FF; // 紫色到蓝色
+		break;
+	}
+	ws2812_set_pixel_color(SEG_WIFI_LED_NUNBER, seg_color == NULL ? 0X00 : seg_color[1][6][0].r, seg_color == NULL ? 0XFF : seg_color[1][6][0].g, seg_color == NULL ? 0X00 : seg_color[1][6][0].b);
+	ws2812_set_pixel_brightness(SEG_WIFI_LED_NUNBER, brightness);
 }

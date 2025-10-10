@@ -43,11 +43,11 @@ static bool is_blufi_config = false;
 // 数码管显示时间状态
 static bool seg_is_timer_running = true;
 // B站信息变量
-static bool is_flash_bilibili_uid = false;
+bool is_flash_bilibili_uid = false;
 char flash_bilibili_uid[32] = {0};
 int fans_count = 0;
 // 嘉立创 工程浏览量
-static bool is_flash_jlc_pro_uid = false;
+bool is_flash_jlc_pro_uid = false;
 char project_uid[64] = {0};
 int project_view_count = 0;
 
@@ -190,11 +190,11 @@ static void device_state_task(void *arg)
                 {
                     seg_display_fans_count_color_mode(display_msg ? fans_count : project_view_count, color_mode, 0.05);
 
-                    if (is_flash_bilibili_uid && https_get_fans_task_handle == NULL && display_msg)
+                    if (is_flash_bilibili_uid && display_msg)
                     {
                         bilibili_get_fans_count(flash_bilibili_uid);
                     }
-                    else if (is_flash_jlc_pro_uid && https_get_project_view_task_handle == NULL && !display_msg)
+                    else if (is_flash_jlc_pro_uid && !display_msg)
                     {
                         jlc_get_views_count(project_uid);
                     }
@@ -220,6 +220,7 @@ static void device_state_task(void *arg)
 
                 blog_info("color_mode:%d", color_mode);
                 flash_save_color_mode(color_mode);
+                seg_set_wifi_dot_color(color_mode, 0.05);
                 if (seg_is_timer_running == true)
                 {
                     seg_display_time_ex_color_mode((int)timer_hour == 0 ? 8 : timer_hour, (int)timer_min == 0 ? 0 : timer_min, (int)color_mode, 0.05);
@@ -301,15 +302,15 @@ static void device_state_timer_callback(TimerHandle_t xTimer)
 
         sntp_get_time(&seconds, &frags);
         utils_time_date_from_epoch(seconds + 8 * 60 * 60, &date);
-        blog_info("Date & time is: %u-%02u-%02u %02u:%02u:%02u (Day %u of week, Day %u of Year)",
-                  date.ntp_year,
-                  date.ntp_month,
-                  date.ntp_date,
-                  date.ntp_hour,
-                  date.ntp_minute,
-                  date.ntp_second,
-                  date.ntp_week_day,
-                  date.day_of_year);
+        blog_debug("Date & time is: %u-%02u-%02u %02u:%02u:%02u (Day %u of week, Day %u of Year)",
+                   date.ntp_year,
+                   date.ntp_month,
+                   date.ntp_date,
+                   date.ntp_hour,
+                   date.ntp_minute,
+                   date.ntp_second,
+                   date.ntp_week_day,
+                   date.day_of_year);
         timer_hour = date.ntp_hour;
         timer_min = date.ntp_minute;
         if (seg_is_timer_running == true)

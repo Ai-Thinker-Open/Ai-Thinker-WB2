@@ -27,9 +27,10 @@ typedef enum
 // 按键状态
 typedef enum
 {
-	KEY_STATE_RELEASED,	   // 释放状态
-	KEY_STATE_PRESSED,	   // 按下状态
-	KEY_STATE_LONG_PRESSED // 长按状态
+	KEY_STATE_RELEASED,
+	KEY_STATE_PRESSED,
+	KEY_STATE_LONG_PRESSED,
+	// KEY_STATE_WAIT_DOUBLE_CLICK // 新增：等待双击状态
 } KeyState;
 
 // 按键配置结构体

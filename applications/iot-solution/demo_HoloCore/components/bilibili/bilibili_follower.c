@@ -67,8 +67,8 @@ static void https_get_fans_task(void *pvParameters)
 	_exit:
 		cJSON_Delete(root);
 		free(http_data);
-		vTaskSuspend(https_get_fans_task_handle);
 		is_https_get_fans_task_running = false;
+		vTaskSuspend(https_get_fans_task_handle);
 	}
 }
 
@@ -82,8 +82,6 @@ int bilibili_get_fans_count(char *user_id)
 	if (https_get_fans_task_handle == NULL)
 	{
 		xTaskCreate(https_get_fans_task, "https_get_fans_task", 1024 * 2, user_id, 10, &https_get_fans_task_handle);
-		vTaskSuspend(https_get_fans_task_handle);
-		is_https_get_fans_task_running = false;
 	}
 	else
 	{

@@ -49,6 +49,8 @@ extern int fans_count;
 extern char project_uid[64];
 extern int project_view_count;
 extern unsigned char display_msg;
+extern bool is_flash_bilibili_uid;
+extern bool is_flash_jlc_pro_uid;
 void device_state_init(void *arg);
 void device_state_update(int is_iqr, dev_msg_t *dev_msg);
 #endif

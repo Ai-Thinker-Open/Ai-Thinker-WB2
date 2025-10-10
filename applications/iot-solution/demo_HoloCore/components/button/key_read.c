@@ -50,7 +50,7 @@ void button_init(void)
 		.gpio_pin = BUTTOM_CFG_PIN,
 		.active_level = 0,
 		.long_press_time = 2000,
-		.click_interval = 500,
+		.click_interval = 200,
 
 	};
 	bl_gpio_enable_input(BUTTOM_CFG_PIN, 1, 0);

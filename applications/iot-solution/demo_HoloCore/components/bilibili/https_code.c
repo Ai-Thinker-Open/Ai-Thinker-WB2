@@ -395,8 +395,29 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 	// 第二阶段：提取JSON（仅在成功读取响应后）
 
 	// const char *json_start = NULL;
+	int _ret = -1;
+	if (uid_type)
+	{
+		const char *json_start = extract_json_from_http_response(http_response);
+		http_data = malloc(512);
+		memset(http_data, 0, 512);
+		if (json_start != NULL)
+		{
+			// 获取JSON字符串长度
 
-	int _ret = parse_chunked_response(http_response, &http_data);
+			// 将JSON字符串复制到http_data
+			strcpy(http_data, json_start);
+			_ret = 0;
+		}
+		else
+		{
+			_ret = -1;
+		}
+	}
+	else
+	{
+		_ret = parse_chunked_response(http_response, &http_data);
+	}
 
 	// puts(http_data);
 	if (http_data != NULL && _ret == 0)

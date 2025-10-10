@@ -138,7 +138,7 @@ KeyDetector *Button_detector_init(const KeyConfig *config, int (*read_pin)(void)
 	detector->on_double_click = double_click_cb;
 	detector->read_pin = read_pin;
 	// 创建定时器，周期为5ms(可根据需要调整)
-	detector->timer = xTimerCreate("KeyTimer", pdMS_TO_TICKS(5), pdTRUE, (void *)detector, Button_timer_callback);
+	detector->timer = xTimerCreate("KeyTimer", pdMS_TO_TICKS(10), pdTRUE, (void *)detector, Button_timer_callback);
 
 	if (detector->timer == NULL)
 	{
@@ -155,7 +155,6 @@ void Button_detector_start(KeyDetector *detector)
 	{
 		xTimerStart(detector->timer, 0);
 	}
-	
 }
 
 // 停止按键检测
