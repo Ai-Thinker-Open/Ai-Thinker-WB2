@@ -409,7 +409,7 @@ void seg_display_fans_count_color_mode(int follow_cnt, int color_mode, float bri
 	uint8_t segments = digitSegments[follow_cnt / 1000 % 10];
 	for (int i = 0; i < NUM_SEGMENTS; i++)
 	{
-		int is_segment_on = (segments >> i) & 1 && (follow_cnt / 1000 % 10 > 0) ? true : false; // 千位为0时不显示
+		int is_segment_on = (segments >> i) & 1 && follow_cnt > 1000 ? true : false; // 千位为0时不显示
 		ws2812_set_pixel_color(seg_dev.seg_time.seg_hour_tens[i][0], seg_color[0][i][0].r, seg_color[0][i][0].g, seg_color[0][i][0].b);
 		ws2812_set_pixel_color(seg_dev.seg_time.seg_hour_tens[i][1], seg_color[0][i][1].r, seg_color[0][i][1].g, seg_color[0][i][1].b);
 		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_hour_tens[i][0], is_segment_on ? ws2812_strip.brightness : 0);
@@ -419,7 +419,7 @@ void seg_display_fans_count_color_mode(int follow_cnt, int color_mode, float bri
 	segments = digitSegments[follow_cnt / 100 % 10];
 	for (int i = 0; i < NUM_SEGMENTS; i++)
 	{
-		int is_segment_on = (segments >> i) & 1 && (follow_cnt / 100 % 10 > 0) ? true : false; // 百位为0时不显示
+		int is_segment_on = (segments >> i) & 1 && follow_cnt > 100 ? true : false; // 百位为0时不显示
 		ws2812_set_pixel_color(seg_dev.seg_time.seg_hour_units[i][0], seg_color[1][i][0].r, seg_color[1][i][0].g, seg_color[1][i][0].b);
 		ws2812_set_pixel_color(seg_dev.seg_time.seg_hour_units[i][1], seg_color[1][i][1].r, seg_color[1][i][1].g, seg_color[1][i][1].b);
 		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_hour_units[i][0], is_segment_on ? ws2812_strip.brightness : 0);
@@ -429,7 +429,7 @@ void seg_display_fans_count_color_mode(int follow_cnt, int color_mode, float bri
 	segments = digitSegments[follow_cnt / 10 % 10];
 	for (int i = 0; i < NUM_SEGMENTS; i++)
 	{
-		int is_segment_on = (segments >> i) & 1 && (follow_cnt / 10 % 10 > 0) ? true : false; // 十位为0时不显示
+		int is_segment_on = (segments >> i) & 1 && follow_cnt > 10 ? true : false; // 十位为0时不显示
 
 		ws2812_set_pixel_color(seg_dev.seg_time.seg_minute_tens[i][0], seg_color[2][i][0].r, seg_color[2][i][0].g, seg_color[2][i][0].b);
 		ws2812_set_pixel_color(seg_dev.seg_time.seg_minute_tens[i][1], seg_color[2][i][1].r, seg_color[2][i][1].g, seg_color[2][i][1].b);
@@ -440,7 +440,7 @@ void seg_display_fans_count_color_mode(int follow_cnt, int color_mode, float bri
 	segments = digitSegments[follow_cnt % 10];
 	for (int i = 0; i < NUM_SEGMENTS; i++)
 	{
-		int is_segment_on = (segments >> i) & 1 && (follow_cnt % 10 > 0) ? true : false; // 个位为0时不显示，除非是四位数
+		int is_segment_on = (segments >> i) & 1 ? true : false; // 个位为0时不显示，除非是四位数
 		ws2812_set_pixel_color(seg_dev.seg_time.seg_minute_units[i][0], seg_color[3][i][0].r, seg_color[3][i][0].g, seg_color[3][i][0].b);
 		ws2812_set_pixel_color(seg_dev.seg_time.seg_minute_units[i][1], seg_color[3][i][1].r, seg_color[3][i][1].g, seg_color[3][i][1].b);
 		ws2812_set_pixel_brightness(seg_dev.seg_time.seg_minute_units[i][1], is_segment_on ? ws2812_strip.brightness : 0);

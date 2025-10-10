@@ -37,7 +37,7 @@ void main(void)
 
     while (1)
     {
-        blog_warn("HeapSize=%d ", xPortGetFreeHeapSize());
+        blog_debug("HeapSize=%d ", xPortGetFreeHeapSize());
 
         vTaskDelay(pdMS_TO_TICKS(1000));
     }

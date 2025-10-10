@@ -74,7 +74,7 @@ static void device_read_msg_from_flash(void)
     }
     memset(project_uid, 0, 32);
     flash_get_jlc_puid(project_uid);
-    if (strlen(project_uid) != 0 && strlen(project_uid) == 32)
+    if (strlen(project_uid) != 0)
     {
         is_flash_jlc_pro_uid = true;
     }
@@ -174,8 +174,7 @@ static void device_state_task(void *arg)
                 seg_display_loading(SEG_LOADING_BLUFI_CONFIG, color_mode);
                 blufi_config_start();
                 break;
-            default:
-                break;
+
             case DEVIDE_STATE_CFG_STATE_SHORT_PRESS:
             {
                 blog_info("<<<<<<<<<<<<<<<  DEVIDE_STATE_CFG_STATE_SHORT_PRESS");
@@ -234,9 +233,12 @@ static void device_state_task(void *arg)
             case DEVICE_STATE_HTTP_REQUEST:
                 blog_info("<<<<<<<<<<<<<<<  DEVICE_STATE_HTTP_REQUEST");
                 // seg_display_fans_count_color_mode(fans_count, (int)color_mode, 0.05);
-                if (is_flash_bilibili_uid && https_get_fans_task_handle == NULL && display_msg)
+                blog_info("display_msg:%d,is_flash_bilibili_uid:%d,is_flash_jlc_pro_uid:%d", display_msg, is_flash_bilibili_uid, is_flash_jlc_pro_uid);
+                if (is_flash_bilibili_uid && display_msg)
+                {
                     bilibili_get_fans_count(flash_bilibili_uid);
-                else if (is_flash_jlc_pro_uid && https_get_project_view_task_handle == NULL && !display_msg)
+                }
+                else if (is_flash_jlc_pro_uid && display_msg == 0)
                 {
                     jlc_get_views_count(project_uid);
                 }
@@ -247,30 +249,30 @@ static void device_state_task(void *arg)
                 blog_info("<<<<<<<<<<<<<<<  DEVICE_STATE_HTTP_RESPONSE");
                 if (display_msg == HTTP_REQUEST_TYPE_BILIBILI)
                 {
-                    if (fans_count != -1)
+
+                    int fans_count_flash = flash_get_follower_count();
+                    if (fans_count_flash != fans_count)
                     {
-                        int fans_count_flash = flash_get_follower_count();
-                        if (fans_count_flash != fans_count)
-                        {
-                            flash_save_follower_count(fans_count);
-                        }
+                        flash_save_follower_count(fans_count);
                     }
                 }
                 else
                 {
-                    if (project_view_count != -1)
+
+                    int flash_views = flash_get_views_count();
+                    if (flash_views != project_view_count)
                     {
-                        int flash_views = flash_get_views_count();
-                        if (flash_views != project_view_count)
-                        {
-                            flash_save_views_count(project_view_count);
-                        }
+                        flash_save_views_count(project_view_count);
                     }
                 }
-                seg_display_fans_count_color_mode(display_msg ? fans_count : project_view_count, color_mode, 0.05);
+                if (seg_is_timer_running == false)
+                    seg_display_fans_count_color_mode(display_msg ? fans_count : project_view_count, color_mode, 0.05);
             }
 
             break;
+
+            default:
+                break;
             }
 
             memset(dev_msg, 0, sizeof(dev_msg_t));
@@ -333,7 +335,7 @@ static void device_state_timer_callback(TimerHandle_t xTimer)
 void device_state_init(void *arg)
 {
     device_queue_handle = xQueueCreate(2, sizeof(dev_msg_t));
-    BaseType_t err = xTaskCreate(device_state_task, "device_state_task", DEVICE_QUEUE_HANDLE_SIZE * 8, NULL, 9, NULL);
+    BaseType_t err = xTaskCreate(device_state_task, "device_state_task", DEVICE_QUEUE_HANDLE_SIZE * 4, NULL, 9, NULL);
 
     wifi_device_init(blufi_wifi_event);
     // blufi_wifi_init();

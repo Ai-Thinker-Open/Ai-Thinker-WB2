@@ -76,12 +76,6 @@ static const uint8_t TEST_CERTIFICATE_FILENAME[] = {"-----BEGIN CERTIFICATE-----
 bool is_https_running = false;
 static const char *extract_json_from_http_response(const char *response);
 static int parse_chunked_response(const char *response, char **json_out);
-static void count_extractor_init(CountExtractor *extractor);
-static int expand_buffer(CountExtractor *extractor, size_t needed);
-static void process_buf_for_count(CountExtractor *extractor, const char *buf, size_t len);
-static int is_count_extracted(CountExtractor *extractor);
-static const char *get_extracted_count(CountExtractor *extractor);
-static void count_extractor_free(CountExtractor *extractor);
 
 char *https_get_code(char *user_id, unsigned char uid_type)
 {
@@ -95,7 +89,6 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 
 	int ret = 0, flags, len;
 	char buf[1024] = {0};
-	const char *json_data = NULL;
 	char *http_data = NULL;
 	// 初始化上下文结构 - 按释放顺序的逆序初始化
 	mbedtls_entropy_context entropy;
@@ -267,26 +260,27 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 	} while (written_bytes < strlen(request_buf));
 
 	blog_info("Reading HTTP response...");
-	char *http_response = malloc(HTTP_RESPONSE_BUFFER_SIZE);
+
+	char *http_response = pvPortMalloc(HTTP_RESPONSE_BUFFER_SIZE);
 	if (!http_response)
 	{
 		blog_error("Failed to allocate memory for http_response");
 		ret = -1;
 		goto exit;
 	}
+
 	memset(http_response, 0, HTTP_RESPONSE_BUFFER_SIZE);
 	http_response[0] = '\0'; // 初始化空字符串
 	int json_extracted = 0;	 // 标记JSON是否已提取
 							 // 第一阶段：读取完整的HTTP响应
 
 	// 创建一个临时缓冲区来存储每次读取的数据，用于获取JLC工程浏览量
-	CountExtractor count_extractor;
-	count_extractor_init(&count_extractor);
 	ResponseState resp_state = RESPONSE_STATE_HEADER;
 	size_t content_length = 0; // 从Content-Length获取的总长度
 	size_t body_read = 0;	   // 已读取的响应体长度
 	int is_chunked = 0;		   // 是否为分块传输
 	char *header_end = NULL;   // 响应头结束标记("\r\n\r\n")的位置
+
 	do
 	{
 		len = sizeof(buf) - 1;
@@ -332,22 +326,27 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 			ret = -1;
 			goto exit;
 		}
-
+		// 缓存数据用于下一步操作
+		const char *http_response_temp = http_response;
 		// 1. 解析响应头（仅在未解析完成时执行）
 		if (resp_state == RESPONSE_STATE_HEADER)
 		{
 			// 查找响应头结束标记("\r\n\r\n")
-			header_end = strstr(http_response, "\r\n\r\n");
+
+			header_end = strstr(http_response_temp, "\r\n\r\n");
 			if (header_end != NULL)
 			{
+
 				resp_state = RESPONSE_STATE_BODY;
 				// 计算响应头长度和响应体起始位置
-				size_t header_len = header_end - http_response + 4; // 包含"\r\n\r\n"
-				const char *body_start = http_response + header_len;
+				size_t header_len = header_end - http_response_temp + 4; // 包含"\r\n\r\n"
+				const char *body_start = http_response_temp + header_len;
+
 				size_t initial_body_len = strlen(body_start);
 
 				// 解析Content-Length
-				const char *cl_header = strstr(http_response, "Content-Length: ");
+				const char *cl_header = strstr(http_response_temp, "Content-Length: ");
+
 				if (cl_header != NULL)
 				{
 					content_length = atoi(cl_header + 16); // "Content-Length: "长度为16
@@ -356,7 +355,7 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 					body_read = initial_body_len;
 				}
 				// 解析分块传输（简化处理，实际需处理分块格式）
-				else if (strstr(http_response, "Transfer-Encoding: chunked") != NULL)
+				else if (strstr(http_response_temp, "Transfer-Encoding: chunked") != NULL)
 				{
 					is_chunked = 1;
 					// 分块传输需逐块解析，此处简化为标记状态
@@ -368,11 +367,12 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 		// 2. 判断响应体是否读取完成（非分块模式）
 		if (resp_state == RESPONSE_STATE_BODY && !is_chunked && content_length > 0)
 		{
-			body_read = strlen(http_response) - (header_end - http_response + 4); // 更新已读长度
+			body_read = strlen(http_response_temp) - (header_end - http_response_temp + 4); // 更新已读长度
 			if (body_read >= content_length)
 			{
 				blog_info("Response completed (Content-Length reached)");
 				resp_state = RESPONSE_STATE_DONE;
+
 				break; // 读取完成，退出循环
 			}
 		}
@@ -381,10 +381,11 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 		if (resp_state == RESPONSE_STATE_BODY && is_chunked)
 		{
 			// 实际需解析每块的长度（十六进制），此处简化为检测"0\r\n\r\n"结束标记
-			if (strstr(http_response, "\r\n0\r\n\r\n") != NULL)
+			if (strstr(http_response_temp, "\r\n0\r\n\r\n") != NULL)
 			{
 				blog_info("Response completed (chunked transfer ended)");
 				resp_state = RESPONSE_STATE_DONE;
+
 				break; // 读取完成，退出循环
 			}
 		}
@@ -394,9 +395,10 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 	// 第二阶段：提取JSON（仅在成功读取响应后）
 
 	// const char *json_start = NULL;
+
 	int _ret = parse_chunked_response(http_response, &http_data);
 
-	puts(http_data);
+	// puts(http_data);
 	if (http_data != NULL && _ret == 0)
 	{
 		json_extracted = 1; // 标记JSON提取成功
@@ -408,9 +410,9 @@ char *https_get_code(char *user_id, unsigned char uid_type)
 		ret = -1;
 	}
 	// 释放临时缓冲区（无论是否成功都释放）
-	count_extractor_free(&count_extractor);
-	free(http_response);
+	vPortFree(http_response);
 	http_response = NULL;
+
 exit:
 	// 关键修复：按初始化的逆序释放资源，只释放已初始化的部分
 	if (server_fd_inited)
@@ -441,9 +443,6 @@ exit:
 	{
 		free(http_data);
 		http_data = NULL;
-	}
-	if (ret != 0)
-	{
 		mbedtls_strerror(ret, buf, sizeof(buf) - 1);
 		blog_error("Last error was: -0x%x - %s", -ret, buf);
 	}
@@ -508,7 +507,13 @@ static const char *extract_json_from_http_response(const char *response)
 	str_temp[i + 1] = '\0';
 	return json_start;
 }
-
+/**
+ * 解析分块编码的HTTP响应体，提取完整JSON字符串
+ * @param response [in] 完整的HTTP响应字符串（需以'\0'结尾）
+ * @param json_out [out] 输出参数，指向拼接后的完整JSON字符串（需调用者手动free释放）
+ * @return 0：成功；-1：失败（内存已释放，无泄漏）
+ * @note 成功返回后，调用者必须通过 free(*json_out) 释放内存，否则会导致泄漏
+ */
 static int parse_chunked_response(const char *response, char **json_out)
 {
 	if (!response || !json_out)
@@ -596,164 +601,4 @@ static int parse_chunked_response(const char *response, char **json_out)
 
 	*json_out = json_data;
 	return 0;
-}
-
-// 初始化提取器
-static void count_extractor_init(CountExtractor *extractor)
-{
-	memset(extractor, 0, sizeof(CountExtractor));
-	extractor->state = COUNT_STATE_NONE;
-	extractor->buf_capacity = 1024;
-	extractor->buffer = malloc(extractor->buf_capacity);
-	if (extractor->buffer)
-	{
-		extractor->buffer[0] = '\0';
-	}
-}
-
-// 扩展缓冲区
-static int expand_buffer(CountExtractor *extractor, size_t needed)
-{
-	if (!extractor->buffer)
-		return -1;
-
-	size_t new_capacity = extractor->buf_capacity;
-	while (extractor->buf_size + needed >= new_capacity)
-	{
-		new_capacity *= 2;
-		if (new_capacity > 1024 * 1024)
-		{ // 限制最大1MB，防止内存溢出
-			return -1;
-		}
-	}
-
-	char *new_buf = realloc(extractor->buffer, new_capacity);
-	if (!new_buf)
-		return -1;
-
-	extractor->buffer = new_buf;
-	extractor->buf_capacity = new_capacity;
-	return 0;
-}
-
-// 处理缓冲区数据，提取count对象
-static void process_buf_for_count(CountExtractor *extractor, const char *buf, size_t len)
-{
-	if (extractor->state == COUNT_STATE_COMPLETE || !extractor->buffer)
-	{
-		return;
-	}
-
-	for (size_t i = 0; i < len; i++)
-	{
-		if (extractor->state == COUNT_STATE_NONE)
-		{
-			// 先寻找最外层的左大括号 '{'
-			if (buf[i] == '{')
-			{
-				// 记录最外层左大括号
-				if (expand_buffer(extractor, 1) != 0)
-				{
-					return;
-				}
-				extractor->buffer[extractor->buf_size++] = '{';
-				extractor->brace_balance = 1;
-				extractor->state = COUNT_STATE_INSIDE;
-			}
-		}
-		else if (extractor->state == COUNT_STATE_INSIDE)
-		{
-			// 处理内部字符，先找"count"关键字
-			if (!extractor->found_count)
-			{
-				// 查找"count":的位置
-				if (i + 6 < len &&
-					buf[i] == '"' && buf[i + 1] == 'c' && buf[i + 2] == 'o' &&
-					buf[i + 3] == 'u' && buf[i + 4] == 'n' && buf[i + 5] == 't' &&
-					buf[i + 6] == '"')
-				{
-
-					// 跳过冒号前的空白
-					size_t colon_pos = i + 7;
-					while (colon_pos < len && (buf[colon_pos] == ' ' || buf[colon_pos] == '\t' ||
-											   buf[colon_pos] == '\r' || buf[colon_pos] == '\n'))
-					{
-						colon_pos++;
-					}
-
-					// 确认有冒号
-					if (colon_pos < len && buf[colon_pos] == ':')
-					{
-						// 计算需要复制的长度（从"count"到冒号）
-						size_t keyword_len = colon_pos - i + 1;
-						if (expand_buffer(extractor, keyword_len) != 0)
-						{
-							return;
-						}
-
-						// 复制"count":部分
-						memcpy(extractor->buffer + extractor->buf_size, &buf[i], keyword_len);
-						extractor->buf_size += keyword_len;
-
-						// 标记已找到count关键字
-						extractor->found_count = 1;
-						i = colon_pos; // 移动索引到已处理位置
-						continue;
-					}
-				}
-			}
-
-			// 复制当前字符并更新大括号平衡
-			if (expand_buffer(extractor, 1) != 0)
-			{
-				return;
-			}
-			extractor->buffer[extractor->buf_size++] = buf[i];
-
-			// 更新大括号平衡
-			if (buf[i] == '{')
-			{
-				extractor->brace_balance++;
-			}
-			else if (buf[i] == '}')
-			{
-				extractor->brace_balance--;
-
-				// 当大括号平衡为0且已找到count时，说明完整JSON结束
-				if (extractor->brace_balance == 0 && extractor->found_count)
-				{
-					extractor->state = COUNT_STATE_COMPLETE;
-					extractor->buffer[extractor->buf_size] = '\0'; // 确保字符串结束
-					break;
-				}
-			}
-		}
-	}
-}
-
-// 检查是否提取完成
-static int is_count_extracted(CountExtractor *extractor)
-{
-	return (extractor->state == COUNT_STATE_COMPLETE) ? 1 : 0;
-}
-
-// 获取提取的count对象
-static const char *get_extracted_count(CountExtractor *extractor)
-{
-	if (extractor->state == COUNT_STATE_COMPLETE && extractor->buffer)
-	{
-		return extractor->buffer;
-	}
-	return NULL;
-}
-
-// 释放提取器资源
-static void count_extractor_free(CountExtractor *extractor)
-{
-	if (extractor->buffer)
-	{
-		free(extractor->buffer);
-		extractor->buffer = NULL;
-	}
-	memset(extractor, 0, sizeof(CountExtractor));
 }

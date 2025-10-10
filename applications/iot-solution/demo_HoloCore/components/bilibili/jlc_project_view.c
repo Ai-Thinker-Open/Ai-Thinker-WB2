@@ -20,76 +20,92 @@
 #include "device_state.h"
 
 TaskHandle_t https_get_project_view_task_handle = NULL;
-
+static bool is_https_get_project_view_task_running = false;
 static void https_get_project_view_task(void *pvParameters)
 {
-	char *proUID = (char *)pvParameters;
-	// blog_info("get jlc_puid:%s", proUID);
-	char *http_data = https_get_code(proUID, HTTP_REQUEST_TYPE_JLC);
-	if (http_data == NULL)
-	{
-		vTaskDelete(https_get_project_view_task_handle);
-		goto _exit;
-	}
-	// blog_info("http_data:%s", http_data);
-	// puts(http_data);
-	cJSON *root = cJSON_Parse(http_data);
-	if (root == NULL)
-	{
-		blog_error("cJSON_Parse error");
-		free(http_data);
-		vTaskDelete(https_get_project_view_task_handle);
-		goto _exit;
-	}
-	cJSON *result = cJSON_GetObjectItem(root, "result");
-	if (result == NULL)
-	{
-		blog_error("cJSON_GetObjectItem error");
-		cJSON_Delete(root);
-		free(http_data);
-		vTaskDelete(https_get_project_view_task_handle);
-		goto _exit;
-	}
-	cJSON *count = cJSON_GetObjectItem(result, "count");
-	if (count == NULL)
-	{
-		blog_error("cJSON_GetObjectItem error");
-		cJSON_Delete(root);
-		free(http_data);
-		vTaskDelete(https_get_project_view_task_handle);
-		goto _exit;
-	}
-	cJSON *view = cJSON_GetObjectItem(count, "views");
-	if (view == NULL)
-	{
-		blog_error("cJSON_GetObjectItem error");
-		cJSON_Delete(root);
-		free(http_data);
-		vTaskDelete(https_get_project_view_task_handle);
-		goto _exit;
-	}
-	project_view_count = view->valueint;
-	blog_info("project_view_count:%d", project_view_count);
 
-	cJSON_Delete(root);
-	if (http_data != NULL)
-		free(http_data);
+	const char *proUID = (char *const)pvParameters;
 
-	dev_msg_t dev_msg = {
-		.device_state = DEVICE_STATE_HTTP_RESPONSE,
-	};
-	device_state_update(0, &dev_msg);
-_exit:
-	vTaskDelete(https_get_project_view_task_handle);
+	blog_info("get jlc_puid:%s", proUID);
+
+	while (1)
+	{
+		is_https_get_project_view_task_running = true;
+		char *http_data = https_get_code(proUID, HTTP_REQUEST_TYPE_JLC);
+
+		if (http_data == NULL)
+		{
+			// 直接删除任务并返回，避免后续操作
+			if (https_get_project_view_task_handle != NULL)
+			{
+				vTaskSuspend(https_get_project_view_task_handle);
+			}
+		}
+		// blog_info("http_data:%s", http_data);
+		// puts(http_data);
+		cJSON *root = cJSON_Parse(http_data);
+		if (root == NULL)
+		{
+			blog_error("cJSON_Parse error");
+			goto _exit;
+		}
+		cJSON *result = cJSON_GetObjectItem(root, "result");
+		if (result == NULL)
+		{
+			blog_error("cJSON_GetObjectItem error");
+			goto _exit;
+		}
+		cJSON *count = cJSON_GetObjectItem(result, "count");
+		if (count == NULL)
+		{
+			blog_error("cJSON_GetObjectItem error");
+
+			goto _exit;
+		}
+		cJSON *view = cJSON_GetObjectItem(count, "views");
+		if (view == NULL)
+		{
+			blog_error("cJSON_GetObjectItem error");
+
+			goto _exit;
+		}
+		project_view_count = view->valueint;
+		blog_info("project_view_count:%d", project_view_count);
+
+		dev_msg_t dev_msg = {
+			.device_state = DEVICE_STATE_HTTP_RESPONSE,
+		};
+		device_state_update(0, &dev_msg);
+	_exit:
+		cJSON_Delete(root);
+		free(http_data);
+		is_https_get_project_view_task_running = false;
+		vTaskSuspend(https_get_project_view_task_handle);
+	}
+	return;
+
+	//
 }
 
-int jlc_get_views_count(char *user_id)
+int jlc_get_views_count(const char *user_id)
 {
 	if (user_id == NULL)
 	{
 		return -1;
 	}
 	// 创建任务
-	xTaskCreate(https_get_project_view_task, "https_get_project_view_task", 1024 * 2, user_id, 10, &https_get_project_view_task_handle);
+
+	if (https_get_project_view_task_handle == NULL)
+	{
+		xTaskCreate(https_get_project_view_task, "https_get_project_view_task", 1024 * 3, (void *const)user_id, 10, &https_get_project_view_task_handle);
+	}
+	else
+	{
+		// 检查任务运行状态
+		if (is_https_get_project_view_task_running == false)
+		{
+			vTaskResume(https_get_project_view_task_handle);
+		}
+	}
 	return 0;
 }

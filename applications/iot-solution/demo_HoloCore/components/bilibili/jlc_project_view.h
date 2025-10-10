@@ -12,5 +12,5 @@
 #define __JLC_PROJECT_VIEW_H__
 #include "https_code.h"
 
-int jlc_get_views_count(char *user_id);
+int jlc_get_views_count(const char *user_id);
 #endif // !__JLC_PROJECT_VIEW_H__
