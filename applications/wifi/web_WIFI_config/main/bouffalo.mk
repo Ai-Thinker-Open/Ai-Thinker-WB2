@@ -1,0 +1,25 @@
+#
+# "main" 伪组件（与 demo_TM1721/main/bouffalo.mk 对齐）
+#
+
+include $(BL60X_SDK_PATH)/components/network/ble/ble_common.mk
+
+ifeq ($(CONFIG_ENABLE_PSM_RAM),1)
+CPPFLAGS += -DCONF_USER_ENABLE_PSRAM
+endif
+
+ifeq ($(CONFIG_ENABLE_CAMERA),1)
+CPPFLAGS += -DCONF_USER_ENABLE_CAMERA
+endif
+
+ifeq ($(CONFIG_ENABLE_BLSYNC),1)
+CPPFLAGS += -DCONF_USER_ENABLE_BLSYNC
+endif
+
+ifeq ($(CONFIG_ENABLE_VFS_SPI),1)
+CPPFLAGS += -DCONF_USER_ENABLE_VFS_SPI
+endif
+
+ifeq ($(CONFIG_ENABLE_VFS_ROMFS),1)
+CPPFLAGS += -DCONF_USER_ENABLE_VFS_ROMFS
+endif

@@ -1,0 +1,1825 @@
+﻿<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Communication Protocol</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <style>
+        html {
+            height: 100%;
+            min-height: 100%;
+        }
+        
+        body {
+            height: 100%;
+            min-height: 100%;
+            min-height: 100dvh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            background: #E8F4FC;
+            font-family: Arial, sans-serif;
+            width: 100%;
+            line-height: 2.3em;
+        }
+        
+        .clearfix:after {
+            content: '';
+            display: block;
+            height: 0;
+            clear: both;
+            visibility: hidden;
+        }
+        
+        .clearfix {
+            zoom: 1;
+        }
+        
+        .float-left {
+            float: left;
+        }
+        
+        .float-right {
+            float: right;
+        }
+        
+        .txc {
+            text-align: center;
+        }
+        
+        p {
+            margin: 0;
+        }
+        /*设置字体不倾斜*/
+        
+        i {
+            font-style: normal;
+        }
+        /*内嵌水平线*/
+        /*内嵌水平线*/
+        
+        hr.style-one {
+            width: 100%;
+            margin: 10px auto 2px auto;
+            border: 0;
+            height: 0;
+            border-bottom: 1px solid #7EB8E5;
+        }
+        
+        input[type="text"],
+        input[type="password"],
+        /*下拉选择器*/
+        
+        select {
+            height: 34px;
+            border: 1px solid #ccc;
+            width: calc(58% - 2px);
+        }
+
+        select.router-select {
+            width: calc(58% - 36px);
+        }
+        /*输入匡*/
+        
+        input[type="text"].password-input,
+        input[type="password"].password-input {
+            width: calc(58% - 36px);
+        }
+        
+        input[type="number"].tcp-port-field {
+            height: 34px;
+            width: calc(58% - 2px);
+            line-height: normal;
+            border: 1px solid #ccc;
+        }
+        
+        input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            margin: 0 0 0 5px;
+        }
+        
+        button {
+            width: 150px;
+            height: 32px;
+            background: #A8D8FF;
+            border: 0px solid #0089FF;
+            border-radius: 2px;
+            color: #0D3A5C;
+            cursor: hand;
+        }
+        
+         ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            border-radius: 1em;
+            background-color: rgba(50, 50, 50, .3);
+        }
+        
+         ::-webkit-scrollbar-track {
+            border-radius: 1em;
+            background-color: rgba(50, 50, 50, .1);
+        }
+        
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-height: 0;
+            width: 100%;
+            padding: 0 0px;
+        }
+        
+        header {
+            border-bottom: 0px solid #ccc;
+            padding: 10px 0px 0px 0px;
+        }
+        
+        h1 {
+            margin: 0;
+            padding: 10px 0;
+            font-weight: 400;
+        }
+        
+        .tab-wrap {
+            padding: 6px 15%;
+            display: flex;
+            justify-content: center;
+        }
+        
+        .tab {
+            padding: 0 10px;
+            height: 30px;
+            font-size: 16px;
+            line-height: 30px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        #setupTab {
+            width: 33.33vw;
+            flex: 0 0 33.33vw;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .tab-panel-wrap {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .tab-panel {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .form {
+            padding-bottom: 4px;
+            border-bottom: 0px solid #ccc;
+        }
+        
+        h2 {
+            margin: 0;
+            height: 34px;
+            line-height: 34px;
+            font-size: 16px;
+            text-align: left;
+        }
+        
+        h3 {
+            margin: 0;
+            height: 34px;
+            line-height: 34px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .form-item {
+            padding: 0;
+            margin: 4px 0;
+            line-height: 20px;
+        }
+        
+        .password-eye {
+            width: 16px;
+            height: 16px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            margin-left: 0px;
+            background: #fff;
+        }
+
+        .router-refresh {
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .router-refresh .refresh-icon {
+            display: block;
+            line-height: 16px;
+            font-size: 16px;
+            user-select: none;
+        }
+        
+        .tips {
+            font-size: 14px;
+            line-height: 2.5em;
+        }
+        /*第一页左侧部分*/
+        
+        .label {
+            width: 40%;
+            height: 34px;
+            padding-right: 2%;
+            text-align: right;
+            line-height: 34px;
+            font-size: 14px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        /*language*/
+        
+        .language-box {
+            width: 200px;
+        }
+        
+        .label2 {
+            width: 40%;
+            height: 34px;
+            padding-top: 6px;
+            padding-right: 2%;
+            text-align: right;
+            font-size: 14px;
+        }
+        
+        .checkbox-label {
+            height: 16px;
+            font-size: 14px;
+            line-height: 16px;
+        }
+        
+        .tips-small {
+            font-size: 14px;
+        }
+        
+        .button-wrap {
+            padding: 8px 0px;
+        }
+        
+        .advanced-panel {
+            font-size: 14px;
+            letter-spacing: -0.2px;
+        }
+        
+        .advanced-panel .form {
+            padding: 10px 0;
+        }
+        /*第二页左侧文字样式*/
+        
+        .advanced-panel label {
+            height: 45px;
+            padding-right: 2px;
+            font-size: 14px;
+            padding-top: 5px;
+            /*代替行高*/
+            text-align: right;
+        }
+        /*第二页中部左侧文字样式*/
+        
+        .small-box {
+            width: calc(100% - 60px);
+            font-size: 14px;
+            text-align: right;
+        }
+        
+        .smbox {
+            width: 100%;
+        }
+        
+        .label-small {
+            width: 46px;
+        }
+        /*第二页的左侧部分*/
+        
+        .form-item-left {
+            width: 52%;
+            padding-left: 3%;
+        }
+        /*第二页的右侧部分*/
+        
+        .form-item-right {
+            width: 40%;
+            padding-right: 5%;
+        }
+        
+        .ragebox-l {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .ragebox-r {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        @media screen and (min-width:680px) {
+            .left-box {
+                width: 200px;
+            }
+        }
+        
+        @media screen and (max-width:610px) {
+            .small-box {
+                width: calc(100% - 50px);
+                font-size: 12px;
+            }
+            /*第二页下左侧字体大小*/
+            .advanced-panel,
+            .advanced-panel label {
+                font-size: 12px;
+            }
+            .range-tips p {
+                font-size: 12px;
+            }
+        }
+        
+        @media screen and (max-width:580px) {
+            /*第二页的左侧部分*/
+            .form-item-left {
+                width: 54%;
+                padding-left: 1%;
+            }
+            /*第二页的右侧部分*/
+            .form-item-right {
+                width: 44%;
+                padding-right: 1%;
+            }
+        }
+        
+        @media screen and (max-width:490px) {
+            /*第二页的左侧部分*/
+            .form-item-left {
+                width: 54%;
+                padding-left: 1%;
+            }
+            /*第二页的右侧部分*/
+            .form-item-right {
+                width: 44%;
+                padding-right: 1%;
+            }
+            .tips {
+                font-size: 12px;
+            }
+        }
+        
+        .temp-select-wrap {
+            width: 50%;
+        }
+        
+        .temperature-select {
+            width: 50px;
+            height: 28px;
+            line-height: 28px;
+        }
+        
+        input[type="number"] {
+            width: 50px;
+            height: 28px;
+            line-height: 10px;
+            border: 1px solid #ccc;
+        }
+        /*常规number宽*/
+        
+        input[type="number"].small-input {
+            width: 50px;
+        }
+        
+        .advanced-panel .offset-text {
+            height: 28px;
+            line-height: 28px;
+        }
+        
+        .range-tips {
+            height: 20px;
+            line-height: 20px;
+            font-size: 14px;
+        }
+        
+        .pressure-select {
+            width: 70px;
+            height: 28px;
+            line-height: 28px;
+        }
+        /*第二页中部左侧*/
+        
+        .pressure-label {
+            width: 50%;
+        }
+        
+        input[type="number"].pressure-input,
+        input[type="number"].pressure-input2 {
+            width: 70px;
+        }
+        /*垂直居中设置*/
+        
+        .l-c {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pressure-tips {}
+        /*第二页下右侧*/
+        
+        .pressure-tips p {
+            font-size: 12px;
+            text-align: left;
+        }
+        
+        .press-right {
+            float: left;
+        }
+        
+        .pressure-range {
+            height: auto;
+            text-align: left;
+            line-height: 20px;
+            padding-left: 5%;
+        }
+        /*第二部分下半部分左侧*/
+        
+        .form-gain {}
+        
+        .form-gain .pressure-label {
+            width: 150px;
+        }
+        
+        @media screen and (max-width:450px) {
+            .temp-select-wrap {
+                width: 50%;
+            }
+            /*第一页左侧部分*/
+            .label {
+                width: 40%;
+            }
+            .label-small {
+                width: 38px;
+            }
+            .tab-wrap {
+                padding: 6px 5%;
+            }
+            .pressure-label {
+                width: 50%;
+            }
+            select {
+                width: calc(58% - 2px);
+            }
+            .form-gain .pressure-label {
+                width: 150px;
+            }
+            .form-gain .pressure-tips {
+                width: calc(100% - 206px);
+            }
+            input[type="number"].pressure-input {
+                width: 50px;
+            }
+        }
+        
+        @media screen and (max-width:438px) {
+            /*第二页的左侧部分*/
+            .form-item-left {
+                width: 55%;
+                padding-left: 0%;
+            }
+            /*第二页的右侧部分*/
+            .form-item-right {
+                width: 45%;
+                padding-right: 0%;
+            }
+            .small-box {
+                width: calc(100% - 50px);
+                font-size: 12px;
+            }
+        }
+        
+        @media screen and (max-width:420px) {
+            .small-box {
+                width: calc(100% - 30px);
+                font-size: 12px;
+            }
+            .form-gain .pressure-label {
+                width: 140px;
+            }
+            .form-gain .pressure-tips {
+                width: calc(100% - 174px);
+            }
+            input[type="number"] {
+                width: 30px;
+            }
+            input[type="number"].pressure-input {
+                width: 30px;
+            }
+            input[type="number"].small-input {
+                width: 30px;
+            }
+            .rest {
+                max-width: 152px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+        
+        @media screen and (max-width:360px) {
+            .rest {
+                max-width: 130px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+            .rest-r {
+                max-width: 110px;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+        }
+        /*浏览器大于等于620px*/
+        
+        @media screen and (min-width:620px) {
+            /*.label {
+                width: 120px;
+            }*/
+            .form-gain .pressure-label {
+                width: 45%;
+            }
+            .checkbox-wrap {
+                padding-left: 8%;
+            }
+            .advanced-panel,
+            .advanced-panel label {
+                font-size: 14px;
+            }
+            .label-small {
+                width: 70px;
+            }
+            .pressure-select {
+                width: 90px;
+            }
+            input[type="number"],
+            input[type="number"].small-input {
+                width: 60px;
+            }
+            input[type="number"].pressure-input,
+            input[type="number"].pressure-input2 {
+                width: 90px;
+            }
+        }
+        /*默认设置*/
+        
+        .head-box {
+            flex-shrink: 0;
+            background: #0089FF;
+        }
+        
+        .head {
+            color: #FFF;
+            padding: 0 60px;
+        }
+        
+        .subject {
+            flex: 1;
+            min-height: 0;
+            display: flex;
+            flex-direction: column;
+            background: #D6EFFF;
+            padding: 0 0px;
+        }
+        
+        .subcon,
+        .subcon2 {
+            flex: 1;
+            min-height: 0;
+            overflow-y: auto;
+            padding: 20px 60px;
+        }
+        
+        .foot-box {
+            flex-shrink: 0;
+            background: #0089FF;
+        }
+        
+        .foot {
+            padding: 20px 60px;
+        }
+        
+        .foot p {
+            color: #fff;
+            font-size: 16px
+        }
+        
+        .foot button {
+            font-size: 16px
+        }
+        
+        .text-none {
+            display: none;
+        }
+        
+        .float-box {
+            width: fit-content;
+            display: inline-block;
+        }
+        
+        .margin-r4 {
+            margin-right: 4px;
+        }
+        /*浏览器大于或等于470px小于540px时*/
+        
+        @media only screen and (min-width: 470px) and (max-width: 540px) {
+            .head {
+                color: #FFF;
+                padding: 0 30px;
+            }
+            .subcon,
+            .subcon2 {
+                padding: 10px 30px;
+            }
+            .foot {
+                padding: 20px 30px;
+            }
+        }
+        /*浏览器大于或等于320px小于470px时*/
+        @media only screen and (min-width: 320px) and (max-width: 470px) {
+            .head {
+                color: #FFF;
+                padding: 0 20px;
+            }
+            .subcon {
+                padding: 10px 20px;
+            }
+            .subcon2 {
+                padding: 10px 10px;
+            }
+            .foot {
+                padding: 20px 20px;
+            }
+            .foot p {
+                font-size: 12px;
+            }
+            .foot button {
+                font-size: 14px
+            }
+        }
+        
+        @media screen and (min-width:768px) {
+            .head {
+                width: 80%;
+                margin: 0 auto;
+            }
+            .subcon,
+            .subcon2 {
+                width: 80%;
+                margin: 0 auto;
+            }
+            .foot {
+                width: 80%;
+                margin: 0 auto;
+            }
+        }
+        
+        @media screen and (min-width:1200px) {
+            .head {
+                width: 75%;
+                margin: 0 auto;
+            }
+            .subcon,
+            .subcon2 {
+                width: 75%;
+                margin: 0 auto;
+            }
+            .foot {
+                width: 75%;
+                margin: 0 auto;
+            }
+        }
+        /*定义语言引用样式名*/
+        
+        .lang {}
+        /*父子容器内容居中，父=子容器宽度*/
+        
+        .t-p {
+            text-align: center;
+            height: 45px;
+        }
+        
+        .t-c {
+            height: 28px;
+            line-height: 28px;
+            white-space: nowrap;
+            display: inline-block;
+        }
+        
+        .t-c-c {
+            display: inline-block;
+        }
+    </style>
+
+</head>
+
+<body>
+    <section class="container">
+        <section class="head-box">
+            <section class="head">
+                <header class="clearfix">
+                    <h1 class="float-left lang" key="SETTINGS">Ai-Thinker </h1>
+                    <img src="" class="logo float-right" />
+                </header>
+                <div class="tab-wrap">
+                    <div class="tab lang" key="SETUP" id="setupTab" style="background:#B8E5FF;color:#0D3A5C;">SETUP</div>
+                </div>
+            </section>
+        </section>
+
+        <section class="tab-panel-wrap">
+            <!--tab setup-->
+
+            <section class="tab-panel" id="setup">
+                <section class="subject">
+                    <div class="subcon">
+                        <section class="form">
+                            <div class="clearfix form-item">
+                                <div class="float-right margin-r4 language-box">
+                                    <label class="float-left label2 lang" key="Language">Language</label>
+                                    <select class="float-left" id="Language" name="Language" onChange="getLanguage(this.options[selectedIndex].value);">
+                                        <option value="en">English</option>
+                                        <option value="de">Deutsch</option>
+                                        <option value="fr">Français</option>
+                                        <option value="it">Italiano</option>
+                                        <option value="es">Espanol</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <h2 class="lang" key="WiFi Router setup">Wi-Fi Router setup</h2>
+                            <div class="clearfix form-item">
+                                <label class="float-left label lang" key="Router">Router</label>
+                                <select class="float-left router-select" id="Network" name="Network" onmousedown="onNetworkSelectOpen(event);">
+                                    <option value="">Select a network</option>
+                                </select>
+                                <div class="float-left password-eye router-refresh" title="Scan for available networks">
+                                    <span class="refresh-icon" onclick="scanWiFi('Network', 3500);return false;">⟳</span>
+                                </div>
+                            </div>
+                            <p class="txc tips lang" key="WIFI Router" style="text-align:right; ">Choose your 2.4 GHz Wi-Fi router</p>
+
+                            <div class="clearfix form-item">
+                                <label class="float-left label lang" key="Password">Password</label>
+                                <input class="float-left password-input" name="Password" id="Password" type="password" maxlength=64>
+                                <div class="float-left password-eye">
+                                    <img style="display: none;" id="eyeOpen" class="eye-open" onclick="changeEye(-1);return false;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMWVtIiBoZWlnaHQ9IjFlbSIgdmlld0JveD0iNjQgNjQgODk2IDg5NiIgZGF0YS1pY29uPSJleWUiIHZlcnNpb249IjEuMSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4bWxuczp4bGluaz0iaHR0cDovL3d3dy53My5vcmcvMTk5OS94bGluayI+CiAgPHBhdGggZD0iTTk0Mi4yIDQ4Ni4yQzg0Ny40IDI4Ni41IDcwNC4xIDE4NiA1MTIgMTg2Yy0xOTIuMiAwLTMzNS40IDEwMC41LTQzMC4yIDMwMC4zYTYwLjMgNjAuMyAwIDAgMCAwIDUxLjVDMTc2LjYgNzM3LjUgMzE5LjkgODM4IDUxMiA4MzhjMTkyLjIgMCAzMzUuNC0xMDAuNSA0MzAuMi0zMDAuMyA3LjctMTYuMiA3LjctMzUgMC01MS41ek01MTIgNzY2Yy0xNjEuMyAwLTI3OS40LTgxLjgtMzYyLjctMjU0QzIzMi42IDMzOS44IDM1MC43IDI1OCA1MTIgMjU4YzE2MS4zIDAgMjc5LjQgODEuOCAzNjIuNyAyNTRDNzkxLjUgNjg0LjIgNjczLjQgNzY2IDUxMiA3NjZ6bS00LTQzMGMtOTcuMiAwLTE3NiA3OC44LTE3NiAxNzZzNzguOCAxNzYgMTc2IDE3NiAxNzYtNzguOCAxNzYtMTc2LTc4LjgtMTc2LTE3Ni0xNzZ6bTAgMjg4Yy02MS45IDAtMTEyLTUwLjEtMTEyLTExMnM1MC4xLTExMiAxMTItMTEyIDExMiA1MC4xIDExMiAxMTItNTAuMSAxMTItMTEyIDExMnoiIGlkPSJGaWxsLTEiPjwvcGF0aD4KPC9zdmc+"
+                                    />
+                                    <img style="display: block;" id="eyeClose" class="eye-close" onclick="changeEye(1);return false;" src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHN2ZyB3aWR0aD0iMWVtIiBoZWlnaHQ9IjFlbSIgZGF0YS1pY29uPSJleWUtaW52aXNpYmxlIiB2aWV3Qm94PSI2NCA2NCA4OTYgODk2IiBmaWxsPSJjdXJyZW50Q29sb3IiIGFyaWEtaGlkZGVuPSJ0cnVlIiBmb2N1c2FibGU9ImZhbHNlIiB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiPgogIDxwYXRoIGQ9Ik05NDIuMiA0ODYuMlE4ODkuNDcgMzc1LjExIDgxNi43IDMwNWwtNTAuODggNTAuODhDODA3LjMxIDM5NS41MyA4NDMuNDUgNDQ3LjQgODc0LjcgNTEyIDc5MS41IDY4NC4yIDY3My40IDc2NiA1MTIgNzY2cS03Mi42NyAwLTEzMy44Ny0yMi4zOEwzMjMgNzk4Ljc1UTQwOCA4MzggNTEyIDgzOHEyODguMyAwIDQzMC4yLTMwMC4zYTYwLjI5IDYwLjI5IDAgMCAwIDAtNTEuNXptLTYzLjU3LTMyMC42NEw4MzYgMTIyLjg4YTggOCAwIDAgMC0xMS4zMiAwTDcxNS4zMSAyMzIuMlE2MjQuODYgMTg2IDUxMiAxODZxLTI4OC4zIDAtNDMwLjIgMzAwLjNhNjAuMyA2MC4zIDAgMCAwIDAgNTEuNXE1Ni42OSAxMTkuNCAxMzYuNSAxOTEuNDFMMTEyLjQ4IDgzNWE4IDggMCAwIDAgMCAxMS4zMUwxNTUuMTcgODg5YTggOCAwIDAgMCAxMS4zMSAwbDcxMi4xNS03MTIuMTJhOCA4IDAgMCAwIDAtMTEuMzJ6TTE0OS4zIDUxMkMyMzIuNiAzMzkuOCAzNTAuNyAyNTggNTEyIDI1OGM1NC41NCAwIDEwNC4xMyA5LjM2IDE0OS4xMiAyOC4zOWwtNzAuMyA3MC4zYTE3NiAxNzYgMCAwIDAtMjM4LjEzIDIzOC4xM2wtODMuNDIgODMuNDJDMjIzLjEgNjM3LjQ5IDE4My4zIDU4Mi4yOCAxNDkuMyA1MTJ6bTI0Ni43IDBhMTEyLjExIDExMi4xMSAwIDAgMSAxNDYuMi0xMDYuNjlMNDAxLjMxIDU0Ni4yQTExMiAxMTIgMCAwIDEgMzk2IDUxMnoiIGlkPSJGaWxsLTEiPjwvcGF0aD4KICA8cGF0aCBkPSJNNTA4IDYyNGMtMy40NiAwLTYuODctLjE2LTEwLjI1LS40N2wtNTIuODIgNTIuODJhMTc2LjA5IDE3Ni4wOSAwIDAgMCAyMjcuNDItMjI3LjQybC01Mi44MiA1Mi44MmMuMzEgMy4zOC40NyA2Ljc5LjQ3IDEwLjI1YTExMS45NCAxMTEuOTQgMCAwIDEtMTEyIDExMnoiPjwvcGF0aD4KPC9zdmc+"
+                                    />
+                                </div>
+                            </div>
+
+                        </section>
+                        <section class="form">
+                            <h2 class="lang" key="TCP Server Setup">TCP Server Setup</h2>
+
+                            <div class="clearfix form-item">
+                                <label class="float-left label"></label>
+                                <h3 class="float-left lang" key="TCP Configuration">TCP Configuration</h3>
+                            </div>
+
+                            <div class="clearfix form-item">
+                                <label class="float-left label lang" key="URL">URL</label>
+                                <input class="float-left" name="URL" id="URL" type="text" maxlength=64>
+                            </div>
+                            <div class="clearfix form-item">
+                                <label class="float-left label lang" key="Port">Port</label>
+                                <input class="float-left tcp-port-field" name="port" id="port" type="number" min="0" max="65535" step="1">
+                            </div>
+
+                        </section>
+                    </div>
+                    <div class="foot-box">
+                        <div class="foot">
+                            <section class="clearfix button-wrap">
+                                <div class="float-left">
+                                    <p><i class="lang" key="Firmware Version">Firmware Version </i>:1.0.3</p>
+                                </div>
+                                <button class="float-right save-button lang" key="Apply" onClick="saveInfo();return false;">Apply</button>
+                            </section>
+
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </section>
+
+    </section>
+
+    <div id="alertOverlay">
+        <div id="alertWindow">
+            <div id="alertMsg"></div>
+            <button id="alertBtn">确定</button>
+        </div>
+    </div>
+
+    <style>
+        #alertOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            z-index: 9999;
+            padding-bottom: calc(16px + env(safe-area-inset-bottom, 0px));
+            box-sizing: border-box;
+        }
+
+        #alertWindow {
+            background: #fff;
+            width: min(300px, calc(100vw - 32px));
+            max-width: 100%;
+            padding: 25px;
+            border-radius: 0;
+            text-align: center;
+            font-family: system-ui;
+            border: 1px solid #ccc;
+            margin-bottom: 0;
+        }
+
+        #alertMsg {
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #000;
+        }
+
+        #alertBtn {
+            padding: 5px 20px;
+            cursor: pointer;
+        }
+    </style>
+
+    <script type="text/javascript">
+        var acitveTab = 'setup'
+        var domain = 'http://weixin.xuhongv.com'
+        var path = ''
+        var mNetworkSSID = ''
+        var networkScanFilled = false
+        var initialWiFiScanScheduled = false
+        var isScanning = false
+
+        function scheduleInitialWiFiScanOnce() {
+            if (initialWiFiScanScheduled) {
+                return;
+            }
+            initialWiFiScanScheduled = true;
+            scanWiFi('Network', 3500, true);
+        }
+
+        function applySyncedNetworkToSelect(networkStr) {
+            var networkSelectionEle = clearSelect('Network');
+            var s = (networkStr == null || networkStr === undefined) ? '' : String(networkStr).trim();
+            if (s !== '') {
+                networkSelectionEle.options.add(new Option(s, s));
+                networkSelectionEle.selectedIndex = 0;
+            } else {
+                networkSelectionEle.options.add(new Option('Select a network', ''));
+                networkSelectionEle.selectedIndex = 0;
+            }
+        }
+
+        function fillNetworkFormFromRes(res) {
+            if (!res || !res.NEWORK || !res.PLATFORM) {
+                return;
+            }
+            $id('Password').value = res.NEWORK.Password || '';
+            mNetworkSSID = res.NEWORK.Network || '';
+            applySyncedNetworkToSelect(mNetworkSSID);
+            var tcp = res.PLATFORM.TCPParam;
+            if (tcp) {
+                $id('URL').value = tcp.URL || '';
+                $id('port').value = (tcp.port !== undefined && tcp.port !== null) ? tcp.port : '';
+            }
+        }
+
+        function onNetworkSelectOpen(ev) {
+            if (ev && ev.button !== 0) {
+                return;
+            }
+            if (networkScanFilled || isScanning) {
+                return;
+            }
+            scanWiFi('Network', 3500, true);
+        }
+
+        window.onload = function() {
+            scanRouterLists();
+        }
+
+        function scanRouterLists() {
+            http('get', '/getNetWorkInfo').then(function(res) {
+                fillNetworkFormFromRes(res);
+                scheduleInitialWiFiScanOnce();
+            }, function(err) {
+                http('get', '/getNetWorkInfo').then(function(res) {
+                    fillNetworkFormFromRes(res);
+                    scheduleInitialWiFiScanOnce();
+                }, function(err2) {
+                    scheduleInitialWiFiScanOnce();
+                });
+            });
+        }
+
+        function pollGetNetworkAfterScan(select, clearFirst, attempt, maxAttempts, gapMs) {
+            http('get', '/getNetWork').then(function(res) {
+                var ok = res && res.code === 1 && res.data && res.data.length > 0;
+                if (ok) {
+                    select.innerHTML = '';
+                    res.data.forEach(function(network) {
+                        select.add(new Option(network, network));
+                    });
+                    var keep = mNetworkSSID;
+                    for (var j = 0; j < select.options.length; j++) {
+                        if (select.options[j].value === keep) {
+                            select.selectedIndex = j;
+                            break;
+                        }
+                    }
+                    networkScanFilled = true;
+                    if (clearFirst) {
+                        select.disabled = false;
+                    }
+                    isScanning = false;
+                    return;
+                }
+                if (attempt + 1 < maxAttempts) {
+                    setTimeout(function() {
+                        pollGetNetworkAfterScan(select, clearFirst, attempt + 1, maxAttempts, gapMs);
+                    }, gapMs);
+                } else {
+                    if (clearFirst) {
+                        select.disabled = false;
+                    }
+                    isScanning = false;
+                }
+            }).catch(function() {
+                if (attempt + 1 < maxAttempts) {
+                    setTimeout(function() {
+                        pollGetNetworkAfterScan(select, clearFirst, attempt + 1, maxAttempts, gapMs);
+                    }, gapMs);
+                } else {
+                    if (clearFirst) {
+                        select.disabled = false;
+                    }
+                    isScanning = false;
+                }
+            });
+        }
+
+        //发起扫描请求：preserveOptions=true 时保留当前选项直至拿到扫描列表（用于同步显示 + 后台扫描）
+        function scanWiFi(selectId, waitTime, preserveOptions) {
+            selectId = selectId || 'Network'
+            if (waitTime === undefined || waitTime === null) {
+                waitTime = 3500
+            }
+            if (isScanning) {
+                console.log('Scan already in progress')
+                return
+            }
+            isScanning = true
+            var select = document.getElementById(selectId)
+            if (!select) {
+                isScanning = false
+                return
+            }
+            var clearFirst = !preserveOptions
+            if (clearFirst) {
+                select.disabled = true
+                select.innerHTML = ''
+            }
+            var pollGap = 500
+            var pollMax = 6
+            http('get', '/scan').then(function() {
+                setTimeout(function() {
+                    pollGetNetworkAfterScan(select, clearFirst, 0, pollMax, pollGap)
+                }, waitTime)
+            }).catch(function() {
+                if (clearFirst) {
+                    select.disabled = false
+                }
+                isScanning = false
+            })
+        }
+
+        // NetWork 获取路由器列表
+        function getNetworkOptions() {
+            http('get', '/getNetWork').then(function(res) {
+                if (res.code == 1) {
+                    var list = res.data;
+                    var networkSelectionEle = clearSelect("Network");
+                    for (var i = 0; i < list.length; i++) {
+                        networkSelectionEle.options.add(new Option(list[i], list[i]));
+                    }
+                    networkScanFilled = true;
+                    var ele = $id("Network");
+                    for (var j = 0; j < list.length; j++) {
+                        if (list[j] === mNetworkSSID) {
+                            ele.selectedIndex = j;
+                            break;
+                        }
+                    }
+                } else {
+                    alert(res.msg)
+                }
+            }, function(err) {
+                alert(err.message)
+            })
+        }
+
+        function showAlert(message) {
+            const overlay = document.getElementById("alertOverlay");
+            const msgBox = document.getElementById("alertMsg");
+
+            msgBox.textContent = message;
+
+            overlay.style.display = "flex";
+
+            document.getElementById("alertBtn").onclick = function() {
+                overlay.style.display = "none";
+            };
+        }
+
+        function saveAll() {
+            var params = {
+                NEWORK: {
+                    Network: getSelectValue('Network'),
+                    Password: $id('Password').value,
+                },
+                PLATFORM: {
+                    TCPParam: {
+                        confirm: 0,
+                        URL: String($id('URL').value),
+                        port: (function() {
+                            var n = parseInt($id('port').value, 10);
+                            return isNaN(n) ? 0 : n;
+                        })()
+                    },
+                    wethercloud: {
+                        confirm: 0,
+                        ID: '',
+                        Key: ''
+                    },
+                    TimeZoneSet: {
+                        TimeServer: 'time.windows.com',
+                    }
+                },
+            }
+
+            http('post', '/saveInfo', params).then(function(res) {
+                showAlert('Saved successfully!');
+            }, function(err) {
+                showAlert(err.message || 'Save failed');
+            })
+
+        }
+
+        // SETUP 页面 保存参数
+        function saveInfo() {
+            saveAll()
+        }
+
+        // 获取下拉框的值
+        function getSelectValue(id) {
+            var ele = $id(id)
+            var index = ele.selectedIndex;
+            return index == -1 ? '' : ele.options[index].value
+        }
+
+        //设置select选中 
+        function setSelectCheckedFromValue(selectId, checkValue) {
+            var select = $id(selectId);
+            for (var i = 0; i < select.options.length; i++) {
+                if (select.options[i].value == checkValue) {
+                    select.options[i].selected = true;
+                    break;
+                }
+            }
+        }
+
+        //设置select选中 
+        function setSelectCheckedFromIndex(selectId, index) {
+            var select = $id(selectId);
+            if (!(index > select.options.length - 1)) {
+                select.options[index].selected = true;
+            }
+        }
+
+        // 设置下拉框的值
+        function setSelectValue(id, value) {
+            var ele = $id(id)
+            ele.selectedIndex = (value);
+        }
+
+        // 清除下拉框
+        function clearSelect(id) {
+            var ele = $id(id);
+            var length = ele.length;
+            for (var i = 0; i < length; i++) {
+                ele.remove(0);
+            }
+            return ele;
+        }
+
+        // 通过ID获取元素
+        function $id(ele) {
+            return document.getElementById(ele)
+        }
+
+        // 通过ID获取元素的int值
+        function getNum(id) {
+            var val = $id(id).value
+            return Number(val)
+        }
+
+        // 切换密码显示隐藏
+        function changeEye(num) {
+            if (num == -1) {
+                $id('eyeOpen').style.display = 'none'
+                $id('eyeClose').style.display = 'block'
+                $id('Password').setAttribute('type', 'password')
+            } else {
+                $id('eyeClose').style.display = 'none'
+                $id('eyeOpen').style.display = 'block'
+                $id('Password').setAttribute('type', 'text')
+            }
+        }
+        // http请求方法封装
+        function http(type, url, data) {
+            const promise = new Promise(function(resolve, reject) {
+                function handle() {
+                    if (this.readyState != 4) {
+                        return;
+                    }
+                    if (this.status != 200) {
+                        reject(new Error(this.statusText || String(this.status)));
+                        return;
+                    }
+                    var text = this.responseText || '';
+                    text = text.trim();
+                    if (!text) {
+                        resolve(null);
+                        return;
+                    }
+                    try {
+                        resolve(JSON.parse(text));
+                    } catch (e) {
+                        reject(e);
+                    }
+                }
+                var method = String(type || 'GET').toUpperCase();
+                var xml = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHttp");
+                xml.timeout = 20000;
+                xml.ontimeout = function() {
+                    reject(new Error('Timed out'));
+                };
+                xml.open(method, path + url);
+                xml.responseType = 'text';
+                xml.onreadystatechange = handle;
+                if (method === 'GET') {
+                    xml.send();
+                } else {
+                    xml.setRequestHeader("Content-Type", "application/json");
+                    xml.send(JSON.stringify(data));
+                }
+            })
+            return promise;
+        }
+    </script>
+
+
+</body>
+
+</html>
+
+
+<script type="text/javascript">
+    //jQuery源文件开始
+    function ZQuery(arg) {
+        this.elements = []; //存东西
+        this.domString = ''; //保存字符串标签
+        if (typeof arg == 'function') {
+            //DOMReady
+            DOMReady(arg);
+        } else if (typeof arg == 'string' || arg instanceof String) {
+            if (arg.indexOf('<') != -1) {
+                this.domString = arg;
+            } else {
+                //获取元素
+                this.elements = getEle(arg);
+                this.length = this.elements.length;
+            }
+        } else {
+            //原生对象-》ZQuery对象
+            this.elements.push(arg);
+            this.length = this.elements.length;
+        }
+    }
+    ZQuery.prototype.css = function(name, value) {
+        if (arguments.length == 2) {
+            //设置一个样式
+            for (var i = 0; i < this.elements.length; i++) {
+                this.elements[i].style[name] = value;
+            }
+        } else {
+            if (typeof name == 'string') {
+                //获取样式
+                return getStyle(this.elements[0], name);
+            } else {
+                //批量设置样式
+                var json = name;
+                for (var name in json) {
+                    for (var i = 0; i < this.elements.length; i++) {
+                        this.elements[i].style[name] = json[name];
+                    }
+                }
+            }
+        }
+    };
+    ZQuery.prototype.attr = function(name, value) {
+        if (arguments.length == 1) {
+            return eval("this." + arguments[0]);
+        } else if (arguments.length == 2) {
+            eval("this." + arguments[0] + "=" + arguments[1]);
+            return this;
+        }
+    };
+    ZQuery.prototype.addClass = function(sClass) {
+        var re = new RegExp('\\b' + sClass + '\\b', 'g');
+        for (var i = 0; i < this.elements.length; i++) {
+            if (this.elements[i].className) {
+                if (this.elements[i].className.search(re) == -1) {
+                    this.elements[i].className += ' ' + sClass;
+                }
+            } else {
+                this.elements[i].className = sClass;
+            }
+            this.elements[i].className = this.elements[i].className.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
+        }
+        return this;
+    };
+    ZQuery.prototype.removeClass = function(sClass) {
+        var re = new RegExp('\\b' + sClass + '\\b', 'g');
+        for (var i = 0; i < this.elements.length; i++) {
+            if (this.elements[i].className) {
+                this.elements[i].className = this.elements[i].className.replace(re, '');
+                this.elements[i].className = this.elements[i].className.replace(/^\s+|\s+$/g, '').replace(/\s+/g, ' ');
+                if (this.elements[i].className == '') {
+                    this.elements[i].removeAttribute('class');
+                }
+            }
+        }
+        return this;
+    };
+    ZQuery.prototype.html = function(value) {
+        if (value || value == '') {
+            //设置
+            for (var i = 0; i < this.elements.length; i++) {
+                this.elements[i].innerHTML = value;
+            }
+        } else {
+            return this.elements[0].innerHTML;
+        }
+    };
+    ZQuery.prototype.val = function(value) {
+        if (value || value == '') {
+            //设置
+            for (var i = 0; i < this.elements.length; i++) {
+                this.elements[i].value = value;
+            }
+        } else {
+            return this.elements[0].value;
+        }
+    };
+    ZQuery.prototype.show = function() {
+        for (var i = 0; i < this.elements.length; i++) {
+            this.elements[i].style.display = 'block';
+        }
+        return this;
+    };
+    ZQuery.prototype.hide = function() {
+        for (var i = 0; i < this.elements.length; i++) {
+            this.elements[i].style.display = 'none';
+        }
+        return this;
+    };;
+    'click mouseover mouseout mousedown mouseup mousemove mouseenter mouseleave change keydown keyup contextmenu'.replace(/\w+/g, function(str) {
+        ZQuery.prototype[str] = function(fn) {
+            for (var i = 0; i < this.elements.length; i++) {
+                addEvent(this.elements[i], str, fn);
+            }
+        };
+    });
+    ZQuery.prototype.get = function(n) {
+        for (var i = 0; i < this.elements.length; i++) {
+            if (i == n) {
+                return this.elements[i];
+            }
+        }
+    };
+    ZQuery.prototype.eq = function(n) {
+        for (var i = 0; i < this.elements.length; i++) {
+            if (i == n) {
+                return $(this.elements[i]);
+            }
+        }
+    };
+    ZQuery.prototype.index = function() {
+        var aSiblings = this.elements[0].parentNode.children;
+        for (var i = 0; i < aSiblings.length; i++) {
+            if (aSiblings[i] == this.elements[0]) {
+                return i;
+            }
+        }
+    };
+    ZQuery.prototype.hover = function(fn1, fn2) {
+        for (var i = 0; i < this.elements.length; i++) {
+            $(this.elements[i]).mouseenter(fn1);
+            $(this.elements[i]).mouseleave(fn2);
+        }
+    };
+    ZQuery.prototype.toggle = function() {
+        var args = arguments;
+        var _this = this;
+        for (var i = 0; i < this.elements.length; i++) {;
+            (function(count) {
+                $(_this.elements[i]).click(function(ev) {
+                    args[count % args.length].call(this, ev);
+                    count++;
+                });
+            })(0);
+        }
+    };
+    ZQuery.prototype.animate = function(json, options) {
+        for (var i = 0; i < this.elements.length; i++) {
+            move(this.elements[i], json, options);
+        }
+    };
+    ZQuery.prototype.appendTo = function(arg) {
+        var aParent = $(arg);
+        for (var i = 0; i < aParent.length; i++) {
+            aParent.get(i).insertAdjacentHTML('beforeEnd', this.domString);
+        }
+        return this;
+    };
+    ZQuery.prototype.prependTo = function(arg) {
+        var aParent = $(arg);
+        for (var i = 0; i < aParent.length; i++) {
+            aParent.get(i).insertAdjacentHTML('afterBegin', this.domString);
+        }
+        return this;
+    };
+    ZQuery.prototype.insertAfter = function(arg) {
+        var aParent = $(arg);
+        for (var i = 0; i < aParent.length; i++) {
+            aParent.get(i).insertAdjacentHTML('afterEnd', this.domString);
+        }
+        return this;
+    };
+    ZQuery.prototype.insertBefore = function(arg) {
+        var aParent = $(arg);
+        for (var i = 0; i < aParent.length; i++) {
+            aParent.get(i).insertAdjacentHTML('beforeBegin', this.domString);
+        }
+        return this;
+    };
+    ZQuery.prototype.remove = function() {
+        var oParent = this.elements[0].parentNode;
+        for (var i = 0; i < this.elements.length; i++) {
+            oParent.removeChild(this.elements[i]);
+        }
+        return this;
+    };
+
+    function $(arg) {
+        return new ZQuery(arg);
+    };
+    $.ajax = function(json) {
+        ajax(json);
+    };
+    $.jsonp = function(json) {
+        jsonp(json);
+    };
+    $.fn = ZQuery.prototype;
+    $.fn.extend = function(json) {
+        for (var name in json) {
+            ZQuery.prototype[name] = json[name];
+        }
+    };
+
+    function json2url(json) {
+        var arr = [];
+        for (var name in json) {
+            arr.push(name + '=' + encodeURIComponent(json[name]));
+        }
+        return arr.join('&');
+    }
+
+    function ajax(json) {}
+
+    function jsonp(json) {}
+
+    function getStyle(obj, sName) {}
+
+    function addEvent(obj, sEv, fn) {
+        if (obj.addEventListener) {
+            obj.addEventListener(sEv, function(ev) {
+                var oEvent = ev || event;
+                if (fn.call(obj, oEvent) == false) {
+                    oEvent.cancelBubble = true;
+                    oEvent.preventDefault && oEvent.preventDefault();
+                }
+            }, false);
+        } else {
+            obj.attachEvent('on' + sEv, function() {
+                var oEvent = ev || event;
+                if (fn.call(obj, oEvent) == false) {
+                    oEvent.cancelBubble = true;
+                    return false;
+                }
+            });
+        }
+    }
+
+    function DOMReady(fn) {
+        if (document.addEventListener) {
+            addEvent(document, 'DOMContentLoaded', function() {
+                fn && fn();
+            });
+        } else {
+            addEvent(document, 'onreadystatechange', function() {
+                if (document.readyState == 'complete') {
+                    fn && fn();
+                }
+            });
+        }
+    }
+
+    function getByClass(oParent, sClass) {
+        if (oParent.getElementsByClassName) {
+            return oParent.getElementsByClassName(sClass);
+        } else {
+            var aResult = [];
+            var aEle = oParent.getElementsByTagName('*');
+            var re = new RegExp('\\b' + sClass + '\\b', 'g');
+            for (var i = 0; i < aEle.length; i++) {
+                if (aEle[i].className.search(re) != -1) {
+                    aResult.push(aEle[i]);
+                }
+            }
+            return aResult;
+        }
+    }
+
+    function getByStr(aParent, str) {
+        var aChild = [];
+        //遍历父级
+        for (var i = 0; i < aParent.length; i++) {
+            switch (str.charAt(0)) {
+                case '#':
+                    //#id
+                    aChild.push(document.getElementById(str.substring(1)));
+                    break;
+                case '.':
+                    //.class
+                    var aEle = getByClass(aParent[i], str.substring(1));
+                    for (var j = 0; j < aEle.length; j++) {
+                        aChild.push(aEle[j]);
+                    }
+                    break;
+                default:
+                    if (/^\w+\.\w+$/.test(str)) {
+                        //筛选
+                        //li.on
+                        var arr = str.split('.');
+                        var re = new RegExp('\\b' + arr[1] + '\\b', 'g');
+                        var aEle = aParent[i].getElementsByTagName(arr[0]);
+                        for (var j = 0; j < aEle.length; j++) {
+                            if (aEle[j].className.search(re) != -1) {
+                                aChild.push(aEle[j]);
+                            }
+                        }
+                    } else if (/^\w+\[\w+\=\w+\]$/.test(str)) {
+                        //属性
+                        var arr = str.split(/\[|\=|\]/);
+                        var aEle = aParent[i].getElementsByTagName(arr[0]);
+                        for (var j = 0; j < aEle.length; j++) {
+                            if (aEle[j].getAttribute(arr[1]) == arr[2]) {
+                                aChild.push(aEle[j]);
+                            }
+                        }
+                    } else if (/^\w+\:\w+(\(\d+\))?$/.test(str)) {
+                        var arr = str.split(/\:|\(|\)/);
+                        var aEle = aParent[i].getElementsByTagName(arr[0]);
+                        switch (arr[1]) {
+                            case 'first':
+                                aChild.push(aEle[0]);
+                                break;
+                            case 'last':
+                                aChild.push(aEle[aEle.length - 1]);
+                                break;
+                            case 'even':
+                                for (var j = 0; j < aEle.length; j += 2) {
+                                    aChild.push(aEle[j]);
+                                }
+                                break;
+                            case 'odd':
+                                for (var j = 1; j < aEle.length; j += 2) {
+                                    aChild.push(aEle[j]);
+                                }
+                                break;
+                            case 'eq':
+                                aChild.push(aEle[arr[2]]);
+                                break;
+                            case 'lt':
+                                for (var j = 0; j < arr[2]; j++) {
+                                    aChild.push(aEle[j]);
+                                }
+                                break;
+                            case 'gt':
+                                for (var j = parseInt(arr[2]) + 1; j < aEle.length; j++) {
+                                    aChild.push(aEle[j]);
+                                }
+                                break;
+                        }
+                    } else {
+                        //标签
+                        var aEle = aParent[i].getElementsByTagName(str);
+                        for (var j = 0; j < aEle.length; j++) {
+                            aChild.push(aEle[j]);
+                        }
+                    }
+                    break;
+            }
+        }
+        return aChild;
+    }
+
+    function getEle(str) {
+        var arr = str.replace(/^\s+|\s+$/g, '').split(/\s+/);
+        var aParent = [document];
+        var aChild = [];
+        for (var i = 0; i < arr.length; i++) {
+            aChild = getByStr(aParent, arr[i]);
+            //这一次获取到的子级，是下一次获取的父级
+            aParent = aChild;
+        }
+        return aChild;
+    }
+
+    function move(obj, json, options) {
+        clearInterval(obj.timer);
+        options = options || {};
+        options.easing = options.easing || 'ease-out';
+        options.duration = options.duration || 800;
+        var count = Math.floor(options.duration / 30);
+        var start = {};
+        var dis = {};
+        for (var name in json) {
+            start[name] = parseFloat(getStyle(obj, name));
+            dis[name] = json[name] - start[name];
+        }
+        var n = 0;
+        obj.timer = setInterval(function() {
+            n++;
+            for (var name in json) {
+                switch (options.easing) {
+                    case 'linear':
+                        var a = n / count;
+                        var cur = start[name] + dis[name] * a;
+                        break;
+                    case 'ease-in':
+                        var a = n / count;
+                        var cur = start[name] + dis[name] * a * a * a;
+                        break;
+                    case 'ease-out':
+                        var a = 1 - n / count;
+                        var cur = start[name] + dis[name] * (1 - a * a * a);
+                        break;
+                }
+                if (name == 'opacity') {
+                    obj.style.opacity = cur;
+                    obj.style.filter = 'alpha(opacity:' + cur * 100 + ')';
+                } else {
+                    obj.style[name] = cur + 'px';
+                }
+            }
+            if (n == count) {
+                clearInterval(obj.timer);
+                options.complete && options.complete();
+            }
+        }, 30);
+    }
+
+    Object.prototype.each = String.prototype.each = function(fn) {
+        for (var i in this) {
+            if (this.hasOwnProperty(i)) {
+                if (typeof(this[i]) == "object") {
+                    fn(i, this[i]);
+                } else {
+                    try {
+                        if (!this[0].nodeName) fn(i, this[i]);
+                    } catch (e) {
+                        fn(i, this[i]);
+                    }
+                }
+            }
+        }
+    }
+
+    Object.prototype.click = function(cb) {
+        this.onclick = cb;
+    }
+
+
+    Object.prototype.css = function() {
+        if (arguments.length == 1) {
+            return eval("***.style." + arguments[0]);
+        } else if (arguments.length == 2) {
+            eval("***.style." + arguments[0] + "='" + arguments[1] + "'");
+            return this;
+        }
+    }
+
+    Object.prototype.attr = function() {
+        if (arguments.length == 1) {
+            return eval("this." + arguments[0]);
+        } else if (arguments.length == 2) {
+            eval("this." + arguments[0] + "=" + arguments[1]);
+            return this;
+        }
+    }
+
+
+    //jQuery源文件结束
+    var arrLang = {
+        //English
+        "en": {
+            "SETTINGS": "Ai-Thinker",
+            "SETUP": "SETUP",
+            "ADVANCED": "ADVANCED",
+            "Language": "Language",
+            "WiFi Router setup": "Wi-Fi Router setup",
+            "Router": "Router",
+            "Password": "Password",
+
+            "TCP Server Setup": "TCP Server Setup",
+            "TCP Configuration": "TCP Configuration",
+            "URL": "URL",
+            "Port": "Port",
+
+            "Mac address": "MAC address",
+            "Apply": "Apply",
+
+            "Firmware Version": "Firmware Version",
+            "Default": "(Default : 0)",
+            "WIFI Router": "Choose your 2.4 GHz Wi-Fi router",
+        },
+        //Deutsch
+        "de": {
+            "SETTINGS": "Ai-Thinker",
+            "SETUP": "EINSTELLUNGEN",
+            "ADVANCED": "ERWEITERT",
+            "Language": "Sprache",
+            "WiFi Router setup": "WLAN-Router einrichten",
+            "Router": "Router",
+            "Password": "Kennwort",
+
+            "TCP Server Setup": "TCP-Server-Einrichtung",
+            "TCP Configuration": "TCP-Konfiguration",
+            "URL": "URL",
+            "Port": "Port",
+
+            "Mac address": "MAC-Adresse",
+            "Apply": "Einstellen",
+
+            "Firmware Version": "Firmware Version",
+            "Default": "(Standard : 0)",
+            "WIFI Router": "Wählen Sie Ihren 2,4-GHz-WLAN-Router",
+        },
+        //Français
+        "fr": {
+            "SETTINGS": "Ai-Thinker",
+            "SETUP": "INSTALLATION",
+            "ADVANCED": "AVANCÉ",
+            "Language": "Langue",
+            "WiFi Router setup": "Configuration du routeur Wi-Fi",
+            "Router": "Routeur",
+            "Password": "Mot de passe",
+
+            "TCP Server Setup": "Configuration du serveur TCP",
+            "TCP Configuration": "Configuration TCP",
+            "URL": "URL",
+            "Port": "Port",
+
+            "Mac address": "Adresse MAC",
+            "Apply": "Appliquer",
+
+            "Firmware Version": "Version du firmware",
+            "Default": "(Par défaut : 0)",
+            "WIFI Router": "Choisissez votre routeur Wi-Fi à 2,4 GHz",
+        },
+        //Italiano
+        "it": {
+            "SETTINGS": "Ai-Thinker",
+            "SETUP": "CONFIGURAZIONE",
+            "ADVANCED": "AVANZATE",
+            "Language": "Lingua",
+            "WiFi Router setup": "Configurazione del router Wi-Fi",
+            "Router": "Router",
+            "Password": "Password",
+
+            "TCP Server Setup": "Configurazione server TCP",
+            "TCP Configuration": "Configurazione TCP",
+            "URL": "URL",
+            "Port": "Porta",
+
+            "Mac address": "Indirizzo MAC",
+            "Apply": "Applica",
+
+            "Firmware Version": "Versione firmware",
+            "Default": "(Predefinito : 0)",
+            "WIFI Router": "Scegli il tuo router Wi-Fi a 2.4 GHz",
+        },
+        //Espanol
+        "es": {
+            "SETTINGS": "Ai-Thinker",
+            "SETUP": "CONFIGURACIÓN",
+            "ADVANCED": "AVANZADO",
+            "Language": "Idioma",
+            "WiFi Router setup": "Configuración del router Wi-Fi",
+            "Router": "Router",
+            "Password": "Contraseña",
+
+            "TCP Server Setup": "Configuración del servidor TCP",
+            "TCP Configuration": "Configuración TCP",
+            "URL": "URL",
+            "Port": "Puerto",
+
+            "Mac address": "Dirección MAC",
+            "Apply": "Aplicar",
+
+            "Firmware Version": "versión del firmware",
+            "Default": "(Predeterminado : 0)",
+            "WIFI Router": "Elige tu router Wi-Fi de 2.4 GHz",
+        }
+    };
+
+    function getLanguage(code) {
+        var eles = $(".lang").elements;
+        for (var i = 0; i < eles.length; i++) {
+            var e = eles[i];
+            var k = e.getAttribute("key");
+            if (k && arrLang[code] && arrLang[code][k] !== undefined) {
+                e.innerHTML = arrLang[code][k];
+            }
+        }
+    }
+
+    var lang = "en"; //默认显示语言
+
+    $("#Language").change(function() {
+        var lang = this.value;
+
+        $(".lang").each(function(index, element) { //each() 是 jQuery 遍历方法，选择器的 index 位置，element - 当前的元素（也可使用 "this" 选择器）
+            this.innerHTML = arrLang[lang]; //标签显示html内容
+        });
+        var eles = $(".lang").elements; //集合返回lang所有元素
+        for (var i = 0; i < eles.length; i++) {
+            var e = eles[i];
+            e.innerHTML = arrLang[lang][e.getAttribute("key")]; //获取lang中Key的属性然后输出
+        }
+    });
+</script>
