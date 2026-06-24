@@ -36,7 +36,7 @@ CONFIG_SYS_AOS_CLI_ENABLE:=1
 CONFIG_SYS_AOS_LOOP_ENABLE:=1
 CONFIG_SYS_BLOG_ENABLE:=1
 CONFIG_SYS_DMA_ENABLE:=0
-CONFIG_SYS_USER_VFS_ROMFS_ENABLE:=0
+CONFIG_SYS_USER_VFS_ROMFS_ENABLE:=1
 
 CONFIG_BT:=0
 CONFIG_BT_CENTRAL:=1
@@ -59,4 +59,4 @@ CONFIG_MBEDTLS_BIGNUM_USE_HW:=1
 CONF_ENABLE_COREDUMP:=1
 
 #blog enable components format :=blog_testc cli vfs helper
-LOG_ENABLED_COMPONENTS := blog_testc hosal loopset looprt bloop http_client_tcp ssl
+LOG_ENABLED_COMPONENTS := blog_testc hosal loopset looprt bloop http_client_tcp ssl axk_common tcp_transport http-parser axk_tls axk_mqtt

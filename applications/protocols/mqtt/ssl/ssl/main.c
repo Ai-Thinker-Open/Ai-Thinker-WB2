@@ -9,8 +9,8 @@
 #include <task.h>
 #include <wifi_mgmr_ext.h>
 
-#define ROUTER_SSID "your ssid"
-#define ROUTER_PWD "your password"
+#define ROUTER_SSID "specter"
+#define ROUTER_PWD "12345678909"
 
 static wifi_conf_t conf =
     {
@@ -119,12 +119,14 @@ static void proc_main_entry(void *pvParameters)
 
 void main()
 {
-    blog_set_level_log_component(BLOG_LEVEL_WARN, "ssl");
-    blog_set_level_log_component(BLOG_LEVEL_WARN, "axk_mqtt");
-    blog_set_level_log_component(BLOG_LEVEL_WARN, "axk_tls");
-    blog_set_level_log_component(BLOG_LEVEL_WARN, "tcp_transport");
+    blog_set_level_log_component(BLOG_LEVEL_INFO, "ssl");
+    blog_set_level_log_component(BLOG_LEVEL_INFO, "axk_mqtt");
+    blog_set_level_log_component(BLOG_LEVEL_INFO, "axk_tls");
+    blog_set_level_log_component(BLOG_LEVEL_INFO, "tcp_transport");
+    blog_set_level_log_component(BLOG_LEVEL_INFO, "axk_mqtt");
     puts("[OS] Starting TCP/IP Stack...");
     tcpip_init(NULL, NULL);
+    // fs_init();
     puts("[OS] proc_main_entry task...");
     xTaskCreate(proc_main_entry, (char *)"main_entry", 1024, NULL, 15, NULL);
 }
