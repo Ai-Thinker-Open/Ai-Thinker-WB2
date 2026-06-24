@@ -14,4 +14,4 @@ CONFIG_LINK_ROM=1
 CONFIG_FREERTOS_TICKLESS_MODE:=0
 CONFIG_WIFI:=0
 
-LOG_ENABLED_COMPONENTS:= blog_testc hosal demo_boardtemp
+LOG_ENABLED_COMPONENTS:= blog_testc hosal demo_encoder

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Description">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/docsify@4/lib/themes/vue.css">
+</head>
+<body>
+  <div id="app">Please wait...</div>
+  <script>
+    window.$docsify = {
+      name: 'AI-WB2入门指南',
+      repo: 'https://github.com/WildboarG/Ai-Thinker-WB2',
+      loadNavbar: true,  //加载navbar
+      loadSidebar: true, //加载左侧菜单
+      coverpage: true,  // 开启封面
+      onlyCover: true, //分割页面
+      topMargin: 90,
+      coverpage: ['/'],
+      auto2top: true,
+      sidebar: function() {
+      const lang = window.location.pathname.includes('/zh-cn') ? 'zh-cn' : 'en-us';
+      return `./${lang}/_sidebar.md`; // 根据路径判断语言并加载对应的侧边栏
+      },
+    progress: {
+      position: "top",
+      color: "var(--theme-color,#42b983)",
+      height: "3px",
+     }
+    }
+  </script>
+  <!-- Docsify v4 -->
+  <script src="//cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="//cdn.jsdelivr.net/npm/docsify/lib/plugins/emoji.min.js"></script>
+  <!-- 进度条 -->
+<script src="https://cdn.jsdelivr.net/npm/docsify-progress@latest/dist/progress.min.js"></script>
+  <!--剪贴板-->
+  <script src="//cdn.jsdelivr.net/npm/docsify-copy-code/dist/docsify-copy-code.min.js"></script>
+  <!--语法高亮-->
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-c.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/prismjs@1/components/prism-bash.min.js"></script>
+  </body>
+</html>
