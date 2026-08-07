@@ -1,0 +1,430 @@
+Your configuration chipname is Ai-Thinker Ai-WB2 Wi-Fi&BLE Module
+RM libromfs.a src/bl_romfs.o src/bl_romfs.d component_project_vars.mk
+RM libvfs.a src/vfs.o src/vfs_file.o src/vfs_inode.o src/vfs_register.o device/vfs_uart.o device/vfs_adc.o device/vfs_spi.o device/vfs_gpio.o device/vfs_pwm.o src/vfs.d src/vfs_file.d src/vfs_inode.d src/vfs_register.d device/vfs_uart.d device/vfs_adc.d device/vfs_spi.d device/vfs_gpio.d device/vfs_pwm.d component_project_vars.mk
+RM libnewlibc.a ./syscalls.o ./assert.o ./syscalls.d ./assert.d component_project_vars.mk
+RM liblwip.a lwip-port/FreeRTOS/ethernetif.o lwip-port/FreeRTOS/sys_arch.o src/api/api_lib.o src/api/api_msg.o src/api/err.o src/api/if_api.o src/api/netbuf.o src/api/netdb.o src/api/netifapi.o src/api/sockets.o src/api/tcpip.o src/apps/altcp_tls/altcp_tls_mbedtls.o src/apps/altcp_tls/altcp_tls_mbedtls_mem.o src/core/altcp.o src/core/altcp_alloc.o src/core/altcp_tcp.o src/core/def.o src/core/dns.o src/core/inet_chksum.o src/core/init.o src/core/ip.o src/core/ipv4/autoip.o src/core/ipv4/dhcp.o src/core/ipv4/etharp.o src/core/ipv4/icmp.o src/core/ipv4/igmp.o src/core/ipv4/ip4.o src/core/ipv4/ip4_addr.o src/core/ipv4/ip4_frag.o src/core/mem.o src/core/memp.o src/core/netif.o src/core/pbuf.o src/core/raw.o src/core/stats.o src/core/sys.o src/core/tcp.o src/core/tcp_in.o src/core/tcp_out.o src/core/timeouts.o src/core/udp.o src/core/utils.o src/netif/bridgeif.o src/netif/bridgeif_fdb.o src/netif/ethernet.o src/netif/lowpan6.o src/netif/lowpan6_ble.o src/netif/lowpan6_common.o src/netif/slipif.o src/netif/zepif.o lwip-port/FreeRTOS/ethernetif.d lwip-port/FreeRTOS/sys_arch.d src/api/api_lib.d src/api/api_msg.d src/api/err.d src/api/if_api.d src/api/netbuf.d src/api/netdb.d src/api/netifapi.d src/api/sockets.d src/api/tcpip.d src/apps/altcp_tls/altcp_tls_mbedtls.d src/apps/altcp_tls/altcp_tls_mbedtls_mem.d src/core/altcp.d src/core/altcp_alloc.d src/core/altcp_tcp.d src/core/def.d src/core/dns.d src/core/inet_chksum.d src/core/init.d src/core/ip.d src/core/ipv4/autoip.d src/core/ipv4/dhcp.d src/core/ipv4/etharp.d src/core/ipv4/icmp.d src/core/ipv4/igmp.d src/core/ipv4/ip4.d src/core/ipv4/ip4_addr.d src/core/ipv4/ip4_frag.d src/core/mem.d src/core/memp.d src/core/netif.d src/core/pbuf.d src/core/raw.d src/core/stats.d src/core/sys.d src/core/tcp.d src/core/tcp_in.d src/core/tcp_out.d src/core/timeouts.d src/core/udp.d src/core/utils.d src/netif/bridgeif.d src/netif/bridgeif_fdb.d src/netif/ethernet.d src/netif/lowpan6.d src/netif/lowpan6_ble.d src/netif/lowpan6_common.d src/netif/slipif.d src/netif/zepif.d component_project_vars.mk
+RM libhosal.a adapter/hosal_adpt_iotsdk.o bl602_hal/bl_uart.o bl602_hal/bl_chip.o bl602_hal/bl_cks.o bl602_hal/bl_sys.o bl602_hal/bl_sys_cli.o bl602_hal/bl_dma.o bl602_hal/bl_irq.o bl602_hal/bl_sec.o bl602_hal/bl_ir.o bl602_hal/bl_boot2.o bl602_hal/bl_timer.o bl602_hal/bl_hbn.o bl602_hal/bl_efuse.o bl602_hal/bl_flash.o bl602_hal/bl_gpio.o bl602_hal/bl_gpio_cli.o bl602_hal/hal_gpio.o bl602_hal/hal_button.o bl602_hal/bl_pwm.o bl602_hal/bl_sec_aes.o bl602_hal/bl_wifi.o bl602_hal/bl_wdt.o bl602_hal/bl_wdt_cli.o bl602_hal/bl_clocktree.o bl602_hal/hal_boot2.o bl602_hal/hal_sys.o bl602_hal/hal_board.o bl602_hal/hal_ir.o bl602_hal/bl_adc.o bl602_hal/bl_dac_audio.o bl602_hal/bl_i2c.o bl602_hal/bl_pm.o bl602_hal/bl_pds.o bl602_hal/hosal_pwm.o bl602_hal/hal_pds.o bl602_hal/hosal_rng.o bl602_hal/bl_rtc.o bl602_hal/hal_hbn.o bl602_hal/hal_hbnram.o bl602_hal/hosal_rtc.o bl602_hal/hosal_gpio.o bl602_hal/hosal_adc.o bl602_hal/hosal_spi.o bl602_hal/hal_hwtimer.o bl602_hal/hal_wifi.o bl602_hal/hosal_wdg.o platform_hal/platform_hal_device.o bl602_hal/hosal_uart.o bl602_hal/hosal_dma.o bl602_hal/hosal_flash.o bl602_hal/hosal_dac.o bl602_hal/hosal_i2c.o bl602_hal/hosal_ota.o bl602_hal/hosal_timer.o bl602_hal/hosal_efuse.o sec_common/bl_sec_sha.o sec_common/bl_sec_pka.o sec_common/bl_sec_aes.o sec_common/bl_sec_gmac.o adapter/hosal_adpt_iotsdk.d bl602_hal/bl_uart.d bl602_hal/bl_chip.d bl602_hal/bl_cks.d bl602_hal/bl_sys.d bl602_hal/bl_sys_cli.d bl602_hal/bl_dma.d bl602_hal/bl_irq.d bl602_hal/bl_sec.d bl602_hal/bl_ir.d bl602_hal/bl_boot2.d bl602_hal/bl_timer.d bl602_hal/bl_hbn.d bl602_hal/bl_efuse.d bl602_hal/bl_flash.d bl602_hal/bl_gpio.d bl602_hal/bl_gpio_cli.d bl602_hal/hal_gpio.d bl602_hal/hal_button.d bl602_hal/bl_pwm.d bl602_hal/bl_sec_aes.d bl602_hal/bl_wifi.d bl602_hal/bl_wdt.d bl602_hal/bl_wdt_cli.d bl602_hal/bl_clocktree.d bl602_hal/hal_boot2.d bl602_hal/hal_sys.d bl602_hal/hal_board.d bl602_hal/hal_ir.d bl602_hal/bl_adc.d bl602_hal/bl_dac_audio.d bl602_hal/bl_i2c.d bl602_hal/bl_pm.d bl602_hal/bl_pds.d bl602_hal/hosal_pwm.d bl602_hal/hal_pds.d bl602_hal/hosal_rng.d bl602_hal/bl_rtc.d bl602_hal/hal_hbn.d bl602_hal/hal_hbnram.d bl602_hal/hosal_rtc.d bl602_hal/hosal_gpio.d bl602_hal/hosal_adc.d bl602_hal/hosal_spi.d bl602_hal/hal_hwtimer.d bl602_hal/hal_wifi.d bl602_hal/hosal_wdg.d platform_hal/platform_hal_device.d bl602_hal/hosal_uart.d bl602_hal/hosal_dma.d bl602_hal/hosal_flash.d bl602_hal/hosal_dac.d bl602_hal/hosal_i2c.d bl602_hal/hosal_ota.d bl602_hal/hosal_timer.d bl602_hal/hosal_efuse.d sec_common/bl_sec_sha.d sec_common/bl_sec_pka.d sec_common/bl_sec_aes.d sec_common/bl_sec_gmac.d component_project_vars.mk
+RM libbl602.a evb/src/boot/gcc/entry.o evb/src/boot/gcc/start.o evb/src/debug.o evb/src/strntoumax.o bfl_main.o evb/src/boot/gcc/entry.d evb/src/boot/gcc/start.d evb/src/debug.d evb/src/strntoumax.d bfl_main.d component_project_vars.mk
+RM libbl602_std.a bl602_std/StdDriver/Src/bl602_uart.o bl602_std/StdDriver/Src/bl602_adc.o bl602_std/StdDriver/Src/bl602_sec_eng.o bl602_std/StdDriver/Src/bl602_dma.o bl602_std/StdDriver/Src/bl602_common.o bl602_std/StdDriver/Src/bl602_glb.o bl602_std/StdDriver/Src/bl602_hbn.o bl602_std/StdDriver/Src/bl602_timer.o bl602_std/StdDriver/Src/bl602_aon.o bl602_std/StdDriver/Src/bl602_pds.o bl602_std/StdDriver/Src/bl602_pwm.o bl602_std/StdDriver/Src/bl602_l1c.o bl602_std/StdDriver/Src/bl602_ef_ctrl.o bl602_std/StdDriver/Src/bl602_mfg_efuse.o bl602_std/StdDriver/Src/bl602_mfg_flash.o bl602_std/StdDriver/Src/bl602_mfg_media.o bl602_std/StdDriver/Src/bl602_dac.o bl602_std/StdDriver/Src/bl602_ir.o bl602_std/StdDriver/Src/bl602_spi.o bl602_std/StdDriver/Src/bl602_i2c.o bl602_std/StdDriver/Src/bl602_sdu.o bl602_std/Common/soft_crc/softcrc.o bl602_std/Common/xz/xz_crc32.o bl602_std/Common/xz/xz_dec_lzma2.o bl602_std/Common/xz/xz_dec_stream.o bl602_std/Common/xz/xz_decompress.o bl602_std/Common/xz/xz_port.o bl602_std/Common/cipher_suite/src/bflb_crypt.o bl602_std/Common/cipher_suite/src/bflb_hash.o bl602_std/Common/cipher_suite/src/bflb_dsa.o bl602_std/Common/cipher_suite/src/bflb_ecdsa.o bl602_std/Common/platform_print/platform_device.o bl602_std/Common/platform_print/platform_gpio.o bl602_std/Common/ring_buffer/ring_buffer.o bl602_std/RISCV/Device/Bouffalo/BL602/Startup/interrupt.o bl602_std/StdDriver/Src/bl602_romapi.o bl602_std/StdDriver/Src/bl602_sflash_ext.o bl602_std/StdDriver/Src/bl602_sf_cfg_ext.o bl602_std/StdDriver/Src/bl602_xip_sflash_ext.o bl602_std/StdDriver/Src/bl602_uart.d bl602_std/StdDriver/Src/bl602_adc.d bl602_std/StdDriver/Src/bl602_sec_eng.d bl602_std/StdDriver/Src/bl602_dma.d bl602_std/StdDriver/Src/bl602_common.d bl602_std/StdDriver/Src/bl602_glb.d bl602_std/StdDriver/Src/bl602_hbn.d bl602_std/StdDriver/Src/bl602_timer.d bl602_std/StdDriver/Src/bl602_aon.d bl602_std/StdDriver/Src/bl602_pds.d bl602_std/StdDriver/Src/bl602_pwm.d bl602_std/StdDriver/Src/bl602_l1c.d bl602_std/StdDriver/Src/bl602_ef_ctrl.d bl602_std/StdDriver/Src/bl602_mfg_efuse.d bl602_std/StdDriver/Src/bl602_mfg_flash.d bl602_std/StdDriver/Src/bl602_mfg_media.d bl602_std/StdDriver/Src/bl602_dac.d bl602_std/StdDriver/Src/bl602_ir.d bl602_std/StdDriver/Src/bl602_spi.d bl602_std/StdDriver/Src/bl602_i2c.d bl602_std/StdDriver/Src/bl602_sdu.d bl602_std/Common/soft_crc/softcrc.d bl602_std/Common/xz/xz_crc32.d bl602_std/Common/xz/xz_dec_lzma2.d bl602_std/Common/xz/xz_dec_stream.d bl602_std/Common/xz/xz_decompress.d bl602_std/Common/xz/xz_port.d bl602_std/Common/cipher_suite/src/bflb_crypt.d bl602_std/Common/cipher_suite/src/bflb_hash.d bl602_std/Common/cipher_suite/src/bflb_dsa.d bl602_std/Common/cipher_suite/src/bflb_ecdsa.d bl602_std/Common/platform_print/platform_device.d bl602_std/Common/platform_print/platform_gpio.d bl602_std/Common/ring_buffer/ring_buffer.d bl602_std/RISCV/Device/Bouffalo/BL602/Startup/interrupt.d bl602_std/StdDriver/Src/bl602_romapi.d bl602_std/StdDriver/Src/bl602_sflash_ext.d bl602_std/StdDriver/Src/bl602_sf_cfg_ext.d bl602_std/StdDriver/Src/bl602_xip_sflash_ext.d component_project_vars.mk
+RM libfreertos_riscv_ram.a event_groups.o list.o queue.o stream_buffer.o tasks.o timers.o misaligned/misaligned_ldst.o misaligned/fp_asm.o panic/panic_c.o portable/GCC/RISC-V/port.o portable/GCC/RISC-V/portASM.o portable/MemMang/heap_5.o event_groups.d list.d queue.d stream_buffer.d tasks.d timers.d misaligned/misaligned_ldst.d misaligned/fp_asm.d panic/panic_c.d portable/GCC/RISC-V/port.d portable/GCC/RISC-V/portASM.d portable/MemMang/heap_5.d component_project_vars.mk
+RM libmbedtls_lts.a mbedtls/library/xtea.o mbedtls/library/aes.o mbedtls/library/aesni.o mbedtls/library/arc4.o mbedtls/library/aria.o mbedtls/library/asn1parse.o mbedtls/library/asn1write.o mbedtls/library/base64.o mbedtls/library/blowfish.o mbedtls/library/camellia.o mbedtls/library/ccm.o mbedtls/library/certs.o mbedtls/library/chacha20.o mbedtls/library/chachapoly.o mbedtls/library/cipher.o mbedtls/library/cipher_wrap.o mbedtls/library/cmac.o mbedtls/library/constant_time.o mbedtls/library/ctr_drbg.o mbedtls/library/debug.o mbedtls/library/des.o mbedtls/library/dhm.o mbedtls/library/ecdh.o mbedtls/library/ecdsa.o mbedtls/library/ecjpake.o mbedtls/library/ecp.o mbedtls/library/ecp_curves.o mbedtls/library/entropy.o mbedtls/library/entropy_poll.o mbedtls/library/error.o mbedtls/library/gcm.o mbedtls/library/havege.o mbedtls/library/hkdf.o mbedtls/library/hmac_drbg.o mbedtls/library/md2.o mbedtls/library/md4.o mbedtls/library/md5.o mbedtls/library/md.o mbedtls/library/memory_buffer_alloc.o mbedtls/library/mps_reader.o mbedtls/library/mps_trace.o mbedtls/library/nist_kw.o mbedtls/library/oid.o mbedtls/library/padlock.o mbedtls/library/pem.o mbedtls/library/pk.o mbedtls/library/pkcs11.o mbedtls/library/pkcs12.o mbedtls/library/pkcs5.o mbedtls/library/pk_wrap.o mbedtls/library/pkwrite.o mbedtls/library/platform.o mbedtls/library/platform_util.o mbedtls/library/poly1305.o mbedtls/library/ripemd160.o mbedtls/library/rsa.o mbedtls/library/rsa_internal.o mbedtls/library/sha1.o mbedtls/library/sha256.o mbedtls/library/sha512.o mbedtls/library/ssl_cache.o mbedtls/library/ssl_ciphersuites.o mbedtls/library/ssl_cli.o mbedtls/library/ssl_cookie.o mbedtls/library/ssl_msg.o mbedtls/library/ssl_srv.o mbedtls/library/ssl_ticket.o mbedtls/library/ssl_tls13_keys.o mbedtls/library/ssl_tls.o mbedtls/library/threading.o mbedtls/library/timing.o mbedtls/library/version.o mbedtls/library/version_features.o mbedtls/library/x509.o mbedtls/library/x509_create.o mbedtls/library/x509_crl.o mbedtls/library/x509_crt.o mbedtls/library/x509_csr.o mbedtls/library/x509write_crt.o mbedtls/library/x509write_csr.o port/pkparse.o port/mbedtls_port_mem.o port/net_sockets.o port/hw_entropy_poll.o port/bignum_ext.o mbedtls/library/bignum.o port/test_case.o mbedtls/library/xtea.d mbedtls/library/aes.d mbedtls/library/aesni.d mbedtls/library/arc4.d mbedtls/library/aria.d mbedtls/library/asn1parse.d mbedtls/library/asn1write.d mbedtls/library/base64.d mbedtls/library/blowfish.d mbedtls/library/camellia.d mbedtls/library/ccm.d mbedtls/library/certs.d mbedtls/library/chacha20.d mbedtls/library/chachapoly.d mbedtls/library/cipher.d mbedtls/library/cipher_wrap.d mbedtls/library/cmac.d mbedtls/library/constant_time.d mbedtls/library/ctr_drbg.d mbedtls/library/debug.d mbedtls/library/des.d mbedtls/library/dhm.d mbedtls/library/ecdh.d mbedtls/library/ecdsa.d mbedtls/library/ecjpake.d mbedtls/library/ecp.d mbedtls/library/ecp_curves.d mbedtls/library/entropy.d mbedtls/library/entropy_poll.d mbedtls/library/error.d mbedtls/library/gcm.d mbedtls/library/havege.d mbedtls/library/hkdf.d mbedtls/library/hmac_drbg.d mbedtls/library/md2.d mbedtls/library/md4.d mbedtls/library/md5.d mbedtls/library/md.d mbedtls/library/memory_buffer_alloc.d mbedtls/library/mps_reader.d mbedtls/library/mps_trace.d mbedtls/library/nist_kw.d mbedtls/library/oid.d mbedtls/library/padlock.d mbedtls/library/pem.d mbedtls/library/pk.d mbedtls/library/pkcs11.d mbedtls/library/pkcs12.d mbedtls/library/pkcs5.d mbedtls/library/pk_wrap.d mbedtls/library/pkwrite.d mbedtls/library/platform.d mbedtls/library/platform_util.d mbedtls/library/poly1305.d mbedtls/library/ripemd160.d mbedtls/library/rsa.d mbedtls/library/rsa_internal.d mbedtls/library/sha1.d mbedtls/library/sha256.d mbedtls/library/sha512.d mbedtls/library/ssl_cache.d mbedtls/library/ssl_ciphersuites.d mbedtls/library/ssl_cli.d mbedtls/library/ssl_cookie.d mbedtls/library/ssl_msg.d mbedtls/library/ssl_srv.d mbedtls/library/ssl_ticket.d mbedtls/library/ssl_tls13_keys.d mbedtls/library/ssl_tls.d mbedtls/library/threading.d mbedtls/library/timing.d mbedtls/library/version.d mbedtls/library/version_features.d mbedtls/library/x509.d mbedtls/library/x509_create.d mbedtls/library/x509_crl.d mbedtls/library/x509_crt.d mbedtls/library/x509_csr.d mbedtls/library/x509write_crt.d mbedtls/library/x509write_csr.d port/pkparse.d port/mbedtls_port_mem.d port/net_sockets.d port/hw_entropy_poll.d port/bignum_ext.d mbedtls/library/bignum.d port/test_case.d component_project_vars.mk
+RM libblfdt.a src/fdt.o src/fdt_ro.o src/fdt_wip.o src/fdt_sw.o src/fdt_rw.o src/fdt_strerror.o src/fdt_empty_tree.o src/fdt_addresses.o src/fdt_overlay.o test/tc_blfdt_dump.o test/tc_blfdt_wifi.o test/blfdt_cli_test.o src/fdt.d src/fdt_ro.d src/fdt_wip.d src/fdt_sw.d src/fdt_rw.d src/fdt_strerror.d src/fdt_empty_tree.d src/fdt_addresses.d src/fdt_overlay.d test/tc_blfdt_dump.d test/tc_blfdt_wifi.d test/blfdt_cli_test.d component_project_vars.mk
+RM libblog.a ./blog.o ./blog.d component_project_vars.mk
+RM libblog_testc.a blog_testc.o blog_testc1_diable.o blog_testc2_full.o blog_testc3_nopri.o blog_testc4_onlypri.o blog_testc.d blog_testc1_diable.d blog_testc2_full.d blog_testc3_nopri.d blog_testc4_onlypri.d component_project_vars.mk
+RM libcli.a cli/cli.o cli/cli.d component_project_vars.mk
+RM libcoredump.a bl_coredump.o bl_coredump.d component_project_vars.mk
+RM libyloop.a src/yloop.o src/select.o src/aos_freertos.o src/device.o src/local_event.o src/yloop.d src/select.d src/aos_freertos.d src/device.d src/local_event.d component_project_vars.mk
+RM libblmtd.a bl_mtd.o bl_mtd.d component_project_vars.mk
+RM libbloop.a src/bloop_base.o src/bloop_handler_sys.o src/bloop_base.d src/bloop_handler_sys.d component_project_vars.mk
+RM liblooprt.a src/looprt.o src/looprt_test_cli.o src/looprt.d src/looprt_test_cli.d component_project_vars.mk
+RM libloopset.a src/loopset_led.o src/loopset_led_cli.o src/loopset_ir.o src/loopset_pwm.o src/loopset_led.d src/loopset_led_cli.d src/loopset_ir.d src/loopset_pwm.d component_project_vars.mk
+RM libbltime.a bl_sys_time.o bl_sys_time_cli.o bl_sys_time.d bl_sys_time_cli.d component_project_vars.mk
+RM libutils.a src/utils_hex.o src/utils_crc.o src/utils_sha256.o src/utils_fec.o src/utils_log.o src/utils_dns.o src/utils_list.o src/utils_ringblk.o src/utils_rbtree.o src/utils_hexdump.o src/utils_time.o src/utils_notifier.o src/utils_getopt.o src/utils_string.o src/utils_hmac_sha1_fast.o src/utils_psk_fast.o src/utils_memp.o src/utils_tlv_bl.o src/utils_base64.o src/utils_bitmap_window.o src/test/test_utils_base64.o src/test/test_utils_ringblk.o src/test/test_utils_bitmap_window.o src/utils_hex.d src/utils_crc.d src/utils_sha256.d src/utils_fec.d src/utils_log.d src/utils_dns.d src/utils_list.d src/utils_ringblk.d src/utils_rbtree.d src/utils_hexdump.d src/utils_time.d src/utils_notifier.d src/utils_getopt.d src/utils_string.d src/utils_hmac_sha1_fast.d src/utils_psk_fast.d src/utils_memp.d src/utils_tlv_bl.d src/utils_base64.d src/utils_bitmap_window.d src/test/test_utils_base64.d src/test/test_utils_ringblk.d src/test/test_utils_bitmap_window.d component_project_vars.mk
+RM libhelloworld.a ./main.o ./main.d component_project_vars.mk
+RM /home/fae/codex-builds/Ai-Thinker-WB2-2420da7/applications/get-started/helloworld/build_out/helloworld.elf
+Your configuration chipname is Ai-Thinker Ai-WB2 Wi-Fi&BLE Module
+Your configuration chipname is Ai-Thinker Ai-WB2 Wi-Fi&BLE Module
+AS build_out/bl602/evb/src/boot/gcc/entry.o
+AS build_out/bl602/evb/src/boot/gcc/start.o
+CC build_out/bl602/evb/src/debug.o
+CC build_out/bl602/evb/src/strntoumax.o
+CC build_out/blfdt/src/fdt.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_uart.o
+CC build_out/blmtd/bl_mtd.o
+CC build_out/blog/blog.o
+CC build_out/bl602/bfl_main.o
+CC build_out/blog_testc/blog_testc.o
+CC build_out/blog_testc/blog_testc1_diable.o
+CC build_out/blfdt/src/fdt_ro.o
+AR build_out/blmtd/libblmtd.a
+CC build_out/blog_testc/blog_testc2_full.o
+CC build_out/bloop/src/bloop_base.o
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/stage/blog_testc/blog_testc2_full.c: In function 'test_buf':
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/stage/blog_testc/blog_testc2_full.c:18:364: warning: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} changes value from '256' to '0' [-Woverflow]
+   18 |     blog_debug_hexdump("hexdumpbuf", buf, sizeof(buf));
+      |                                                                                                                                                                                                                                                                                                                                                                            ^          
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/stage/blog_testc/blog_testc2_full.c:19:368: warning: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} changes value from '256' to '0' [-Woverflow]
+   19 |     blog_info_hexdump("hexdumpbuf", buf, sizeof(buf));
+      |                                                                                                                                                                                                                                                                                                                                                                                ^          
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/stage/blog_testc/blog_testc2_full.c:20:368: warning: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} changes value from '256' to '0' [-Woverflow]
+   20 |     blog_warn_hexdump("hexdumpbuf", buf, sizeof(buf));
+      |                                                                                                                                                                                                                                                                                                                                                                                ^          
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/stage/blog_testc/blog_testc2_full.c:21:371: warning: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} changes value from '256' to '0' [-Woverflow]
+   21 |     blog_error_hexdump("hexdumpbuf", buf, sizeof(buf));
+      |                                                                                                                                                                                                                                                                                                                                                                                   ^          
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/stage/blog_testc/blog_testc2_full.c:22:372: warning: conversion from 'unsigned int' to 'uint8_t' {aka 'unsigned char'} changes value from '256' to '0' [-Woverflow]
+   22 |     blog_assert_hexdump("hexdumpbuf", buf, sizeof(buf));
+      |                                                                                                                                                                                                                                                                                                                                                                                    ^          
+CC build_out/blfdt/src/fdt_wip.o
+CC build_out/blfdt/src/fdt_sw.o
+AR build_out/blog/libblog.a
+CC build_out/blfdt/src/fdt_rw.o
+CC build_out/blfdt/src/fdt_strerror.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_adc.o
+CC build_out/blog_testc/blog_testc3_nopri.o
+CC build_out/blfdt/src/fdt_empty_tree.o
+CC build_out/blog_testc/blog_testc4_onlypri.o
+CC build_out/blfdt/src/fdt_addresses.o
+CC build_out/blfdt/src/fdt_overlay.o
+CC build_out/bloop/src/bloop_handler_sys.o
+CC build_out/blfdt/test/tc_blfdt_dump.o
+AR build_out/bloop/libbloop.a
+AR build_out/blog_testc/libblog_testc.a
+AR build_out/bl602/libbl602.a
+CC build_out/blfdt/test/tc_blfdt_wifi.o
+CC build_out/blfdt/test/blfdt_cli_test.o
+CC build_out/bltime/bl_sys_time.o
+CC build_out/bltime/bl_sys_time_cli.o
+CC build_out/cli/cli/cli.o
+CC build_out/coredump/bl_coredump.o
+CC build_out/freertos_riscv_ram/event_groups.o
+AR build_out/bltime/libbltime.a
+CC build_out/freertos_riscv_ram/list.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_sec_eng.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_dma.o
+CC build_out/helloworld/main.o
+AR build_out/blfdt/libblfdt.a
+CC build_out/hosal/adapter/hosal_adpt_iotsdk.o
+CC build_out/looprt/src/looprt.o
+CC build_out/hosal/bl602_hal/bl_uart.o
+AR build_out/helloworld/libhelloworld.a
+CC build_out/hosal/bl602_hal/bl_chip.o
+AR build_out/coredump/libcoredump.a
+CC build_out/hosal/bl602_hal/bl_cks.o
+CC build_out/looprt/src/looprt_test_cli.o
+CC build_out/freertos_riscv_ram/queue.o
+CC build_out/hosal/bl602_hal/bl_sys.o
+AR build_out/looprt/liblooprt.a
+CC build_out/hosal/bl602_hal/bl_sys_cli.o
+CC build_out/hosal/bl602_hal/bl_dma.o
+CC build_out/hosal/bl602_hal/bl_irq.o
+CC build_out/hosal/bl602_hal/bl_sec.o
+CC build_out/hosal/bl602_hal/bl_ir.o
+CC build_out/freertos_riscv_ram/stream_buffer.o
+CC build_out/hosal/bl602_hal/bl_boot2.o
+CC build_out/hosal/bl602_hal/bl_timer.o
+AR build_out/cli/libcli.a
+CC build_out/hosal/bl602_hal/bl_hbn.o
+CC build_out/freertos_riscv_ram/tasks.o
+CC build_out/hosal/bl602_hal/bl_efuse.o
+CC build_out/hosal/bl602_hal/bl_flash.o
+CC build_out/freertos_riscv_ram/timers.o
+CC build_out/hosal/bl602_hal/bl_gpio.o
+CC build_out/hosal/bl602_hal/bl_gpio_cli.o
+CC build_out/hosal/bl602_hal/hal_gpio.o
+CC build_out/loopset/src/loopset_led.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_common.o
+CC build_out/hosal/bl602_hal/hal_button.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_glb.o
+CC build_out/hosal/bl602_hal/bl_pwm.o
+CC build_out/loopset/src/loopset_led_cli.o
+CC build_out/loopset/src/loopset_ir.o
+CC build_out/freertos_riscv_ram/misaligned/misaligned_ldst.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_hbn.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_timer.o
+CC build_out/hosal/bl602_hal/bl_sec_aes.o
+CC build_out/loopset/src/loopset_pwm.o
+AS build_out/freertos_riscv_ram/misaligned/fp_asm.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_aon.o
+AR build_out/loopset/libloopset.a
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_pds.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_pwm.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_l1c.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_ef_ctrl.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_mfg_efuse.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_mfg_flash.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_mfg_media.o
+CC build_out/hosal/bl602_hal/bl_wifi.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_dac.o
+CC build_out/freertos_riscv_ram/panic/panic_c.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_ir.o
+CC build_out/hosal/bl602_hal/bl_wdt.o
+CC build_out/freertos_riscv_ram/portable/GCC/RISC-V/port.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_spi.o
+AS build_out/freertos_riscv_ram/portable/GCC/RISC-V/portASM.o
+CC build_out/hosal/bl602_hal/bl_wdt_cli.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_i2c.o
+CC build_out/freertos_riscv_ram/portable/MemMang/heap_5.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_sdu.o
+CC build_out/hosal/bl602_hal/bl_clocktree.o
+CC build_out/bl602_std/bl602_std/Common/soft_crc/softcrc.o
+CC build_out/bl602_std/bl602_std/Common/xz/xz_crc32.o
+CC build_out/hosal/bl602_hal/hal_boot2.o
+CC build_out/hosal/bl602_hal/hal_sys.o
+AR build_out/freertos_riscv_ram/libfreertos_riscv_ram.a
+CC build_out/lwip/lwip-port/FreeRTOS/ethernetif.o
+CC build_out/bl602_std/bl602_std/Common/xz/xz_dec_lzma2.o
+CC build_out/lwip/lwip-port/FreeRTOS/sys_arch.o
+CC build_out/lwip/src/api/api_lib.o
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c: In function 'hal_sys_romapi_get':
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:40:65: warning: array subscript 88 is outside array bounds of 'uint8_t[1]' {aka 'unsigned char[1]'} [-Warray-bounds]
+   40 |     *(gp_data_start + 0) = (uint32_t)((uint8_t*)(gp_data_start) + 0x58);
+      |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:29:20: note: while referencing '__global_pointer_head$'
+   29 |     extern uint8_t __global_pointer_head$;
+      |                    ^~~~~~~~~~~~~~~~~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:42:65: warning: array subscript 96 is outside array bounds of 'uint8_t[1]' {aka 'unsigned char[1]'} [-Warray-bounds]
+   42 |     *(gp_data_start + 1) = (uint32_t)((uint8_t*)(gp_data_start) + 0x60);
+      |                                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~^~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:29:20: note: while referencing '__global_pointer_head$'
+   29 |     extern uint8_t __global_pointer_head$;
+      |                    ^~~~~~~~~~~~~~~~~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:42:5: warning: array subscript 1 is outside array bounds of 'uint8_t[1]' {aka 'unsigned char[1]'} [-Warray-bounds]
+   42 |     *(gp_data_start + 1) = (uint32_t)((uint8_t*)(gp_data_start) + 0x60);
+      |     ^~~~~~~~~~~~~~~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:29:20: note: while referencing '__global_pointer_head$'
+   29 |     extern uint8_t __global_pointer_head$;
+      |                    ^~~~~~~~~~~~~~~~~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:44:5: warning: array subscript 2 is outside array bounds of 'uint8_t[1]' {aka 'unsigned char[1]'} [-Warray-bounds]
+   44 |     *(gp_data_start + 2) = 32 * 1000 / 1000;//Use 32K
+      |     ^~~~~~~~~~~~~~~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:29:20: note: while referencing '__global_pointer_head$'
+   29 |     extern uint8_t __global_pointer_head$;
+      |                    ^~~~~~~~~~~~~~~~~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:37:21: warning: array subscript 1116 is outside array bounds of 'uint8_t[1]' {aka 'unsigned char[1]'} [-Warray-bounds]
+   37 |     romapi_freertos = (struct romapi_freertos_map*) (((uint8_t*)gp_data_start) + 0x45c);
+      |     ~~~~~~~~~~~~~~~~^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hal_sys.c:29:20: note: while referencing '__global_pointer_head$'
+   29 |     extern uint8_t __global_pointer_head$;
+      |                    ^~~~~~~~~~~~~~~~~~~~~~
+CC build_out/bl602_std/bl602_std/Common/xz/xz_dec_stream.o
+CC build_out/hosal/bl602_hal/hal_board.o
+CC build_out/hosal/bl602_hal/hal_ir.o
+CC build_out/hosal/bl602_hal/bl_adc.o
+CC build_out/hosal/bl602_hal/bl_dac_audio.o
+CC build_out/lwip/src/api/api_msg.o
+CC build_out/lwip/src/api/err.o
+CC build_out/lwip/src/api/if_api.o
+CC build_out/bl602_std/bl602_std/Common/xz/xz_decompress.o
+CC build_out/hosal/bl602_hal/bl_i2c.o
+CC build_out/hosal/bl602_hal/bl_pm.o
+CC build_out/bl602_std/bl602_std/Common/xz/xz_port.o
+CC build_out/bl602_std/bl602_std/Common/cipher_suite/src/bflb_crypt.o
+CC build_out/lwip/src/api/netbuf.o
+CC build_out/bl602_std/bl602_std/Common/cipher_suite/src/bflb_hash.o
+CC build_out/bl602_std/bl602_std/Common/cipher_suite/src/bflb_dsa.o
+CC build_out/hosal/bl602_hal/bl_pds.o
+CC build_out/hosal/bl602_hal/hosal_pwm.o
+CC build_out/hosal/bl602_hal/hal_pds.o
+CC build_out/lwip/src/api/netdb.o
+CC build_out/lwip/src/api/netifapi.o
+CC build_out/lwip/src/api/sockets.o
+CC build_out/bl602_std/bl602_std/Common/cipher_suite/src/bflb_ecdsa.o
+CC build_out/bl602_std/bl602_std/Common/platform_print/platform_device.o
+CC build_out/lwip/src/api/tcpip.o
+CC build_out/hosal/bl602_hal/hosal_rng.o
+CC build_out/hosal/bl602_hal/bl_rtc.o
+CC build_out/hosal/bl602_hal/hal_hbn.o
+CC build_out/lwip/src/apps/altcp_tls/altcp_tls_mbedtls.o
+CC build_out/hosal/bl602_hal/hal_hbnram.o
+CC build_out/hosal/bl602_hal/hosal_rtc.o
+CC build_out/lwip/src/apps/altcp_tls/altcp_tls_mbedtls_mem.o
+CC build_out/lwip/src/core/altcp.o
+CC build_out/hosal/bl602_hal/hosal_gpio.o
+CC build_out/hosal/bl602_hal/hosal_adc.o
+CC build_out/lwip/src/core/altcp_alloc.o
+CC build_out/bl602_std/bl602_std/Common/platform_print/platform_gpio.o
+CC build_out/lwip/src/core/altcp_tcp.o
+CC build_out/lwip/src/core/def.o
+CC build_out/bl602_std/bl602_std/Common/ring_buffer/ring_buffer.o
+CC build_out/hosal/bl602_hal/hosal_spi.o
+CC build_out/lwip/src/core/dns.o
+CC build_out/bl602_std/bl602_std/RISCV/Device/Bouffalo/BL602/Startup/interrupt.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_romapi.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_sflash_ext.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_sf_cfg_ext.o
+CC build_out/bl602_std/bl602_std/StdDriver/Src/bl602_xip_sflash_ext.o
+CC build_out/hosal/bl602_hal/hal_hwtimer.o
+CC build_out/hosal/bl602_hal/hal_wifi.o
+CC build_out/hosal/bl602_hal/hosal_wdg.o
+CXX build_out/hosal/platform_hal/platform_hal_device.o
+CC build_out/hosal/bl602_hal/hosal_uart.o
+CC build_out/hosal/bl602_hal/hosal_dma.o
+CC build_out/lwip/src/core/inet_chksum.o
+CC build_out/hosal/bl602_hal/hosal_flash.o
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hosal_uart.c: In function 'gpio_init_only_tx':
+/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/components/platform/hosal/bl602_hal/hosal_uart.c:60:38: warning: variable 'rx_sigfun' set but not used [-Wunused-but-set-variable]
+   60 |     GLB_UART_SIG_FUN_Type tx_sigfun, rx_sigfun;
+      |                                      ^~~~~~~~~
+CC build_out/hosal/bl602_hal/hosal_dac.o
+CC build_out/hosal/bl602_hal/hosal_i2c.o
+CC build_out/lwip/src/core/init.o
+CC build_out/lwip/src/core/ip.o
+CC build_out/lwip/src/core/ipv4/autoip.o
+CC build_out/lwip/src/core/ipv4/dhcp.o
+CC build_out/hosal/bl602_hal/hosal_ota.o
+CC build_out/lwip/src/core/ipv4/etharp.o
+AR build_out/bl602_std/libbl602_std.a
+CC build_out/mbedtls_lts/mbedtls/library/xtea.o
+CC build_out/mbedtls_lts/mbedtls/library/aes.o
+CC build_out/hosal/bl602_hal/hosal_timer.o
+CC build_out/hosal/bl602_hal/hosal_efuse.o
+CC build_out/newlibc/syscalls.o
+CC build_out/newlibc/assert.o
+CC build_out/hosal/sec_common/bl_sec_sha.o
+CC build_out/romfs/src/bl_romfs.o
+CC build_out/utils/src/utils_hex.o
+CC build_out/utils/src/utils_crc.o
+CC build_out/lwip/src/core/ipv4/icmp.o
+AR build_out/newlibc/libnewlibc.a
+CC build_out/lwip/src/core/ipv4/igmp.o
+CC build_out/utils/src/utils_sha256.o
+CC build_out/utils/src/utils_fec.o
+CC build_out/lwip/src/core/ipv4/ip4.o
+CC build_out/hosal/sec_common/bl_sec_pka.o
+CC build_out/mbedtls_lts/mbedtls/library/aesni.o
+CC build_out/mbedtls_lts/mbedtls/library/arc4.o
+CC build_out/mbedtls_lts/mbedtls/library/aria.o
+CC build_out/hosal/sec_common/bl_sec_aes.o
+CC build_out/hosal/sec_common/bl_sec_gmac.o
+CC build_out/mbedtls_lts/mbedtls/library/asn1parse.o
+CC build_out/lwip/src/core/ipv4/ip4_addr.o
+CC build_out/lwip/src/core/ipv4/ip4_frag.o
+CC build_out/lwip/src/core/mem.o
+CC build_out/lwip/src/core/memp.o
+CC build_out/lwip/src/core/netif.o
+CC build_out/lwip/src/core/pbuf.o
+AR build_out/hosal/libhosal.a
+CC build_out/vfs/src/vfs.o
+CC build_out/mbedtls_lts/mbedtls/library/asn1write.o
+AR build_out/romfs/libromfs.a
+CC build_out/yloop/src/yloop.o
+CC build_out/lwip/src/core/raw.o
+CC build_out/lwip/src/core/stats.o
+CC build_out/utils/src/utils_log.o
+CC build_out/lwip/src/core/sys.o
+CC build_out/lwip/src/core/tcp.o
+CC build_out/lwip/src/core/tcp_in.o
+CC build_out/utils/src/utils_dns.o
+CC build_out/yloop/src/select.o
+CC build_out/lwip/src/core/tcp_out.o
+CC build_out/mbedtls_lts/mbedtls/library/base64.o
+CC build_out/utils/src/utils_list.o
+CC build_out/vfs/src/vfs_file.o
+CC build_out/yloop/src/aos_freertos.o
+CC build_out/yloop/src/device.o
+CC build_out/mbedtls_lts/mbedtls/library/blowfish.o
+CC build_out/utils/src/utils_ringblk.o
+CC build_out/vfs/src/vfs_inode.o
+CC build_out/mbedtls_lts/mbedtls/library/camellia.o
+CC build_out/mbedtls_lts/mbedtls/library/ccm.o
+CC build_out/yloop/src/local_event.o
+CC build_out/mbedtls_lts/mbedtls/library/certs.o
+CC build_out/mbedtls_lts/mbedtls/library/chacha20.o
+CC build_out/mbedtls_lts/mbedtls/library/chachapoly.o
+CC build_out/vfs/src/vfs_register.o
+CC build_out/utils/src/utils_rbtree.o
+CC build_out/mbedtls_lts/mbedtls/library/cipher.o
+AR build_out/yloop/libyloop.a
+CC build_out/utils/src/utils_hexdump.o
+CC build_out/utils/src/utils_time.o
+CC build_out/vfs/device/vfs_uart.o
+CC build_out/utils/src/utils_notifier.o
+CC build_out/utils/src/utils_getopt.o
+CC build_out/utils/src/utils_string.o
+CC build_out/lwip/src/core/timeouts.o
+CC build_out/utils/src/utils_hmac_sha1_fast.o
+CC build_out/lwip/src/core/udp.o
+CC build_out/utils/src/utils_psk_fast.o
+CC build_out/lwip/src/core/utils.o
+CC build_out/mbedtls_lts/mbedtls/library/cipher_wrap.o
+CC build_out/vfs/device/vfs_adc.o
+CC build_out/utils/src/utils_memp.o
+CC build_out/utils/src/utils_tlv_bl.o
+CC build_out/utils/src/utils_base64.o
+CC build_out/mbedtls_lts/mbedtls/library/cmac.o
+CC build_out/mbedtls_lts/mbedtls/library/constant_time.o
+CC build_out/lwip/src/netif/bridgeif.o
+CC build_out/lwip/src/netif/bridgeif_fdb.o
+CC build_out/lwip/src/netif/ethernet.o
+CC build_out/lwip/src/netif/lowpan6.o
+CC build_out/vfs/device/vfs_spi.o
+CC build_out/lwip/src/netif/lowpan6_ble.o
+CC build_out/mbedtls_lts/mbedtls/library/ctr_drbg.o
+CC build_out/mbedtls_lts/mbedtls/library/debug.o
+CC build_out/lwip/src/netif/lowpan6_common.o
+CC build_out/utils/src/utils_bitmap_window.o
+CC build_out/vfs/device/vfs_gpio.o
+CC build_out/lwip/src/netif/slipif.o
+CC build_out/vfs/device/vfs_pwm.o
+CC build_out/utils/src/test/test_utils_base64.o
+CC build_out/utils/src/test/test_utils_ringblk.o
+CC build_out/utils/src/test/test_utils_bitmap_window.o
+AR build_out/vfs/libvfs.a
+CC build_out/lwip/src/netif/zepif.o
+CC build_out/mbedtls_lts/mbedtls/library/des.o
+CC build_out/mbedtls_lts/mbedtls/library/dhm.o
+CC build_out/mbedtls_lts/mbedtls/library/ecdh.o
+AR build_out/lwip/liblwip.a
+CC build_out/mbedtls_lts/mbedtls/library/ecdsa.o
+CC build_out/mbedtls_lts/mbedtls/library/ecjpake.o
+CC build_out/mbedtls_lts/mbedtls/library/ecp.o
+CC build_out/mbedtls_lts/mbedtls/library/ecp_curves.o
+CC build_out/mbedtls_lts/mbedtls/library/entropy.o
+CC build_out/mbedtls_lts/mbedtls/library/entropy_poll.o
+CC build_out/mbedtls_lts/mbedtls/library/error.o
+AR build_out/utils/libutils.a
+CC build_out/mbedtls_lts/mbedtls/library/gcm.o
+CC build_out/mbedtls_lts/mbedtls/library/havege.o
+CC build_out/mbedtls_lts/mbedtls/library/hkdf.o
+CC build_out/mbedtls_lts/mbedtls/library/hmac_drbg.o
+CC build_out/mbedtls_lts/mbedtls/library/md2.o
+CC build_out/mbedtls_lts/mbedtls/library/md4.o
+CC build_out/mbedtls_lts/mbedtls/library/md5.o
+CC build_out/mbedtls_lts/mbedtls/library/md.o
+CC build_out/mbedtls_lts/mbedtls/library/memory_buffer_alloc.o
+CC build_out/mbedtls_lts/mbedtls/library/mps_reader.o
+CC build_out/mbedtls_lts/mbedtls/library/mps_trace.o
+CC build_out/mbedtls_lts/mbedtls/library/nist_kw.o
+CC build_out/mbedtls_lts/mbedtls/library/oid.o
+CC build_out/mbedtls_lts/mbedtls/library/padlock.o
+CC build_out/mbedtls_lts/mbedtls/library/pem.o
+CC build_out/mbedtls_lts/mbedtls/library/pk.o
+CC build_out/mbedtls_lts/mbedtls/library/pkcs11.o
+CC build_out/mbedtls_lts/mbedtls/library/pkcs12.o
+CC build_out/mbedtls_lts/mbedtls/library/pkcs5.o
+CC build_out/mbedtls_lts/mbedtls/library/pk_wrap.o
+CC build_out/mbedtls_lts/mbedtls/library/pkwrite.o
+CC build_out/mbedtls_lts/mbedtls/library/platform.o
+CC build_out/mbedtls_lts/mbedtls/library/platform_util.o
+CC build_out/mbedtls_lts/mbedtls/library/poly1305.o
+CC build_out/mbedtls_lts/mbedtls/library/ripemd160.o
+CC build_out/mbedtls_lts/mbedtls/library/rsa.o
+CC build_out/mbedtls_lts/mbedtls/library/rsa_internal.o
+CC build_out/mbedtls_lts/mbedtls/library/sha1.o
+CC build_out/mbedtls_lts/mbedtls/library/sha256.o
+CC build_out/mbedtls_lts/mbedtls/library/sha512.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_cache.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_ciphersuites.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_cli.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_cookie.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_msg.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_srv.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_ticket.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_tls13_keys.o
+CC build_out/mbedtls_lts/mbedtls/library/ssl_tls.o
+CC build_out/mbedtls_lts/mbedtls/library/threading.o
+CC build_out/mbedtls_lts/mbedtls/library/timing.o
+CC build_out/mbedtls_lts/mbedtls/library/version.o
+CC build_out/mbedtls_lts/mbedtls/library/version_features.o
+CC build_out/mbedtls_lts/mbedtls/library/x509.o
+CC build_out/mbedtls_lts/mbedtls/library/x509_create.o
+CC build_out/mbedtls_lts/mbedtls/library/x509_crl.o
+CC build_out/mbedtls_lts/mbedtls/library/x509_crt.o
+CC build_out/mbedtls_lts/mbedtls/library/x509_csr.o
+CC build_out/mbedtls_lts/mbedtls/library/x509write_crt.o
+CC build_out/mbedtls_lts/mbedtls/library/x509write_csr.o
+CC build_out/mbedtls_lts/port/pkparse.o
+CC build_out/mbedtls_lts/port/mbedtls_port_mem.o
+CC build_out/mbedtls_lts/port/net_sockets.o
+CC build_out/mbedtls_lts/port/hw_entropy_poll.o
+CC build_out/mbedtls_lts/port/bignum_ext.o
+CC build_out/mbedtls_lts/mbedtls/library/bignum.o
+CC build_out/mbedtls_lts/port/test_case.o
+AR build_out/mbedtls_lts/libmbedtls_lts.a
+LD build_out/helloworld.elf
+Generating BIN File to /home/fae/codex-builds/Ai-Thinker-WB2-2420da7/applications/get-started/helloworld/build_out/helloworld.bin
+Building Finish. To flash build output. run 'make flash' or:
+c  ...
+cd /home/fae/codex-builds/Ai-Thinker-WB2-2420da7/tools/flash_tool && env SDK_APP_BIN=/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/applications/get-started/helloworld/build_out/helloworld.bin SDK_BOARD=evb SDK_NAME=helloworld SDK_MEDIA_BIN= SDK_ROMFS_DIR= SDK_DTS= SDK_XTAL= BL_FLASH_TOOL_INPUT_PATH_cfg2_bin_input=/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/applications/get-started/helloworld/build_out/helloworld.bin ./bflb_iot_tool-ubuntu --chipname=BL602 --baudrate=921600 --port=/dev/ttyUSB0 --pt=/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/applications/get-started/helloworld/img_conf/partition_cfg_2M.toml --dts=/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/applications/get-started/helloworld/img_conf/bl_factory_params_IoTKitA_40M.dts --firmware=/home/fae/codex-builds/Ai-Thinker-WB2-2420da7/applications/get-started/helloworld/build_out/helloworld.bin
+ELAPSED_SECONDS=5.18
