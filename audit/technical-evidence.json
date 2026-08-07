@@ -1,0 +1,125 @@
+{
+  "schema_version": "1.0",
+  "rules_version": "2.0-sdk-technical",
+  "repositories": {
+    "Ai-Thinker-Open/Ai-Thinker-WB2": {
+      "code_entry": {
+        "status": "verified",
+        "entry_points": [
+          "components/platform/soc/bl602/bl602/evb/src/boot/gcc/start.S:150:call bfl_main",
+          "components/platform/soc/bl602/bl602/bfl_main.c:304:bfl_main",
+          "components/platform/soc/bl602/bl602/bfl_main.c:173:app_main_entry",
+          "applications/get-started/helloworld/helloworld/main.c:16:main"
+        ],
+        "evidence": [
+          "applications/get-started/helloworld/Makefile selects the helloworld component and common BL602 components",
+          "applications/get-started/helloworld/helloworld/bouffalo.mk participates in the component build",
+          "components/platform/soc/bl602/bl602/bfl_main.c bridges platform startup to the application main task",
+          "applications/get-started/helloworld/build_out/helloworld.map",
+          "RISC-V nm confirms app_main_entry, main and vTaskStartScheduler in helloworld.elf"
+        ],
+        "build_linked": true
+      },
+      "architecture": {
+        "status": "verified",
+        "modules": [
+          "independent application projects",
+          "Make-based component build orchestration",
+          "BL602 and BL70x platform support",
+          "FreeRTOS and OS adaptation",
+          "network and wireless protocol components",
+          "system services and middleware",
+          "file-system and security components",
+          "pinned RISC-V toolchains",
+          "flashing and debugging tools"
+        ],
+        "evidence": [
+          "applications/get-started/helloworld/Makefile",
+          "applications/get-started/helloworld/proj_config.mk",
+          "applications/get-started/helloworld/helloworld/bouffalo.mk",
+          "make_scripts_riscv/project.mk",
+          "make_scripts_riscv/component_wrapper.mk",
+          "components/platform/soc/bl602/bl602/evb/src/boot/gcc/start.S",
+          "components/platform/soc/bl602/bl602/bfl_main.c",
+          "docs/ARCHITECTURE.md"
+        ],
+        "init_flow": [
+          "BL602 startup assembly",
+          "bfl_main",
+          "chip, heap, UART, security, boot and board initialization",
+          "aos_loop_proc task creation",
+          "FreeRTOS scheduler start",
+          "VFS and event-loop initialization",
+          "app_main_entry task creation",
+          "application main"
+        ]
+      },
+      "build": {
+        "status": "passed",
+        "clean_builds": 2,
+        "command": "cd applications/get-started/helloworld && make clean && make -j8",
+        "commit": "2420da77a4e8b03df06f3d747224a62e54113a20",
+        "repository_base_commit": "2420da77a4e8b03df06f3d747224a62e54113a20",
+        "source_tree": "ca6e3323287ca6e69a63313b8c40e8ba5e7f7ea6",
+        "submodules": {
+          "toolchain/riscv/Linux": "fbff0015ed1657fd5677283b02eab250ab49d43a"
+        },
+        "log": "docs/build-logs/Ai-Thinker-WB2-helloworld-clean-build-2.log",
+        "environment": {
+          "os": "Ubuntu 22.04.5 LTS on WSL2",
+          "kernel": "6.18.33.2-microsoft-standard-WSL2",
+          "make": "GNU Make 4.3",
+          "compiler": "SiFive GCC-Metal 10.2.0-2020.12.8"
+        },
+        "runs": [
+          {
+            "clean_build": 1,
+            "elapsed_seconds": 5.37,
+            "warnings": 11,
+            "errors": 0,
+            "log": "docs/build-logs/Ai-Thinker-WB2-helloworld-clean-build-1.log"
+          },
+          {
+            "clean_build": 2,
+            "elapsed_seconds": 5.18,
+            "warnings": 11,
+            "errors": 0,
+            "log": "docs/build-logs/Ai-Thinker-WB2-helloworld-clean-build-2.log"
+          }
+        ],
+        "artifacts": [
+          {
+            "path": "applications/get-started/helloworld/build_out/helloworld.elf",
+            "size": 1103168,
+            "sha256": "a7a448b516362cbbb6db32636f57669dd998314c75e2cd388adb1e1e9a961eb0"
+          },
+          {
+            "path": "applications/get-started/helloworld/build_out/helloworld.bin",
+            "size": 68056,
+            "sha256": "0328029d45c97ce638a494d80f48ac3605eb1d6aa9bd3d1bee2d9c5c55fd364a"
+          },
+          {
+            "path": "applications/get-started/helloworld/build_out/helloworld.flash.bin",
+            "size": 68056,
+            "sha256": "0328029d45c97ce638a494d80f48ac3605eb1d6aa9bd3d1bee2d9c5c55fd364a"
+          },
+          {
+            "path": "applications/get-started/helloworld/build_out/helloworld.map",
+            "size": 1027560,
+            "sha256": "e485615fc6c9d6db9874b65ac7e7a4f91729b773d6fe3c22e17d09a1ee531737"
+          }
+        ],
+        "errors": 0,
+        "warnings": 11,
+        "warning_breakdown": {
+          "blog_testc_overflow": 5,
+          "hal_sys_array_bounds": 5,
+          "hosal_uart_unused_variable": 1
+        },
+        "hardware_verified": false,
+        "validated_target": "applications/get-started/helloworld",
+        "application_makefiles_in_repository": 241
+      }
+    }
+  }
+}
