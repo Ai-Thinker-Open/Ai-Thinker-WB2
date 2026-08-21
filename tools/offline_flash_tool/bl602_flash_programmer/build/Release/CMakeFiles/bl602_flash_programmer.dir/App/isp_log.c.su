@@ -1,0 +1,4 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/isp_log.c:8:6:isp_log_init	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/isp_log.c:12:6:isp_log_set_deferred	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/isp_log.c:18:6:isp_log_flush	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/isp_log.c:22:6:isp_log_printf	136	static

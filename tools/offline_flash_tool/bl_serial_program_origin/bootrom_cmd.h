@@ -1,0 +1,44 @@
+#ifndef _BOOTROM_CMD_H
+#define _BOOTROM_CMD_H
+
+#define BOOTROM_HOST_CMD_BOOTINFO_GET                     0x10
+#define BOOTROM_HOST_CMD_BOOTHEADER_LOAD                  0x11
+#define BOOTROM_HOST_CMD_PK1_LOAD                         0x12
+#define BOOTROM_HOST_CMD_PK2_LOAD                         0x13
+#define BOOTROM_HOST_CMD_SIGNATURE1_LOAD                  0x14
+#define BOOTROM_HOST_CMD_SIGNATURE2_LOAD                  0x15
+#define BOOTROM_HOST_CMD_AESIV_LOAD                       0x16
+#define BOOTROM_HOST_CMD_SECTIONHEADER_LOAD               0x17
+#define BOOTROM_HOST_CMD_SECTIONDATA_LOAD                 0x18
+#define BOOTROM_HOST_CMD_CHECK_IMAGE                      0x19
+#define BOOTROM_HOST_CMD_RUN                              0x1A
+#define BOOTROM_HOST_CMD_CHANGE_RATE                      0x20
+#define BOOTROM_HOST_CMD_RESET                            0x21
+#define BOOTROM_HOST_CMD_CLOCK_SET                        0x22
+#define BOOTROM_HOST_CMD_FLASH_ERASE                      0x30
+#define BOOTROM_HOST_CMD_FLASH_WRITE                      0x31
+#define BOOTROM_HOST_CMD_FLASH_READ                       0x32
+#define BOOTROM_HOST_CMD_FLASH_BOOT                       0x33
+#define BOOTROM_HOST_CMD_EFLASH_LOADER_FLASH_READ_JEDECID 0x36
+#define BOOTROM_HOST_CMD_EFLASH_LOADER_FLASH_WRITE_CHECK  0x3A
+#define BOOTROM_HOST_CMD_EFLASH_LOADER_FLASH_SET_PARA     0x3B
+#define BOOTROM_HOST_CMD_EFLASH_LOADER_FLASH_CHIPERASE    0x3C
+#define BOOTROM_HOST_CMD_EFLASH_LOADER_FLASH_READSHA      0x3D
+#define BOOTROM_HOST_CMD_EFLASH_LOADER_FLASH_XIP_READSHA  0x3E
+#define BOOTROM_HOST_CMD_EFUSE_WRITE                      0x40
+#define BOOTROM_HOST_CMD_EFUSE_READ                       0x41
+#define BOOTROM_HOST_CMD_EFUSE_READ_EMAC                  0x42
+#define BOOTROM_HOST_CMD_FLASH_START_XIP_READ             0x60
+#define BOOTROM_HOST_CMD_FLASH_END_XIP_READ               0x60
+
+#define BOOTROAM_CMD_HEADER_LEN      4
+#define BOOTROAM_START_ADDR_LEN      4
+#define BOOTROAM_END_ADDR_LEN        4
+#define BOOTROAM_BOOTHEADER_LEN      176
+#define BOOTROAM_SECTIONHEADER_LEN   16
+#define BOOTROAM_SECTIONDATA_LEN     4080
+#define BOOTROAM_FLASH_PROGRAM_LEN   4096
+#define BOOTROAM_UART_IRQ_ENABLE_LEN 4
+#define BOOTROAM_UART_SPEED_LEN      4
+
+#endif

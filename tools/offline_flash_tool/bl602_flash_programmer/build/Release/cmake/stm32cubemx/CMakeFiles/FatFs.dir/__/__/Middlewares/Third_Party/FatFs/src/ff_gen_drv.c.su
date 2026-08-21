@@ -1,0 +1,5 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c:68:9:FATFS_LinkDriverEx	12	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c:97:9:FATFS_LinkDriver	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c:109:9:FATFS_UnLinkDriverEx	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c:135:9:FATFS_UnLinkDriver	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/ff_gen_drv.c:145:9:FATFS_GetAttachedDriversNbr	0	static

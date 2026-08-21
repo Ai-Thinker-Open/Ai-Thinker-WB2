@@ -1,0 +1,5 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/user_diskio.c:80:9:USER_initialize	8	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/user_diskio.c:95:9:USER_status	8	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/user_diskio.c:113:9:USER_read	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/user_diskio.c:134:9:USER_write	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/user_diskio.c:155:9:USER_ioctl	0	static

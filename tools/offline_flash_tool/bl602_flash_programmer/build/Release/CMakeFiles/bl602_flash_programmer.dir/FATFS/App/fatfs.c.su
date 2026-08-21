@@ -1,0 +1,2 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/App/fatfs.c:30:6:MX_FATFS_Init	8	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/App/fatfs.c:45:7:get_fattime	0	static

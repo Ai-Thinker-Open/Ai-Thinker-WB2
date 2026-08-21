@@ -1,0 +1,3 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c:81:6:HAL_GPIOEx_ConfigEventout	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c:95:6:HAL_GPIOEx_EnableEventout	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_gpio_ex.c:104:6:HAL_GPIOEx_DisableEventout	0	static

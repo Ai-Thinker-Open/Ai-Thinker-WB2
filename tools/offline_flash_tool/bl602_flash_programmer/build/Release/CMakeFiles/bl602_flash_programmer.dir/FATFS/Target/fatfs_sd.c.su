@@ -1,0 +1,14 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:39:13:SPI_TxByte	16	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:27:13:SELECT	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:33:13:DESELECT	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:46:16:SPI_RxByte	24	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:83:13:SD_PowerOn	24	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:65:16:SD_ReadyWait	8	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:221:13:SD_SendCmd	16	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:139:13:SD_RxDataBlock	16	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:170:13:SD_TxDataBlock	16	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:266:9:SD_disk_initialize	40	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:374:9:SD_disk_status	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:383:9:SD_disk_read	16	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:427:9:SD_disk_write	24	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/FATFS/Target/fatfs_sd.c:482:9:SD_disk_ioctl	32	static

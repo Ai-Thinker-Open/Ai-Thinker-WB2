@@ -1,0 +1,6 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/diskio.c:75:9:disk_status	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/diskio.c:90:9:disk_initialize	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/diskio.c:112:9:disk_read	8	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/diskio.c:134:9:disk_write	8	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/diskio.c:156:9:disk_ioctl	4	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Middlewares/Third_Party/FatFs/src/diskio.c:174:14:get_fattime	0	static

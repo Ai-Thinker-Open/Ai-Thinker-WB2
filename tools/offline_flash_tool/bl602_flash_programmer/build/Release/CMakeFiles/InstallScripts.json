@@ -1,0 +1,8 @@
+{
+	"InstallScripts" : 
+	[
+		"/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/cmake_install.cmake",
+		"/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/cmake/stm32cubemx/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

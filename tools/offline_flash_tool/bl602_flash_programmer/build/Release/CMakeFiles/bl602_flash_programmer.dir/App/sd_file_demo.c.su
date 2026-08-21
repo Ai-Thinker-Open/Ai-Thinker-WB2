@@ -1,0 +1,5 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/sd_file_demo.c:23:20:sd_entry_name	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/sd_file_demo.c:33:12:sd_name_ieq	12	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/sd_file_demo.c:77:12:sd_is_loader_name	20	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/sd_file_demo.c:85:12:sd_find_open_name.constprop	784	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/sd_file_demo.c:226:6:sd_isp_flash_run	776	static

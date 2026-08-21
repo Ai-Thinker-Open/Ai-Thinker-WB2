@@ -1,0 +1,8 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c:881:26:FLASH_OB_RDP_LevelConfig	16	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c:392:19:HAL_FLASHEx_OBErase	16	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c:441:19:HAL_FLASHEx_OBProgram	24	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c:522:6:HAL_FLASHEx_OBGetConfig	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c:544:10:HAL_FLASHEx_OBGetUserData	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c:1084:6:FLASH_PageErase	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c:157:19:HAL_FLASHEx_Erase	24	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/Drivers/STM32F1xx_HAL_Driver/Src/stm32f1xx_hal_flash_ex.c:317:19:HAL_FLASHEx_Erase_IT	8	static

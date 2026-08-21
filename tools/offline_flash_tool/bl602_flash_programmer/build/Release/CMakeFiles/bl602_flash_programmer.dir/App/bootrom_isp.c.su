@@ -1,0 +1,12 @@
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:87:13:rts_pin_set	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:92:13:isp_gpio_init	32	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:185:13:bootrom_isp_dump_rx	24	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:265:13:isp_tx_55	24	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:61:13:isp_rxq_stop	24	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:200:12:bootrom_isp_send_internal	40	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:555:12:sd_read_at.constprop	32	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:137:16:bootrom_isp_calc_cmd_cksum.constprop	8	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:520:12:bootrom_isp_flash_xip_read_start.isra	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:28:6:USART1_IRQHandler	8	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:749:6:bootrom_isp_init	0	static
+/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/App/bootrom_isp.c:755:5:bootrom_isp_program	160	static

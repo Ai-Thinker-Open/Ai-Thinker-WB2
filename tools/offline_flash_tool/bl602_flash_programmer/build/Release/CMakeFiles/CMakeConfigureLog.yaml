@@ -1,0 +1,2877 @@
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:12 (find_program)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_UNAME"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "uname"
+    candidate_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/uname"
+      - "/home/rita/.local/bin/uname"
+      - "/usr/local/sbin/uname"
+      - "/usr/local/bin/uname"
+      - "/usr/sbin/uname"
+    found: "/usr/bin/uname"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:207 (message)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      The target system is: Generic -  - arm
+      The host system is: Linux - 6.6.114.1-microsoft-standard-WSL2 - x86_64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeNinjaFindMake.cmake:5 (find_program)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_MAKE_PROGRAM"
+    description: "Program used to build from build.ninja files."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "ninja-build"
+      - "ninja"
+      - "samu"
+    candidate_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/ninja-build"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/ninja"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/samu"
+      - "/home/rita/.local/bin/ninja-build"
+    found: "/home/rita/.local/bin/ninja"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompiler.cmake:115 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:67 (_cmake_find_compiler_path)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc"
+    candidate_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc"
+      - "/usr/local/sbin/arm-none-eabi-gcc"
+      - "/usr/local/bin/arm-none-eabi-gcc"
+      - "/usr/sbin/arm-none-eabi-gcc"
+    found: "/usr/bin/arm-none-eabi-gcc"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:468 (find_file)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:506 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/"
+    found: "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" failed.
+      Compiler: /usr/bin/arm-none-eabi-gcc 
+      Build flags: -mcpu=cortex-m3;-Wall;-fdata-sections;-ffunction-sections;-fstack-usage;-mcpu=cortex-m3;-Wall;-fdata-sections;-ffunction-sections;-fstack-usage
+      Id flags:  
+      
+      The output was:
+      1
+      /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(lib_a-exit.o): in function `exit':
+      /build/newlib-pB30de/newlib-3.3.0/build/arm-none-eabi/thumb/v7-m/nofp/newlib/libc/stdlib/../../../../../../../../newlib/libc/stdlib/exit.c:64: undefined reference to `_exit'
+      collect2: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:468 (find_file)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:506 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/"
+    found: "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: /usr/bin/arm-none-eabi-gcc 
+      Build flags: -mcpu=cortex-m3;-Wall;-fdata-sections;-ffunction-sections;-fstack-usage;-mcpu=cortex-m3;-Wall;-fdata-sections;-ffunction-sections;-fstack-usage
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.o"
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CMakeCCompilerId.su"
+      
+      The C compiler identification is GNU, found in:
+        /home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/4.3.2/CompilerIdC/CMakeCCompilerId.o
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:37 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:58 (__resolve_tool_path)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "_CMAKE_TOOL_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-g++"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    found: "/usr/bin/arm-none-eabi-g++"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_AR"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-ar"
+      - "ar"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    found: "/usr/bin/arm-none-eabi-ar"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_RANLIB"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-ranlib"
+      - "ranlib"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    found: "/usr/bin/arm-none-eabi-ranlib"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_STRIP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-strip"
+      - "strip"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    found: "/usr/bin/arm-none-eabi-strip"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_NM"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-nm"
+      - "nm"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    found: "/usr/bin/arm-none-eabi-nm"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_OBJDUMP"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-objdump"
+      - "objdump"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    found: "/usr/bin/arm-none-eabi-objdump"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_READELF"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-readelf"
+      - "readelf"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    found: "/usr/bin/arm-none-eabi-readelf"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_DLLTOOL"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-dlltool"
+      - "dlltool"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/bin/arm-none-eabi-dlltool"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-dlltool"
+      - "/home/rita/.local/bin/arm-none-eabi-dlltool"
+      - "/usr/local/sbin/arm-none-eabi-dlltool"
+      - "/usr/local/bin/arm-none-eabi-dlltool"
+      - "/usr/sbin/arm-none-eabi-dlltool"
+      - "/sbin/arm-none-eabi-dlltool"
+      - "/bin/arm-none-eabi-dlltool"
+      - "/usr/games/arm-none-eabi-dlltool"
+      - "/usr/local/games/arm-none-eabi-dlltool"
+      - "/usr/lib/wsl/lib/arm-none-eabi-dlltool"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-dlltool"
+      - "/mnt/c/WINDOWS/arm-none-eabi-dlltool"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-dlltool"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-dlltool"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-dlltool"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-dlltool"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-dlltool"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-dlltool"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-dlltool"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-dlltool"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-dlltool"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-dlltool"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-dlltool"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-dlltool"
+      - "/snap/bin/arm-none-eabi-dlltool"
+      - "/usr/bin/dlltool"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/dlltool"
+      - "/home/rita/.local/bin/dlltool"
+      - "/usr/local/sbin/dlltool"
+      - "/usr/local/bin/dlltool"
+      - "/usr/sbin/dlltool"
+      - "/sbin/dlltool"
+      - "/bin/dlltool"
+      - "/usr/games/dlltool"
+      - "/usr/local/games/dlltool"
+      - "/usr/lib/wsl/lib/dlltool"
+      - "/mnt/c/WINDOWS/system32/dlltool"
+      - "/mnt/c/WINDOWS/dlltool"
+      - "/mnt/c/WINDOWS/System32/Wbem/dlltool"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/dlltool"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/dlltool"
+      - "/mnt/c/Program Files/usbipd-win/dlltool"
+      - "/mnt/c/Program Files/nodejs/dlltool"
+      - "/mnt/d/Program Files/Git/cmd/dlltool"
+      - "/mnt/d/OpenSSL-Win64/bin/dlltool"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/dlltool"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/dlltool"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/dlltool"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/dlltool"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/dlltool"
+      - "/snap/bin/dlltool"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_ADDR2LINE"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-addr2line"
+      - "addr2line"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    found: "/usr/bin/arm-none-eabi-addr2line"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeFindBinUtils.cmake:243 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:200 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_TAPI"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-tapi"
+      - "tapi"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/bin/arm-none-eabi-tapi"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-tapi"
+      - "/home/rita/.local/bin/arm-none-eabi-tapi"
+      - "/usr/local/sbin/arm-none-eabi-tapi"
+      - "/usr/local/bin/arm-none-eabi-tapi"
+      - "/usr/sbin/arm-none-eabi-tapi"
+      - "/sbin/arm-none-eabi-tapi"
+      - "/bin/arm-none-eabi-tapi"
+      - "/usr/games/arm-none-eabi-tapi"
+      - "/usr/local/games/arm-none-eabi-tapi"
+      - "/usr/lib/wsl/lib/arm-none-eabi-tapi"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-tapi"
+      - "/mnt/c/WINDOWS/arm-none-eabi-tapi"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-tapi"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-tapi"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-tapi"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-tapi"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-tapi"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-tapi"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-tapi"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-tapi"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-tapi"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-tapi"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-tapi"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-tapi"
+      - "/snap/bin/arm-none-eabi-tapi"
+      - "/usr/bin/tapi"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/tapi"
+      - "/home/rita/.local/bin/tapi"
+      - "/usr/local/sbin/tapi"
+      - "/usr/local/bin/tapi"
+      - "/usr/sbin/tapi"
+      - "/sbin/tapi"
+      - "/bin/tapi"
+      - "/usr/games/tapi"
+      - "/usr/local/games/tapi"
+      - "/usr/lib/wsl/lib/tapi"
+      - "/mnt/c/WINDOWS/system32/tapi"
+      - "/mnt/c/WINDOWS/tapi"
+      - "/mnt/c/WINDOWS/System32/Wbem/tapi"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/tapi"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/tapi"
+      - "/mnt/c/Program Files/usbipd-win/tapi"
+      - "/mnt/c/Program Files/nodejs/tapi"
+      - "/mnt/d/Program Files/Git/cmd/tapi"
+      - "/mnt/d/OpenSSL-Win64/bin/tapi"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/tapi"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/tapi"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/tapi"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/tapi"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/tapi"
+      - "/snap/bin/tapi"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Compiler/GNU-FindBinUtils.cmake:18 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:201 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER_AR"
+    description: "A wrapper around 'ar' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc-ar-10.3"
+      - "arm-none-eabi-gcc-ar-10"
+      - "arm-none-eabi-gcc-ar10"
+      - "arm-none-eabi-gcc-ar"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ar-10.3"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/local/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/sbin/arm-none-eabi-gcc-ar-10.3"
+      - "/sbin/arm-none-eabi-gcc-ar-10.3"
+      - "/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/games/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/local/games/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/snap/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/bin/arm-none-eabi-gcc-ar-10"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ar-10"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ar-10"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ar-10"
+      - "/usr/local/bin/arm-none-eabi-gcc-ar-10"
+      - "/usr/sbin/arm-none-eabi-gcc-ar-10"
+      - "/sbin/arm-none-eabi-gcc-ar-10"
+      - "/bin/arm-none-eabi-gcc-ar-10"
+      - "/usr/games/arm-none-eabi-gcc-ar-10"
+      - "/usr/local/games/arm-none-eabi-gcc-ar-10"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ar-10"
+      - "/snap/bin/arm-none-eabi-gcc-ar-10"
+      - "/usr/bin/arm-none-eabi-gcc-ar10"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ar10"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ar10"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ar10"
+      - "/usr/local/bin/arm-none-eabi-gcc-ar10"
+      - "/usr/sbin/arm-none-eabi-gcc-ar10"
+      - "/sbin/arm-none-eabi-gcc-ar10"
+      - "/bin/arm-none-eabi-gcc-ar10"
+      - "/usr/games/arm-none-eabi-gcc-ar10"
+      - "/usr/local/games/arm-none-eabi-gcc-ar10"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ar10"
+      - "/snap/bin/arm-none-eabi-gcc-ar10"
+    found: "/usr/bin/arm-none-eabi-gcc-ar"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Compiler/GNU-FindBinUtils.cmake:30 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:201 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_C_COMPILER_RANLIB"
+    description: "A wrapper around 'ranlib' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc-ranlib-10.3"
+      - "arm-none-eabi-gcc-ranlib-10"
+      - "arm-none-eabi-gcc-ranlib10"
+      - "arm-none-eabi-gcc-ranlib"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ranlib-10.3"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/local/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/sbin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/sbin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/games/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/local/games/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/snap/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ranlib-10"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/local/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/sbin/arm-none-eabi-gcc-ranlib-10"
+      - "/sbin/arm-none-eabi-gcc-ranlib-10"
+      - "/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/games/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/local/games/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/snap/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/bin/arm-none-eabi-gcc-ranlib10"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ranlib10"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ranlib10"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ranlib10"
+      - "/usr/local/bin/arm-none-eabi-gcc-ranlib10"
+      - "/usr/sbin/arm-none-eabi-gcc-ranlib10"
+      - "/sbin/arm-none-eabi-gcc-ranlib10"
+      - "/bin/arm-none-eabi-gcc-ranlib10"
+      - "/usr/games/arm-none-eabi-gcc-ranlib10"
+      - "/usr/local/games/arm-none-eabi-gcc-ranlib10"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ranlib10"
+      - "/snap/bin/arm-none-eabi-gcc-ranlib10"
+    found: "/usr/bin/arm-none-eabi-gcc-ranlib"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompiler.cmake:115 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:71 (_cmake_find_compiler_path)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-g++"
+    candidate_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-g++"
+      - "/home/rita/.local/bin/arm-none-eabi-g++"
+      - "/usr/local/sbin/arm-none-eabi-g++"
+      - "/usr/local/bin/arm-none-eabi-g++"
+      - "/usr/sbin/arm-none-eabi-g++"
+    found: "/usr/bin/arm-none-eabi-g++"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:468 (find_file)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:506 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/"
+    found: "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" failed.
+      Compiler: /usr/bin/arm-none-eabi-g++ 
+      Build flags: -mcpu=cortex-m3;-Wall;-fdata-sections;-ffunction-sections;-fstack-usage;-mcpu=cortex-m3;-Wall;-fdata-sections;-ffunction-sections;-fstack-usage;-fno-rtti;-fno-exceptions;-fno-threadsafe-statics
+      Id flags:  
+      
+      The output was:
+      1
+      /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/ld: /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(lib_a-exit.o): in function `exit':
+      /build/newlib-pB30de/newlib-3.3.0/build/arm-none-eabi/thumb/v7-m/nofp/newlib/libc/stdlib/../../../../../../../../newlib/libc/stdlib/exit.c:64: undefined reference to `_exit'
+      collect2: error: ld returned 1 exit status
+      
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:468 (find_file)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:506 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/"
+    found: "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: /usr/bin/arm-none-eabi-g++ 
+      Build flags: -mcpu=cortex-m3;-Wall;-fdata-sections;-ffunction-sections;-fstack-usage;-mcpu=cortex-m3;-Wall;-fdata-sections;-ffunction-sections;-fstack-usage;-fno-rtti;-fno-exceptions;-fno-threadsafe-statics
+      Id flags: -c 
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.o"
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CMakeCXXCompilerId.su"
+      
+      The CXX compiler identification is GNU, found in:
+        /home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/4.3.2/CompilerIdCXX/CMakeCXXCompilerId.o
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Compiler/GNU-FindBinUtils.cmake:18 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_AR"
+    description: "A wrapper around 'ar' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc-ar-10.3"
+      - "arm-none-eabi-gcc-ar-10"
+      - "arm-none-eabi-gcc-ar10"
+      - "arm-none-eabi-gcc-ar"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ar-10.3"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/local/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/sbin/arm-none-eabi-gcc-ar-10.3"
+      - "/sbin/arm-none-eabi-gcc-ar-10.3"
+      - "/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/games/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/local/games/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ar-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/snap/bin/arm-none-eabi-gcc-ar-10.3"
+      - "/usr/bin/arm-none-eabi-gcc-ar-10"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ar-10"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ar-10"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ar-10"
+      - "/usr/local/bin/arm-none-eabi-gcc-ar-10"
+      - "/usr/sbin/arm-none-eabi-gcc-ar-10"
+      - "/sbin/arm-none-eabi-gcc-ar-10"
+      - "/bin/arm-none-eabi-gcc-ar-10"
+      - "/usr/games/arm-none-eabi-gcc-ar-10"
+      - "/usr/local/games/arm-none-eabi-gcc-ar-10"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ar-10"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ar-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ar-10"
+      - "/snap/bin/arm-none-eabi-gcc-ar-10"
+      - "/usr/bin/arm-none-eabi-gcc-ar10"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ar10"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ar10"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ar10"
+      - "/usr/local/bin/arm-none-eabi-gcc-ar10"
+      - "/usr/sbin/arm-none-eabi-gcc-ar10"
+      - "/sbin/arm-none-eabi-gcc-ar10"
+      - "/bin/arm-none-eabi-gcc-ar10"
+      - "/usr/games/arm-none-eabi-gcc-ar10"
+      - "/usr/local/games/arm-none-eabi-gcc-ar10"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ar10"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ar10"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ar10"
+      - "/snap/bin/arm-none-eabi-gcc-ar10"
+    found: "/usr/bin/arm-none-eabi-gcc-ar"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Compiler/GNU-FindBinUtils.cmake:30 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:207 (include)"
+      - "CMakeLists.txt:28 (project)"
+    mode: "program"
+    variable: "CMAKE_CXX_COMPILER_RANLIB"
+    description: "A wrapper around 'ranlib' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc-ranlib-10.3"
+      - "arm-none-eabi-gcc-ranlib-10"
+      - "arm-none-eabi-gcc-ranlib10"
+      - "arm-none-eabi-gcc-ranlib"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ranlib-10.3"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/local/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/sbin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/sbin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/games/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/local/games/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ranlib-10.3"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/snap/bin/arm-none-eabi-gcc-ranlib-10.3"
+      - "/usr/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ranlib-10"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/local/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/sbin/arm-none-eabi-gcc-ranlib-10"
+      - "/sbin/arm-none-eabi-gcc-ranlib-10"
+      - "/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/games/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/local/games/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ranlib-10"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/snap/bin/arm-none-eabi-gcc-ranlib-10"
+      - "/usr/bin/arm-none-eabi-gcc-ranlib10"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ranlib10"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ranlib10"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ranlib10"
+      - "/usr/local/bin/arm-none-eabi-gcc-ranlib10"
+      - "/usr/sbin/arm-none-eabi-gcc-ranlib10"
+      - "/sbin/arm-none-eabi-gcc-ranlib10"
+      - "/bin/arm-none-eabi-gcc-ranlib10"
+      - "/usr/games/arm-none-eabi-gcc-ranlib10"
+      - "/usr/local/games/arm-none-eabi-gcc-ranlib10"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ranlib10"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ranlib10"
+      - "/snap/bin/arm-none-eabi-gcc-ranlib10"
+    found: "/usr/bin/arm-none-eabi-gcc-ranlib"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/CMakeScratch/TryCompile-SDQAMk"
+      binary: "/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/CMakeScratch/TryCompile-SDQAMk"
+    cmakeVariables:
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: " -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage"
+      CMAKE_C_FLAGS_DEBUG: "-O0 -g3"
+      CMAKE_EXE_LINKER_FLAGS: "-mcpu=cortex-m3  -T \"/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/STM32F103xx_FLASH.ld\" --specs=nano.specs -Wl,-Map=bl602_flash_programmer.map -Wl,--gc-sections -Wl,--print-memory-usage"
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/CMakeScratch/TryCompile-SDQAMk'
+        
+        Run Build Command(s): /home/rita/.local/bin/ninja -v cmTC_b19f7
+        [1/2] /usr/bin/arm-none-eabi-gcc   -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage  -std=gnu11   -v -o CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj -c /home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCCompilerABI.c
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/arm-none-eabi-gcc
+        Target: arm-none-eabi
+        Configured with: ../configure --build=x86_64-linux-gnu --prefix=/usr --includedir='/usr/lib/include' --mandir='/usr/lib/share/man' --infodir='/usr/lib/share/info' --sysconfdir=/etc --localstatedir=/var --disable-option-checking --disable-silent-rules --libdir='/usr/lib/lib/x86_64-linux-gnu' --libexecdir='/usr/lib/lib/x86_64-linux-gnu' --disable-maintainer-mode --disable-dependency-tracking --mandir=/usr/share/man --enable-languages=c,c++,lto --enable-multilib --disable-decimal-float --disable-libffi --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libssp --disable-libstdcxx-pch --disable-nls --disable-shared --disable-threads --enable-tls --build=x86_64-linux-gnu --target=arm-none-eabi --with-system-zlib --with-gnu-as --with-gnu-ld --with-pkgversion=15:10.3-2021.07-4 --without-included-gettext --prefix=/usr/lib --infodir=/usr/share/doc/gcc-arm-none-eabi/info --htmldir=/usr/share/doc/gcc-arm-none-eabi/html --pdfdir=/usr/share/doc/gcc-arm-none-eabi/pdf --bindir=/usr/bin --libexecdir=/usr/lib --libdir=/usr/lib --disable-libstdc++-v3 --host=x86_64-linux-gnu --with-headers=no --without-newlib --with-multilib-list=rmprofile,aprofile CFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2' CXXFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' DFLAGS=-frelease FCFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' FFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' GCJFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -fstack-protector-strong' LDFLAGS='-Wl,-Bsymbolic-functions -flto=auto -Wl,-z,relro' OBJCFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' OBJCXXFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' INHIBIT_LIBC_CFLAGS=-DUSE_TM_CLONE_REGISTRY=0 AR_FOR_TARGET=arm-none-eabi-ar AS_FOR_TARGET=arm-none-eabi-as LD_FOR_TARGET=arm-none-eabi-ld NM_FOR_TARGET=arm-none-eabi-nm OBJDUMP_FOR_TARGET=arm-none-eabi-objdump RANLIB_FOR_TARGET=arm-none-eabi-ranlib READELF_FOR_TARGET=arm-none-eabi-readelf STRIP_FOR_TARGET=arm-none-eabi-strip SED=/bin/sed SHELL=/bin/sh BASH=/bin/bash CONFIG_SHELL=/bin/bash
+        Thread model: single
+        Supported LTO compression algorithms: zlib
+        gcc version 10.3.1 20210621 (release) (15:10.3-2021.07-4) 
+        COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-std=gnu11' '-v' '-o' 'CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m'
+         /usr/lib/gcc/arm-none-eabi/10.3.1/cc1 -quiet -v -imultilib thumb/v7-m/nofp -D__USES_INITFINI__ /home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mcpu=cortex-m3 -mfloat-abi=soft -mthumb -mlibarch=armv7-m -march=armv7-m -auxbase-strip CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj -Wall -std=gnu11 -version -fstack-usage -fdata-sections -ffunction-sections -fstack-usage -o /tmp/ccUBmunZ.s
+        GNU C11 (15:10.3-2021.07-4) version 10.3.1 20210621 (release) (arm-none-eabi)
+        	compiled by GNU C version 11.2.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/sys-include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/gcc/arm-none-eabi/10.3.1/include
+         /usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed
+         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include
+        End of search list.
+        GNU C11 (15:10.3-2021.07-4) version 10.3.1 20210621 (release) (arm-none-eabi)
+        	compiled by GNU C version 11.2.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        Compiler executable checksum: 4cf7574ae54eb0935abb4a8c56f8bcfe
+        COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-std=gnu11' '-v' '-o' 'CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m'
+         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/as -v -march=armv7-m -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj /tmp/ccUBmunZ.s
+        GNU assembler version 2.38 (arm-none-eabi) using BFD version (2.38-3ubuntu1+15build1) 2.38
+        COMPILER_PATH=/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/
+        LIBRARY_PATH=/usr/lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/
+        COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-std=gnu11' '-v' '-o' 'CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m'
+        [2/2] : && /home/rita/.local/lib/python3.10/site-packages/cmake/data/bin/cmake -E rm -f libcmTC_b19f7.a && /usr/bin/arm-none-eabi-ar qc libcmTC_b19f7.a  CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj && /usr/bin/arm-none-eabi-ranlib libcmTC_b19f7.a && :
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:217 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Parsed C implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/include]
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed]
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include]
+        end of search list found
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/include] ==> [/usr/lib/gcc/arm-none-eabi/10.3.1/include]
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed] ==> [/usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed]
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include] ==> [/usr/lib/arm-none-eabi/include]
+        implicit include dirs: [/usr/lib/gcc/arm-none-eabi/10.3.1/include;/usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed;/usr/lib/arm-none-eabi/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(arm-none-eabi-g\\+\\+|;ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(arm-none-eabi-g\\+\\+|;ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: '/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/CMakeScratch/TryCompile-SDQAMk']
+        ignore line: []
+        ignore line: [Run Build Command(s): /home/rita/.local/bin/ninja -v cmTC_b19f7]
+        ignore line: [[1/2] /usr/bin/arm-none-eabi-gcc   -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage  -std=gnu11   -v -o CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj -c /home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCCompilerABI.c]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/arm-none-eabi-gcc]
+        ignore line: [Target: arm-none-eabi]
+        ignore line: [Configured with: ../configure --build=x86_64-linux-gnu --prefix=/usr --includedir='/usr/lib/include' --mandir='/usr/lib/share/man' --infodir='/usr/lib/share/info' --sysconfdir=/etc --localstatedir=/var --disable-option-checking --disable-silent-rules --libdir='/usr/lib/lib/x86_64-linux-gnu' --libexecdir='/usr/lib/lib/x86_64-linux-gnu' --disable-maintainer-mode --disable-dependency-tracking --mandir=/usr/share/man --enable-languages=c,c++,lto --enable-multilib --disable-decimal-float --disable-libffi --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libssp --disable-libstdcxx-pch --disable-nls --disable-shared --disable-threads --enable-tls --build=x86_64-linux-gnu --target=arm-none-eabi --with-system-zlib --with-gnu-as --with-gnu-ld --with-pkgversion=15:10.3-2021.07-4 --without-included-gettext --prefix=/usr/lib --infodir=/usr/share/doc/gcc-arm-none-eabi/info --htmldir=/usr/share/doc/gcc-arm-none-eabi/html --pdfdir=/usr/share/doc/gcc-arm-none-eabi/pdf --bindir=/usr/bin --libexecdir=/usr/lib --libdir=/usr/lib --disable-libstdc++-v3 --host=x86_64-linux-gnu --with-headers=no --without-newlib --with-multilib-list=rmprofile,aprofile CFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2' CXXFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' DFLAGS=-frelease FCFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' FFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' GCJFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -fstack-protector-strong' LDFLAGS='-Wl,-Bsymbolic-functions -flto=auto -Wl,-z,relro' OBJCFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' OBJCXXFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' INHIBIT_LIBC_CFLAGS=-DUSE_TM_CLONE_REGISTRY=0 AR_FOR_TARGET=arm-none-eabi-ar AS_FOR_TARGET=arm-none-eabi-as LD_FOR_TARGET=arm-none-eabi-ld NM_FOR_TARGET=arm-none-eabi-nm OBJDUMP_FOR_TARGET=arm-none-eabi-objdump RANLIB_FOR_TARGET=arm-none-eabi-ranlib READELF_FOR_TARGET=arm-none-eabi-readelf STRIP_FOR_TARGET=arm-none-eabi-strip SED=/bin/sed SHELL=/bin/sh BASH=/bin/bash CONFIG_SHELL=/bin/bash]
+        ignore line: [Thread model: single]
+        ignore line: [Supported LTO compression algorithms: zlib]
+        ignore line: [gcc version 10.3.1 20210621 (release) (15:10.3-2021.07-4) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-std=gnu11' '-v' '-o' 'CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m']
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/cc1 -quiet -v -imultilib thumb/v7-m/nofp -D__USES_INITFINI__ /home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCCompilerABI.c -quiet -dumpbase CMakeCCompilerABI.c -mcpu=cortex-m3 -mfloat-abi=soft -mthumb -mlibarch=armv7-m -march=armv7-m -auxbase-strip CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj -Wall -std=gnu11 -version -fstack-usage -fdata-sections -ffunction-sections -fstack-usage -o /tmp/ccUBmunZ.s]
+        ignore line: [GNU C11 (15:10.3-2021.07-4) version 10.3.1 20210621 (release) (arm-none-eabi)]
+        ignore line: [	compiled by GNU C version 11.2.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/sys-include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/include]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include]
+        ignore line: [End of search list.]
+        ignore line: [GNU C11 (15:10.3-2021.07-4) version 10.3.1 20210621 (release) (arm-none-eabi)]
+        ignore line: [	compiled by GNU C version 11.2.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [Compiler executable checksum: 4cf7574ae54eb0935abb4a8c56f8bcfe]
+        ignore line: [COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-std=gnu11' '-v' '-o' 'CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m']
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/as -v -march=armv7-m -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj /tmp/ccUBmunZ.s]
+        ignore line: [GNU assembler version 2.38 (arm-none-eabi) using BFD version (2.38-3ubuntu1+15build1) 2.38]
+        ignore line: [COMPILER_PATH=/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-std=gnu11' '-v' '-o' 'CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m']
+        ignore line: [[2/2] : && /home/rita/.local/lib/python3.10/site-packages/cmake/data/bin/cmake -E rm -f libcmTC_b19f7.a && /usr/bin/arm-none-eabi-ar qc libcmTC_b19f7.a  CMakeFiles/cmTC_b19f7.dir/CMakeCCompilerABI.c.obj && /usr/bin/arm-none-eabi-ranlib libcmTC_b19f7.a && :]
+        ignore line: []
+        ignore line: []
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/CMakeScratch/TryCompile-n233Vg"
+      binary: "/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/CMakeScratch/TryCompile-n233Vg"
+    cmakeVariables:
+      CMAKE_CXX_FLAGS: " -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -fno-rtti -fno-exceptions -fno-threadsafe-statics"
+      CMAKE_CXX_FLAGS_DEBUG: "-O0 -g3"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: "-mcpu=cortex-m3  -T \"/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/STM32F103xx_FLASH.ld\" --specs=nano.specs -Wl,-Map=bl602_flash_programmer.map -Wl,--gc-sections -Wl,--print-memory-usage"
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: '/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/CMakeScratch/TryCompile-n233Vg'
+        
+        Run Build Command(s): /home/rita/.local/bin/ninja -v cmTC_3cd70
+        [1/2] /usr/bin/arm-none-eabi-g++   -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -fno-rtti -fno-exceptions -fno-threadsafe-statics    -v -o CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj -c /home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCXXCompilerABI.cpp
+        Using built-in specs.
+        COLLECT_GCC=/usr/bin/arm-none-eabi-g++
+        Target: arm-none-eabi
+        Configured with: ../configure --build=x86_64-linux-gnu --prefix=/usr --includedir='/usr/lib/include' --mandir='/usr/lib/share/man' --infodir='/usr/lib/share/info' --sysconfdir=/etc --localstatedir=/var --disable-option-checking --disable-silent-rules --libdir='/usr/lib/lib/x86_64-linux-gnu' --libexecdir='/usr/lib/lib/x86_64-linux-gnu' --disable-maintainer-mode --disable-dependency-tracking --mandir=/usr/share/man --enable-languages=c,c++,lto --enable-multilib --disable-decimal-float --disable-libffi --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libssp --disable-libstdcxx-pch --disable-nls --disable-shared --disable-threads --enable-tls --build=x86_64-linux-gnu --target=arm-none-eabi --with-system-zlib --with-gnu-as --with-gnu-ld --with-pkgversion=15:10.3-2021.07-4 --without-included-gettext --prefix=/usr/lib --infodir=/usr/share/doc/gcc-arm-none-eabi/info --htmldir=/usr/share/doc/gcc-arm-none-eabi/html --pdfdir=/usr/share/doc/gcc-arm-none-eabi/pdf --bindir=/usr/bin --libexecdir=/usr/lib --libdir=/usr/lib --disable-libstdc++-v3 --host=x86_64-linux-gnu --with-headers=no --without-newlib --with-multilib-list=rmprofile,aprofile CFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2' CXXFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' DFLAGS=-frelease FCFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' FFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' GCJFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -fstack-protector-strong' LDFLAGS='-Wl,-Bsymbolic-functions -flto=auto -Wl,-z,relro' OBJCFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' OBJCXXFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' INHIBIT_LIBC_CFLAGS=-DUSE_TM_CLONE_REGISTRY=0 AR_FOR_TARGET=arm-none-eabi-ar AS_FOR_TARGET=arm-none-eabi-as LD_FOR_TARGET=arm-none-eabi-ld NM_FOR_TARGET=arm-none-eabi-nm OBJDUMP_FOR_TARGET=arm-none-eabi-objdump RANLIB_FOR_TARGET=arm-none-eabi-ranlib READELF_FOR_TARGET=arm-none-eabi-readelf STRIP_FOR_TARGET=arm-none-eabi-strip SED=/bin/sed SHELL=/bin/sh BASH=/bin/bash CONFIG_SHELL=/bin/bash
+        Thread model: single
+        Supported LTO compression algorithms: zlib
+        gcc version 10.3.1 20210621 (release) (15:10.3-2021.07-4) 
+        COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-fno-rtti' '-fno-exceptions' '-fno-threadsafe-statics' '-v' '-o' 'CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m'
+         /usr/lib/gcc/arm-none-eabi/10.3.1/cc1plus -quiet -v -imultilib thumb/v7-m/nofp -D__USES_INITFINI__ /home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mcpu=cortex-m3 -mfloat-abi=soft -mthumb -mlibarch=armv7-m -march=armv7-m -auxbase-strip CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj -Wall -version -fstack-usage -fdata-sections -ffunction-sections -fstack-usage -fno-rtti -fno-exceptions -fno-threadsafe-statics -o /tmp/ccxKkJAN.s
+        GNU C++14 (15:10.3-2021.07-4) version 10.3.1 20210621 (release) (arm-none-eabi)
+        	compiled by GNU C version 11.2.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        ignoring nonexistent directory "/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/sys-include"
+        #include "..." search starts here:
+        #include <...> search starts here:
+         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1
+         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7-m/nofp
+         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/backward
+         /usr/lib/gcc/arm-none-eabi/10.3.1/include
+         /usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed
+         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include
+        End of search list.
+        GNU C++14 (15:10.3-2021.07-4) version 10.3.1 20210621 (release) (arm-none-eabi)
+        	compiled by GNU C version 11.2.0, GMP version 6.2.1, MPFR version 4.1.0, MPC version 1.2.1, isl version isl-0.24-GMP
+        
+        GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072
+        Compiler executable checksum: 4f994585a8ca8864fa1f4d2fb208a0ba
+        COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-fno-rtti' '-fno-exceptions' '-fno-threadsafe-statics' '-v' '-o' 'CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m'
+         /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/as -v -march=armv7-m -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj /tmp/ccxKkJAN.s
+        GNU assembler version 2.38 (arm-none-eabi) using BFD version (2.38-3ubuntu1+15build1) 2.38
+        COMPILER_PATH=/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/
+        LIBRARY_PATH=/usr/lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/
+        COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-fno-rtti' '-fno-exceptions' '-fno-threadsafe-statics' '-v' '-o' 'CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m'
+        [2/2] : && /home/rita/.local/lib/python3.10/site-packages/cmake/data/bin/cmake -E rm -f libcmTC_3cd70.a && /usr/bin/arm-none-eabi-ar qc libcmTC_3cd70.a  CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj && /usr/bin/arm-none-eabi-ranlib libcmTC_3cd70.a && :
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:217 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Parsed CXX implicit include dir info: rv=done
+        found start of include info
+        found start of implicit include info
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1]
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7-m/nofp]
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/backward]
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/include]
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed]
+          add: [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include]
+        end of search list found
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1] ==> [/usr/lib/arm-none-eabi/include/c++/10.3.1]
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7-m/nofp] ==> [/usr/lib/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7-m/nofp]
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/backward] ==> [/usr/lib/arm-none-eabi/include/c++/10.3.1/backward]
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/include] ==> [/usr/lib/gcc/arm-none-eabi/10.3.1/include]
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed] ==> [/usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed]
+        collapse include dir [/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include] ==> [/usr/lib/arm-none-eabi/include]
+        implicit include dirs: [/usr/lib/arm-none-eabi/include/c++/10.3.1;/usr/lib/arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7-m/nofp;/usr/lib/arm-none-eabi/include/c++/10.3.1/backward;/usr/lib/gcc/arm-none-eabi/10.3.1/include;/usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed;/usr/lib/arm-none-eabi/include]
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(arm-none-eabi-g\\+\\+|;ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(arm-none-eabi-g\\+\\+|;ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)))("|,| |$)]
+        ignore line: [Change Dir: '/home/rita/project/bl602_flash_driver/usb_msc_offline_flasher/bl602_flash_programmer/build/Release/CMakeFiles/CMakeScratch/TryCompile-n233Vg']
+        ignore line: []
+        ignore line: [Run Build Command(s): /home/rita/.local/bin/ninja -v cmTC_3cd70]
+        ignore line: [[1/2] /usr/bin/arm-none-eabi-g++   -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -mcpu=cortex-m3  -Wall -fdata-sections -ffunction-sections -fstack-usage -fno-rtti -fno-exceptions -fno-threadsafe-statics    -v -o CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj -c /home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCXXCompilerABI.cpp]
+        ignore line: [Using built-in specs.]
+        ignore line: [COLLECT_GCC=/usr/bin/arm-none-eabi-g++]
+        ignore line: [Target: arm-none-eabi]
+        ignore line: [Configured with: ../configure --build=x86_64-linux-gnu --prefix=/usr --includedir='/usr/lib/include' --mandir='/usr/lib/share/man' --infodir='/usr/lib/share/info' --sysconfdir=/etc --localstatedir=/var --disable-option-checking --disable-silent-rules --libdir='/usr/lib/lib/x86_64-linux-gnu' --libexecdir='/usr/lib/lib/x86_64-linux-gnu' --disable-maintainer-mode --disable-dependency-tracking --mandir=/usr/share/man --enable-languages=c,c++,lto --enable-multilib --disable-decimal-float --disable-libffi --disable-libgomp --disable-libmudflap --disable-libquadmath --disable-libssp --disable-libstdcxx-pch --disable-nls --disable-shared --disable-threads --enable-tls --build=x86_64-linux-gnu --target=arm-none-eabi --with-system-zlib --with-gnu-as --with-gnu-ld --with-pkgversion=15:10.3-2021.07-4 --without-included-gettext --prefix=/usr/lib --infodir=/usr/share/doc/gcc-arm-none-eabi/info --htmldir=/usr/share/doc/gcc-arm-none-eabi/html --pdfdir=/usr/share/doc/gcc-arm-none-eabi/pdf --bindir=/usr/bin --libexecdir=/usr/lib --libdir=/usr/lib --disable-libstdc++-v3 --host=x86_64-linux-gnu --with-headers=no --without-newlib --with-multilib-list=rmprofile,aprofile CFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' CPPFLAGS='-Wdate-time -D_FORTIFY_SOURCE=2' CXXFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' DFLAGS=-frelease FCFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' FFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' GCJFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -fstack-protector-strong' LDFLAGS='-Wl,-Bsymbolic-functions -flto=auto -Wl,-z,relro' OBJCFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' OBJCXXFLAGS='-g -O2 -ffile-prefix-map=/build/gcc-arm-none-eabi-hYfgK4/gcc-arm-none-eabi-10.3-2021.07=. -flto=auto -ffat-lto-objects -fstack-protector-strong' INHIBIT_LIBC_CFLAGS=-DUSE_TM_CLONE_REGISTRY=0 AR_FOR_TARGET=arm-none-eabi-ar AS_FOR_TARGET=arm-none-eabi-as LD_FOR_TARGET=arm-none-eabi-ld NM_FOR_TARGET=arm-none-eabi-nm OBJDUMP_FOR_TARGET=arm-none-eabi-objdump RANLIB_FOR_TARGET=arm-none-eabi-ranlib READELF_FOR_TARGET=arm-none-eabi-readelf STRIP_FOR_TARGET=arm-none-eabi-strip SED=/bin/sed SHELL=/bin/sh BASH=/bin/bash CONFIG_SHELL=/bin/bash]
+        ignore line: [Thread model: single]
+        ignore line: [Supported LTO compression algorithms: zlib]
+        ignore line: [gcc version 10.3.1 20210621 (release) (15:10.3-2021.07-4) ]
+        ignore line: [COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-fno-rtti' '-fno-exceptions' '-fno-threadsafe-statics' '-v' '-o' 'CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m']
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/cc1plus -quiet -v -imultilib thumb/v7-m/nofp -D__USES_INITFINI__ /home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeCXXCompilerABI.cpp -quiet -dumpbase CMakeCXXCompilerABI.cpp -mcpu=cortex-m3 -mfloat-abi=soft -mthumb -mlibarch=armv7-m -march=armv7-m -auxbase-strip CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj -Wall -version -fstack-usage -fdata-sections -ffunction-sections -fstack-usage -fno-rtti -fno-exceptions -fno-threadsafe-statics -o /tmp/ccxKkJAN.s]
+        ignore line: [GNU C++14 (15:10.3-2021.07-4) version 10.3.1 20210621 (release) (arm-none-eabi)]
+        ignore line: [	compiled by GNU C version 11.2.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [ignoring nonexistent directory "/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/sys-include"]
+        ignore line: [#include "..." search starts here:]
+        ignore line: [#include <...> search starts here:]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/arm-none-eabi/thumb/v7-m/nofp]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include/c++/10.3.1/backward]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/include]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/include-fixed]
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/include]
+        ignore line: [End of search list.]
+        ignore line: [GNU C++14 (15:10.3-2021.07-4) version 10.3.1 20210621 (release) (arm-none-eabi)]
+        ignore line: [	compiled by GNU C version 11.2.0  GMP version 6.2.1  MPFR version 4.1.0  MPC version 1.2.1  isl version isl-0.24-GMP]
+        ignore line: []
+        ignore line: [GGC heuristics: --param ggc-min-expand=100 --param ggc-min-heapsize=131072]
+        ignore line: [Compiler executable checksum: 4f994585a8ca8864fa1f4d2fb208a0ba]
+        ignore line: [COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-fno-rtti' '-fno-exceptions' '-fno-threadsafe-statics' '-v' '-o' 'CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m']
+        ignore line: [ /usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/as -v -march=armv7-m -mfloat-abi=soft -meabi=5 -o CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj /tmp/ccxKkJAN.s]
+        ignore line: [GNU assembler version 2.38 (arm-none-eabi) using BFD version (2.38-3ubuntu1+15build1) 2.38]
+        ignore line: [COMPILER_PATH=/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/bin/]
+        ignore line: [LIBRARY_PATH=/usr/lib/gcc/arm-none-eabi/10.3.1/thumb/v7-m/nofp/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/thumb/v7-m/nofp/:/usr/lib/gcc/arm-none-eabi/10.3.1/:/usr/lib/gcc/arm-none-eabi/10.3.1/../../../arm-none-eabi/lib/]
+        ignore line: [COLLECT_GCC_OPTIONS='-fstack-usage' '-mcpu=cortex-m3' '-Wall' '-fdata-sections' '-ffunction-sections' '-fstack-usage' '-fno-rtti' '-fno-exceptions' '-fno-threadsafe-statics' '-v' '-o' 'CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj' '-c' '-mfloat-abi=soft' '-mthumb' '-mlibarch=armv7-m' '-march=armv7-m']
+        ignore line: [[2/2] : && /home/rita/.local/lib/python3.10/site-packages/cmake/data/bin/cmake -E rm -f libcmTC_3cd70.a && /usr/bin/arm-none-eabi-ar qc libcmTC_3cd70.a  CMakeFiles/cmTC_3cd70.dir/CMakeCXXCompilerABI.cpp.obj && /usr/bin/arm-none-eabi-ranlib libcmTC_3cd70.a && :]
+        ignore line: []
+        ignore line: []
+        linker tool for 'CXX': [1/2] /usr/bin/arm-none-eabi-g++
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Running the CXX compiler's linker: "[1/2] /usr/bin/arm-none-eabi-g++" "-v"
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Running the CXX compiler's linker: "[1/2] /usr/bin/arm-none-eabi-g++" "-V"
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:28 (project)"
+    message: |
+      Running the CXX compiler's linker: "[1/2] /usr/bin/arm-none-eabi-g++" "--version"
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompiler.cmake:115 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineASMCompiler.cmake:64 (_cmake_find_compiler_path)"
+      - "CMakeLists.txt:32 (enable_language)"
+    mode: "program"
+    variable: "CMAKE_ASM_COMPILER_WITH_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc"
+    candidate_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/usr/bin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc"
+      - "/usr/local/sbin/arm-none-eabi-gcc"
+      - "/usr/local/bin/arm-none-eabi-gcc"
+      - "/usr/sbin/arm-none-eabi-gcc"
+    found: "/usr/bin/arm-none-eabi-gcc"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PROGRAM_PATH:
+        - "/bin"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:1296 (message)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineASMCompiler.cmake:170 (CMAKE_DETERMINE_COMPILER_ID_VENDOR)"
+      - "CMakeLists.txt:32 (enable_language)"
+    message: |
+      Checking whether the ASM compiler is GNU using "--version" matched "(GNU assembler)|(GCC)|(Free Software Foundation)":
+      arm-none-eabi-gcc (15:10.3-2021.07-4) 10.3.1 20210621 (release)
+      Copyright (C) 2020 Free Software Foundation, Inc.
+      This is free software; see the source for copying conditions.  There is NO
+      warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+      
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Compiler/GNU-FindBinUtils.cmake:18 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineASMCompiler.cmake:268 (include)"
+      - "CMakeLists.txt:32 (enable_language)"
+    mode: "program"
+    variable: "CMAKE_ASM_COMPILER_AR"
+    description: "A wrapper around 'ar' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc-ar-"
+      - "arm-none-eabi-gcc-ar-"
+      - "arm-none-eabi-gcc-ar"
+      - "arm-none-eabi-gcc-ar"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/bin/arm-none-eabi-gcc-ar-"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ar-"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ar-"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ar-"
+      - "/usr/local/bin/arm-none-eabi-gcc-ar-"
+      - "/usr/sbin/arm-none-eabi-gcc-ar-"
+      - "/sbin/arm-none-eabi-gcc-ar-"
+      - "/bin/arm-none-eabi-gcc-ar-"
+      - "/usr/games/arm-none-eabi-gcc-ar-"
+      - "/usr/local/games/arm-none-eabi-gcc-ar-"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ar-"
+      - "/snap/bin/arm-none-eabi-gcc-ar-"
+      - "/usr/bin/arm-none-eabi-gcc-ar-"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ar-"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ar-"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ar-"
+      - "/usr/local/bin/arm-none-eabi-gcc-ar-"
+      - "/usr/sbin/arm-none-eabi-gcc-ar-"
+      - "/sbin/arm-none-eabi-gcc-ar-"
+      - "/bin/arm-none-eabi-gcc-ar-"
+      - "/usr/games/arm-none-eabi-gcc-ar-"
+      - "/usr/local/games/arm-none-eabi-gcc-ar-"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ar-"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ar-"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ar-"
+      - "/snap/bin/arm-none-eabi-gcc-ar-"
+    found: "/usr/bin/arm-none-eabi-gcc-ar"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PROGRAM_PATH:
+        - "/bin"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/Compiler/GNU-FindBinUtils.cmake:30 (find_program)"
+      - "/home/rita/.local/lib/python3.10/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineASMCompiler.cmake:268 (include)"
+      - "CMakeLists.txt:32 (enable_language)"
+    mode: "program"
+    variable: "CMAKE_ASM_COMPILER_RANLIB"
+    description: "A wrapper around 'ranlib' adding the appropriate '--plugin' option for the GCC compiler"
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: false
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: false
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "arm-none-eabi-gcc-ranlib-"
+      - "arm-none-eabi-gcc-ranlib-"
+      - "arm-none-eabi-gcc-ranlib"
+      - "arm-none-eabi-gcc-ranlib"
+    candidate_directories:
+      - "/usr/bin/"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/"
+      - "/home/rita/.local/bin/"
+      - "/usr/local/sbin/"
+      - "/usr/local/bin/"
+      - "/usr/sbin/"
+      - "/sbin/"
+      - "/bin/"
+      - "/usr/games/"
+      - "/usr/local/games/"
+      - "/usr/lib/wsl/lib/"
+      - "/mnt/c/WINDOWS/system32/"
+      - "/mnt/c/WINDOWS/"
+      - "/mnt/c/WINDOWS/System32/Wbem/"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/"
+      - "/mnt/c/Program Files/usbipd-win/"
+      - "/mnt/c/Program Files/nodejs/"
+      - "/mnt/d/Program Files/Git/cmd/"
+      - "/mnt/d/OpenSSL-Win64/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/"
+      - "/snap/bin/"
+    searched_directories:
+      - "/usr/bin/arm-none-eabi-gcc-ranlib-"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ranlib-"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/local/bin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/sbin/arm-none-eabi-gcc-ranlib-"
+      - "/sbin/arm-none-eabi-gcc-ranlib-"
+      - "/bin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/games/arm-none-eabi-gcc-ranlib-"
+      - "/usr/local/games/arm-none-eabi-gcc-ranlib-"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ranlib-"
+      - "/snap/bin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/bin/arm-none-eabi-gcc-ranlib-"
+      - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli/arm-none-eabi-gcc-ranlib-"
+      - "/home/rita/.local/bin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/local/sbin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/local/bin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/sbin/arm-none-eabi-gcc-ranlib-"
+      - "/sbin/arm-none-eabi-gcc-ranlib-"
+      - "/bin/arm-none-eabi-gcc-ranlib-"
+      - "/usr/games/arm-none-eabi-gcc-ranlib-"
+      - "/usr/local/games/arm-none-eabi-gcc-ranlib-"
+      - "/usr/lib/wsl/lib/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/system32/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/System32/Wbem/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/WINDOWS/System32/OpenSSH/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/Program Files/usbipd-win/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/c/Program Files/nodejs/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Program Files/Git/cmd/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/OpenSSL-Win64/bin/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Roaming/npm/arm-none-eabi-gcc-ranlib-"
+      - "/mnt/d/Users/Rita/AppData/Local/Python/bin/arm-none-eabi-gcc-ranlib-"
+      - "/snap/bin/arm-none-eabi-gcc-ranlib-"
+    found: "/usr/bin/arm-none-eabi-gcc-ranlib"
+    search_context:
+      ENV{PATH}:
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.local/bin"
+        - "/home/rita/.cursor-server/bin/6b2afae0257df2bb5e1835f15165dc2f0de056b0/bin/remote-cli"
+        - "/usr/local/sbin"
+        - "/usr/local/bin"
+        - "/usr/sbin"
+        - "/usr/bin"
+        - "/sbin"
+        - "/bin"
+        - "/usr/games"
+        - "/usr/local/games"
+        - "/usr/lib/wsl/lib"
+        - "/mnt/c/WINDOWS/system32"
+        - "/mnt/c/WINDOWS"
+        - "/mnt/c/WINDOWS/System32/Wbem"
+        - "/mnt/c/WINDOWS/System32/WindowsPowerShell/v1.0/"
+        - "/mnt/c/WINDOWS/System32/OpenSSH/"
+        - "/mnt/c/Program Files/usbipd-win/"
+        - "/mnt/c/Program Files/nodejs/"
+        - "/mnt/d/Program Files/Git/cmd"
+        - "/mnt/d/OpenSSL-Win64/bin"
+        - "/mnt/c/Program Files/nodejs"
+        - "/mnt/d/Users/Rita/AppData/Local/Microsoft/WindowsApps"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/Microsoft VS Code/bin"
+        - "/mnt/d/Users/Rita/AppData/Local/Programs/cursor/resources/app/bin"
+        - "/mnt/d/Users/Rita/AppData/Roaming/npm"
+        - "/mnt/d/Users/Rita/AppData/Local/Python/bin"
+        - "/snap/bin"
+      CMAKE_INSTALL_PREFIX: "/usr/local"
+      CMAKE_SYSTEM_PROGRAM_PATH:
+        - "/bin"
+...
